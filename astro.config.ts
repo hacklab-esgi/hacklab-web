@@ -10,7 +10,7 @@ import { spectreDark } from './src/ec-theme';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://spectre.louisescher.dev',
+  site: 'https://hacklab-esgi.github.io',
   output: 'static',
   integrations: [
     expressiveCode({
@@ -19,30 +19,19 @@ export default defineConfig({
     mdx(),
     sitemap(),
     spectre({
-      name: 'Spectre',
+      name: 'HackLab ESGI',
       openGraph: {
         home: {
-          title: 'Spectre',
-          description: 'A minimalistic theme for Astro.'
+          title: 'HackLab ESGI',
+          description: 'Home of the HackLab from ESGI school.'
         },
         blog: {
           title: 'Blog',
-          description: 'News and guides for Spectre.'
+          description: 'News and articles for HackLab ESGI.'
         },
         projects: {
           title: 'Projects'
         }
-      },
-      giscus: {
-        repository: 'louisescher/spectre',
-        repositoryId: 'R_kgDONjm3ig',
-        category: 'General',
-        categoryId: 'DIC_kwDONjm3is4ClmBF',
-        mapping: 'pathname',
-        strict: true,
-        reactionsEnabled: true,
-        emitMetadata: false,
-        lang: 'en',
       }
     })
   ],

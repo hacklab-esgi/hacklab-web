@@ -44,7 +44,7 @@
 }
 
 .post-container:hover, .post-container:focus-visible {
-  background-color: rgba(140, 92, 245, .125);
+  background-color: rgba(9, 84, 150, .125);
   border: 1px solid var(--primary);
 }
 
