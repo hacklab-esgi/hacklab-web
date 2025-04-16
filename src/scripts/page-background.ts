@@ -74,7 +74,7 @@ class PageBackground {
    * Sets up the background canvases. The text is decided based on the title of the page.
    */
   private initBackground = () => {
-    let text: string = document.title.toLowerCase().split(' | ')[0].replace(/\s/g, '_') || 'spectre';
+    let text: string = "HackLab ESGI";
 
     // Add additional underscore to separate words
     if (text.includes("_")) {
@@ -84,11 +84,12 @@ class PageBackground {
     // Letters are 17px wide and 35px tall
     const letters = Math.ceil(this.width / 17);
     const lines = Math.ceil(this.height / 35);
+    const fontSize = Math.max(16, Math.min(32, window.innerWidth / 40));
   
     // Loop through the canvas and draw the text
     for(let i = 0; i < lines; i++) {
       for(let j = 0; j < letters; j++) {
-        this.baseCtx.font = '28px Geist Mono';
+        this.baseCtx.font = `${fontSize}px Consolas, monospace`;
         this.baseCtx.textAlign = 'start';
         this.baseCtx.textBaseline = 'top';
         this.baseCtx.fillStyle = 'rgba(255, 255, 255, 0.01)';
@@ -110,7 +111,7 @@ class PageBackground {
   
     // Draw the letters on the overlay canvas
     for(const letter of randomLetters) {
-      this.overlayCtx.font = 'bold 28px Geist Mono';
+      this.overlayCtx.font = `bold ${fontSize}px Consolas, monospace`;
       this.overlayCtx.textAlign = 'start';
       this.overlayCtx.textBaseline = 'top';
       this.overlayCtx.fillStyle = `rgba(${this.primaryRgb}, 0)`;
@@ -193,6 +194,7 @@ class PageBackground {
   private redrawBackground = () => {
     // Clear the overlay canvas
     this.overlayCtx.clearRect(0, 0, this.overlayCanvas.width, this.overlayCanvas.height);
+    const fontSize = Math.max(16, Math.min(32, window.innerWidth / 40));
   
     for(const letter of this.letterInstances) {
       if (letter.fadeout > Date.now()) continue;
@@ -212,7 +214,7 @@ class PageBackground {
         });
       }
       
-      this.overlayCtx.font = 'bold 28px Geist Mono';
+      this.overlayCtx.font = `bold ${fontSize}px Consolas, monospace`;
       this.overlayCtx.textAlign = 'start';
       this.overlayCtx.textBaseline = 'top';
       this.overlayCtx.fillStyle = `rgba(${this.primaryRgb}, ${alpha})`;
@@ -253,21 +255,9 @@ class PageBackground {
 }
 
 /**
- * Loads the Geist Mono font. We have to do this asynchronously because the font is not preloaded.
- */
-async function loadFont() {
-  const font = new FontFace('Geist Mono', 'url(/fonts/GeistMono.woff2)');
-
-  await font.load();
-  
-  document.fonts.add(font);
-}
-
-/**
  * First loads the Geist Mono font, then initializes the background.
  */
 async function initializeBackground() {
-  await loadFont();
 
   const canvas = document.getElementById('bg-canvas') as HTMLCanvasElement;
   const overlayCanvas = document.getElementById('overlay-canvas') as HTMLCanvasElement;

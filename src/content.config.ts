@@ -3,10 +3,6 @@ import { defineCollection, z, reference } from "astro:content";
 import type { icons as lucideIcons } from '@iconify-json/lucide/icons.json';
 import type { icons as simpleIcons } from '@iconify-json/simple-icons/icons.json';
 
-const other = defineCollection({
-  loader: glob({ base: "src/content/other", pattern: "**/*.{md,mdx}" }),
-});
-
 const lucideIconSchema = z.object({
   type: z.literal("lucide"),
   name: z.custom<keyof typeof lucideIcons>(),
@@ -76,4 +72,4 @@ const projects = defineCollection({
   })
 });
 
-export const collections = { tags, posts, projects, other, quickInfo, socials };
+export const collections = { tags, posts, projects, quickInfo, socials };
