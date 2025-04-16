@@ -1,0 +1,183 @@
+---
+import "../styles/index.css";
+
+import Card from "../components/Card.astro";
+import Icon from "../components/Icon.astro";
+import Layout from "../layouts/Layout.astro";
+import { name, openGraph } from "spectre:globals";
+---
+
+<script is:inline>
+    document.addEventListener("DOMContentLoaded", () => {
+        const links = document.querySelectorAll(".layout-grid-left-sticky a");
+
+        links.forEach((link) => {
+            link.addEventListener("click", () => {
+                links.forEach((l) => l.classList.remove("active"));
+                link.classList.add("active");
+            });
+        });
+    });
+</script>
+
+<script is:inline>
+    document.addEventListener("DOMContentLoaded", () => {
+        const OFFSET = 153;
+
+        document.querySelectorAll('a[href^="#"]').forEach((link) => {
+            link.addEventListener("click", (e) => {
+                const href = link.getAttribute("href");
+                const target = href && document.querySelector(href);
+
+                if (target) {
+                    e.preventDefault();
+
+                    const top =
+                        target.getBoundingClientRect().top +
+                        window.scrollY -
+                        OFFSET;
+
+                    window.scrollTo({
+                        top,
+                        behavior: "smooth",
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+<Layout
+    title={openGraph.join.title || name}
+    description={openGraph.join.description}
+    pagefindIgnore
+>
+    <div class="layout-grid-left-sticky" slot="left">
+        <Card class="flex-col-card">
+            <h2 class="no-mt">
+                <a href="#connect">1. Restez connectés</a><br />
+                <a href="#contribute">2. Contribuez au labo</a><br />
+                <a href="#format">3. Le format</a><br />
+                <a href="#join-us">4. Pourquoi nous rejoindre&nbsp;?</a>
+            </h2>
+        </Card>
+    </div>
+    <div class="layout-grid-right" slot="right">
+        <Card>
+            <div class="header-container">
+                <Icon
+                    type="lucide"
+                    name="rss"
+                    width={24}
+                    height={24}
+                    class="glow-icon"
+                />
+                <h2 id="connect">Restez connectés</h2>
+            </div>
+            <div class="content-container">
+                <p class="text-default">
+                    Pour ne rien manquer, suivez nos conférences, projets et
+                    annonces.<br />
+                    👉 Retrouvez-nous sur <b
+                        ><a href="https://discord.gg/QuC3mhMzKt" target="_blank"
+                            >Discord</a
+                        ></b
+                    >, <b
+                        ><a
+                            href="https://www.linkedin.com/company/hacklabesgi/"
+                            target="_blank">LinkedIn</a
+                        ></b
+                    >, et via nos événements annoncés sur <b
+                        ><a href="" target="_blank">Meetup</a></b
+                    >.<br /><br />
+                    Même en tant qu'observateur, vous êtes les bienvenus pour assister,
+                    apprendre et échanger.
+                </p>
+            </div>
+        </Card>
+        <Card>
+            <div class="header-container">
+                <Icon
+                    type="lucide"
+                    name="handshake"
+                    width={24}
+                    height={24}
+                    class="glow-icon"
+                />
+                <h2 id="contribute">Contribuez au labo</h2>
+            </div>
+            <div class="content-container">
+                <p class="text-default">
+                    Une idée, une démo, un retour d’expérience&nbsp;?<br />
+                    Nos sessions sont ouvertes à toutes les contributions, quel que
+                    soit votre niveau.<br /><br />
+                    Vous pouvez proposer un sujet de conférence, une présentation
+                    rapide, ou même un atelier pratique.<br />
+                    👉 Pour proposer quelque chose, contactez-nous via Discord ou
+                    envoyez-nous un message directement.
+                </p>
+            </div>
+        </Card>
+        <Card>
+            <div class="header-container">
+                <Icon
+                    type="lucide"
+                    name="layout-template"
+                    width={24}
+                    height={24}
+                    class="glow-icon"
+                />
+                <h2 id="format">Le format</h2>
+            </div>
+            <div class="content-container">
+                <p class="text-default">
+                    Les présentations sont en général d’une durée de 45 minutes
+                    à 1 heure, parfois plus selon le sujet.
+                    <br />
+                    Elles sont suivies d’un moment d’échange informel, autour d’un
+                    verre ou de discussions techniques.
+                </p>
+                <h3>Tout est possible</h3>
+                <p class="text-default">
+                    - Conférence technique ou théorique
+                    <br />
+                    - Démo d’un outil ou d’un exploit
+                    <br />
+                    - Atelier pratique en petit groupe
+                    <br />
+                    - Retex ou partage d’expérience
+                    <br />
+                    - Présentation express (“rump”)
+                    <br />
+                    <br />
+                    Il n’y a aucune pression&nbsp;: tout le monde est là pour progresser
+                    ensemble.<br />
+                    On peut aussi vous aider à préparer votre intervention si vous
+                    le souhaitez.
+                </p>
+            </div>
+        </Card>
+        <Card>
+            <div class="header-container">
+                <Icon
+                    type="lucide"
+                    name="sparkles"
+                    width={24}
+                    height={24}
+                    class="glow-icon"
+                />
+                <h2 id="join-us">Pourquoi nous rejoindre&nbsp;?</h2>
+            </div>
+            <div class="content-container">
+                <p class="text-default">
+                    Ce labo est un espace libre d’expérimentation, d’apprentissage
+                    et de partage autour de la cybersécurité.<br />
+                    Que vous soyez débutant, étudiant, professionnel ou juste curieux&nbsp;:
+                    vous êtes à votre place ici.<br /><br />
+                    Pas de sélection, pas d’élitisme&nbsp;: juste de la passion et de
+                    la curiosité commune.
+                </p>
+            </div>
+        </Card>
+    </div>
+</Layout>
