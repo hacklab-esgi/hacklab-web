@@ -9,6 +9,7 @@ const { class: className, ...props } = Astro.props;
 <div class="card" class:list={[className]} {...props}>
   <slot />
 </div>
+
 <style>
   .card {
     width: 100%;
@@ -16,6 +17,14 @@ const { class: className, ...props } = Astro.props;
     background-color: #121212;
     border: 1px solid #353535;
     padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     overflow: hidden;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
   }
 </style>
