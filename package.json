@@ -9,7 +9,8 @@
     "start": "node dist/server/entry.mjs",
     "preview": "astro preview",
     "astro": "astro",
-    "postbuild": "pagefind --site dist/client"
+    "postbuild": "pagefind --site dist/client",
+    "generate-ics": "node generate-ics.cjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.2.0",
@@ -27,6 +28,7 @@
     "astro": "^5.5.2",
     "astro-expressive-code": "^0.38.3",
     "fullcalendar": "^6.1.17",
+    "ics": "^3.8.1",
     "sharp": "^0.33.5"
   },
   "devDependencies": {

@@ -1,0 +1,25 @@
+[
+  {
+    "title": "Session Exploitation binaire",
+    "start": "2025-04-21T19:00:00",
+    "duration": 2,
+    "location": "ESGI Paris",
+    "description": "Présentation d’une vulnérabilité binaire simple.",
+    "url": "https://meetup.com/exploitation-binaire"
+  },
+  {
+    "title": "CTF interne",
+    "start": "2025-05-05T19:00:00",
+    "duration": 2,
+    "location": "Salle 204",
+    "description": "CTF interne pour les membres réguliers du HackLab."
+  },
+  {
+    "title": "Présentation OSINT",
+    "start": "2025-05-15T19:00:00",
+    "duration": 2,
+    "location": "ESGI Paris",
+    "description": "Initiation aux techniques OSINT.",
+    "url": "https://meetup.com/osint-session"
+  }
+]

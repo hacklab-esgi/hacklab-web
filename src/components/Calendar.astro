@@ -1,45 +1,288 @@
-<div id="calendar"></div>
+---
 
+---
+
+<div id="calendar-wrapper">
+  <div id="calendar"></div>
+</div>
+
+<script type="module" src="/calendar-init.js"></script>
 <style is:global>
-  #calendar {
-    max-width: 100%;
-    margin: 0 auto;
+  /* === CALENDAR WRAPPER === */
+#calendar-wrapper {
+  width: 100%;
+  padding: 1rem;
+  overflow: visible;
+}
+
+#calendar {
+  width: 100%;
+  background-color: #1a1a1a;
+  border: 1px solid #353535;
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+/* Responsive */
+@media screen and (max-width: 640px) {
+  .fc-toolbar-title {
+    font-size: 1rem;
   }
+  .fc-daygrid-day {
+    height: 4rem;
+  }
+}
+
+/* === STRUCTURE GENERALE === */
+.fc {
+  direction: ltr;
+  text-align: left;
+}
+
+.fc-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.fc-toolbar-title,
+.fc-col-header-cell-cushion,
+.fc-list-day-side-text {
+  text-transform: capitalize;
+}
+
+/* === TITRE ET BOUTONS === */
+.fc-dynamicTitle-button {
+  pointer-events: none;
+  opacity: 1;
+}
+
+.fc-dynamicTitle-button:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.fc-button,
+.fc-button-downloadButton {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.fc-button-downloadButton {
+  font-weight: bold;
+  padding: 0 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.fc-button:focus,
+.fc-button:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.fc-button-active {
+  background-color: var(--primary) !important;
+  color: white !important;
+}
+
+/* === GRID JOUR/MOIS === */
+.fc-daygrid {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.fc-daygrid-day {
+  border: 1px solid #353535;
+  vertical-align: top;
+  height: 6rem;
+  padding: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.fc-daygrid-day-top {
+  text-align: right;
+  color: #999;
+}
+
+.fc-daygrid-event {
+  background-color: var(--primary);
+  color: white;
+  padding: 2px 4px;
+  font-size: 0.8rem;
+  border-radius: 3px;
+  margin-top: 0.25rem;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fc-daygrid-event:hover,
+.fc-daygrid-event:focus {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* === TIMEGRID (VUE SEMAINE) === */
+.fc-timegrid-event-harness {
+  height: auto !important;
+  min-height: 100% !important;
+}
+
+.fc-timegrid-event {
+  background-color: var(--primary);
+  color: white;
+  font-size: 0.75rem;
+  padding: 2px 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: auto !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.fc-timegrid-event .fc-event-title {
+  font-weight: bold;
+  font-size: 0.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fc-timegrid-event .fc-event-icon {
+  display: none;
+}
+
+/* === LIST (VUE ANNEE) === */
+.fc-list-day-side-text {
+  font-weight: bold;
+}
+
+.fc-list-event-time,
+.fc-list-event-title {
+  font-size: 0.85rem;
+}
+
+/* Supprimer les effets de hover list */
+.fc .fc-list-event:hover,
+.fc .fc-list-event:hover td,
+.fc .fc-list-event:hover .fc-event-title,
+.fc .fc-list-event:hover .fc-event-time {
+  background-color: inherit !important;
+  color: inherit !important;
+}
+
+/* === INFOS EVENTS === */
+.fc-event-custom {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fc-event-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.fc-event-title {
+  font-weight: bold;
+  font-size: 0.85rem;
+  white-space: normal !important;
+  overflow: visible !important;
+}
+
+.fc-event-meta {
+  font-size: 0.75rem;
+  color: #ccc;
+}
+
+/* === TOOLTIP === */
+.fc-event-tooltip {
+  position: absolute;
+  z-index: 9999;
+  background-color: #111;
+  color: white;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  max-width: 250px;
+  pointer-events: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  line-height: 1.4;
+  border: 1px solid var(--primary);
+}
+
+/* === DIVERS === */
+.fc-col-header a,
+.fc-scrollgrid a {
+  color: white;
+  text-decoration: none;
+}
+
+.fc-daygrid-day-number {
+  color: #0ac9e0;
+}
+
+.fc-list-day-side-text,
+.fc-list-day-text {
+  text-decoration: none !important;
+}
+
+.fc-list-day-side-text:hover,
+.fc-list-day-text:hover {
+  color: var(--primary) !important;
+  cursor: default;
+}
+
+.fc-day-today {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* ========== TOOLBAR FLEX FIX ========== */
+@media screen and (max-width: 800px) {
+  .fc-header-toolbar {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .fc-toolbar-chunk {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .fc-button {
+    flex: 0 1 auto;
+    white-space: nowrap;
+    text-align: center;
+    margin-left: 0 !important;
+  }
+
+  .fc-button-group {
+    margin-left: 0 !important;
+  }
+
+  .fc-button-downloadButton {
+    align-self: center;
+    padding: 0.4rem;
+    font-size: 1rem;
+    width: auto;
+    justify-content: center;
+  }
+}
+
+
+
 </style>
-
-<script type="module" is:inline>
-  import { Calendar } from '@fullcalendar/core';
-  import dayGridPlugin from '@fullcalendar/daygrid';
-  import interactionPlugin from '@fullcalendar/interaction';
-
-  // ⬇️ import des styles directement depuis les packages
-  import '@fullcalendar/core/index.css';
-  import '@fullcalendar/daygrid/index.css';
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const calendarEl = document.getElementById('calendar');
-    if (!calendarEl) return;
-
-    const calendar = new Calendar(calendarEl, {
-      plugins: [dayGridPlugin, interactionPlugin],
-      initialView: 'dayGridMonth',
-      locale: 'fr',
-      events: [
-        {
-          title: 'Session Exploitation binaire',
-          start: '2025-04-20',
-        },
-        {
-          title: 'CTF interne',
-          start: '2025-05-05',
-        },
-        {
-          title: 'Présentation OSINT',
-          start: '2025-05-15',
-        },
-      ],
-    });
-
-    calendar.render();
-  });
-</script>
