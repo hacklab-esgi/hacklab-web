@@ -7,5 +7,14 @@
     },
     "type": "lucide",
     "text": "Made in France"
+  },
+  {
+    "id": 2,
+    "icon": {
+      "type": "lucide",
+      "name": "users"
+    },
+    "type": "lucide",
+    "text": "Laboratoire associatif de cybersécurité de l’ESGI."
   }
 ]

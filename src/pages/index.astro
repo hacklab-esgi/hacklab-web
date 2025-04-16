@@ -8,20 +8,17 @@ import Layout from '../layouts/Layout.astro';
 import ImageGlow from '../components/ImageGlow.astro';
 import Icon from '../components/Icon.astro';
 import { getCollection } from 'astro:content';
-import { getEntry } from 'astro:content';
-import { render } from 'astro:content';
 import { name, openGraph } from 'spectre:globals';
+import Calendar from '../components/Calendar.astro';
 
-const [posts, projects, about, quickInfo, socials] = await Promise.all([
+const [posts, projects, quickInfo, socials] = await Promise.all([
 	getCollection('posts', (post) => post.data.draft !== true),
 	getCollection('projects'),
-	getEntry('other', 'about'),
 	getCollection('quickInfo'),
 	getCollection('socials')
 ]);
 
 // biome-ignore lint/style/noNonNullAssertion: Should always be defined.
-const { Content: About } = await render(about!);
 ---
 
 <Layout
@@ -29,7 +26,7 @@ const { Content: About } = await render(about!);
 	description={openGraph.home.description}
 	pagefindIgnore
 >
-	<div class="layout-grid-left" slot="left">
+	<div class="layout-grid-left-sticky" slot="left">
 		<Card class="flex-col-card">
 			<ImageGlow quality={100} width={80} height={80} src={ProfilePicture} alt="HackLab logo" loading='eager' />
 			<h2>{name}</h2>
@@ -43,11 +40,11 @@ const { Content: About } = await render(about!);
 			</ul>
 		</Card>
 		<Card>
-			<h3 class="no-mt">Réseaux socials</h3>
+			<h3 class="no-mt">Réseaux sociaux</h3>
 			<ul class="overview-list">
 				{socials.map((item) => (
 					<li>
-						<a href={item.data.link} class="socials-link">
+						<a href={item.data.link} class="socials-link" target="_blank">
 							<Icon type={item.data.icon.type} name={item.data.icon.name as any} width={24} height={24} class='glow-icon' />
 							<span>{item.data.text}</span>
 						</a>
@@ -60,16 +57,27 @@ const { Content: About } = await render(about!);
 		<Card>
 			<div class="header-container">
 				<Icon type='lucide' name="user" width={24} height={24} class='glow-icon' />
-				<h2>Notre organisation</h2>
+				<h2>Nos valeurs</h2>
 			</div>
-			<div class="prose">
-				<About />
+			<section class="card-grid">
+				<Card><b>By Try Harder</b><br/><br/>Organisées par des étudiants et des alumni de l'<a href="https://www.esgi.fr/" target="_blank">ESGI</a>.&nbsp;🎓<br/><br/>Notre objectif&nbsp: expérimenter, apprendre ensemble et partager autour de la cybersécurité.&nbsp;🧠</Card>
+				<Card><b>Open to All</b><br/><br/>Nos sessions sont ouvertes à tous, que vous soyez étudiant, professionnel ou simplement curieux.&nbsp;🙌</Card>
+				<Card><b>Built Together</b><br/><br/>Toute proposition est la bienvenue&nbsp;!<br/><br/>Venez partager vos idées, vos recherches ou juste votre passion avec nous&nbsp;🤝💡</Card>
+			</section>
+		</Card>
+		<Card>
+			<div class="header-container">
+				<Icon type='lucide' name="rss" width={24} height={24} class='glow-icon' />
+				<h2>Prochaines conférences</h2>
+			</div>
+			<div class="content-container">
+				<Calendar />
 			</div>
 		</Card>
 		<Card>
 			<div class="header-container">
 				<Icon type='lucide' name="rss" width={24} height={24} class='glow-icon' />
-				<h2>Dernières publications</h2>
+				<h2>Derniers articles</h2>
 			</div>
 			<div class="content-container">
 				{posts.sort((a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime()).slice(0, 2).map((post) => (
