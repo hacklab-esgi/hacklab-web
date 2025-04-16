@@ -14,6 +14,8 @@ interface OpenGraph {
   * Data for the home page.
   */
   home: OpenGraphInfo;
+  about: OpenGraphInfo;
+  join: OpenGraphInfo;
   /**
    * Data for the blog page.
    */

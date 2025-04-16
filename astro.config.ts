@@ -22,15 +22,19 @@ export default defineConfig({
       name: 'HackLab ESGI',
       openGraph: {
         home: {
-          title: 'HackLab ESGI',
-          description: 'Home of the HackLab from ESGI school.'
+          title: 'HackLab ESGI'
+        },
+        about: {
+          title: 'Le laboratoire'
+        },
+        join: {
+          title: 'Nous rejoindre'
         },
         blog: {
-          title: 'Blog',
-          description: 'News and articles for HackLab ESGI.'
+          title: 'Articles'
         },
         projects: {
-          title: 'Projects'
+          title: 'Projets'
         }
       }
     })

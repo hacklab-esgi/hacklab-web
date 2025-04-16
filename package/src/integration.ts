@@ -34,6 +34,8 @@ export const optionsSchema = z.object({
      * Open Graph meta tags for the home page.
      */
     home: openGraphOptionsSchema,
+    about: openGraphOptionsSchema,
+    join: openGraphOptionsSchema,
     /**
      * Open Graph meta tags for the blog page.
      */
@@ -126,6 +128,8 @@ export default function integration(options: z.infer<typeof optionsSchema>): Ast
     export const twitterHandle = ${JSON.stringify(validatedOptions.twitterHandle)};
     export const openGraph = {
       home: ${JSON.stringify(validatedOptions.openGraph.home)},
+      about: ${JSON.stringify(validatedOptions.openGraph.about)},
+      join: ${JSON.stringify(validatedOptions.openGraph.join)},
       blog: ${JSON.stringify(validatedOptions.openGraph.blog)},
       projects: ${JSON.stringify(validatedOptions.openGraph.projects)},
     };
