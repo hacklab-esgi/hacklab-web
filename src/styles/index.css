@@ -5,6 +5,34 @@
   gap: 2rem;
 }
 
+.layout-grid-left-sticky {
+  position: sticky;
+  align-self: start;
+  height: fit-content;
+  top: 128px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.layout-grid-left-sticky a {
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.layout-grid-left-sticky a:hover, .layout-grid-left-sticky a.active {
+  text-decoration: none;
+  color: #0ac9e0;
+}
+
+@media screen and (max-width: 1380px) {
+  .layout-grid-left-sticky {
+    gap: 1rem;
+    position: static;
+    top: auto;
+  }
+}
+
 @media screen and (max-width: 640px) {
   .layout-grid-left, .layout-grid-right {
     gap: 1rem;
@@ -41,6 +69,18 @@
   color: #ffffff;
   text-decoration: none;
   transition: background-color .15s ease, border .15s ease;
+}
+
+
+.layout-grid-left > .card, .layout-grid-left-sticky > .card, .card-grid > .card {
+   transform: none !important;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
 }
 
 .post-container:hover, .post-container:focus-visible {
