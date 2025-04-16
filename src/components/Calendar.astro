@@ -1,0 +1,45 @@
+<div id="calendar"></div>
+
+<style is:global>
+  #calendar {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+</style>
+
+<script type="module" is:inline>
+  import { Calendar } from '@fullcalendar/core';
+  import dayGridPlugin from '@fullcalendar/daygrid';
+  import interactionPlugin from '@fullcalendar/interaction';
+
+  // ⬇️ import des styles directement depuis les packages
+  import '@fullcalendar/core/index.css';
+  import '@fullcalendar/daygrid/index.css';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const calendarEl = document.getElementById('calendar');
+    if (!calendarEl) return;
+
+    const calendar = new Calendar(calendarEl, {
+      plugins: [dayGridPlugin, interactionPlugin],
+      initialView: 'dayGridMonth',
+      locale: 'fr',
+      events: [
+        {
+          title: 'Session Exploitation binaire',
+          start: '2025-04-20',
+        },
+        {
+          title: 'CTF interne',
+          start: '2025-05-05',
+        },
+        {
+          title: 'Présentation OSINT',
+          start: '2025-05-15',
+        },
+      ],
+    });
+
+    calendar.render();
+  });
+</script>
