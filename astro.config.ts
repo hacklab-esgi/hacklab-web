@@ -4,13 +4,12 @@ import expressiveCode from 'astro-expressive-code';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import spectre from './package/src';
-
-import node from '@astrojs/node';
+import staticAdapter from '@astrojs/adapter-static';
 import { spectreDark } from './src/ec-theme';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://hacklab-esgi.github.io',
+  site: 'https://hacklabesgi.netlify.app/',
   output: 'static',
   integrations: [
     expressiveCode({
@@ -39,7 +38,5 @@ export default defineConfig({
       }
     })
   ],
-  adapter: node({
-    mode: 'standalone'
-  })
+  adapter: staticAdapter()
 });
