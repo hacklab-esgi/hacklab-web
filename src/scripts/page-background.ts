@@ -74,13 +74,8 @@ class PageBackground {
    * Sets up the background canvases. The text is decided based on the title of the page.
    */
   private initBackground = () => {
-    let text: string = "HackLab ESGI";
+    let text: string = "HackLab_ESGI ";
 
-    // Add additional underscore to separate words
-    if (text.includes("_")) {
-      text += "_";
-    }
-  
     // Letters are 17px wide and 35px tall
     const letters = Math.ceil(this.width / 17);
     const lines = Math.ceil(this.height / 35);

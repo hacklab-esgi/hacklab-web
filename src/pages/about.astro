@@ -8,215 +8,463 @@ import { name, openGraph } from "spectre:globals";
 ---
 
 <script is:inline>
-    document.addEventListener("DOMContentLoaded", () => {
-        const links = document.querySelectorAll(".layout-grid-left-sticky a");
+  document.addEventListener("DOMContentLoaded", () => {
+    const links = document.querySelectorAll(".layout-grid-left-sticky a");
 
-        links.forEach((link) => {
-            link.addEventListener("click", () => {
-                links.forEach((l) => l.classList.remove("active"));
-                link.classList.add("active");
-            });
-        });
+    links.forEach((link) => {
+      link.addEventListener("click", () => {
+        links.forEach((l) => l.classList.remove("active"));
+        link.classList.add("active");
+      });
     });
+  });
 </script>
 
 <script is:inline>
-    document.addEventListener("DOMContentLoaded", () => {
-        const OFFSET = 153;
+  document.addEventListener("DOMContentLoaded", () => {
+    const OFFSET = 153;
 
-        document.querySelectorAll('a[href^="#"]').forEach((link) => {
-            link.addEventListener("click", (e) => {
-                const href = link.getAttribute("href");
-                const target = href && document.querySelector(href);
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener("click", (e) => {
+        const href = link.getAttribute("href");
+        const target = href && document.querySelector(href);
 
-                if (target) {
-                    e.preventDefault();
+        if (target) {
+          e.preventDefault();
 
-                    const top =
-                        target.getBoundingClientRect().top +
-                        window.scrollY -
-                        OFFSET;
+          const top =
+            target.getBoundingClientRect().top + window.scrollY - OFFSET;
 
-                    window.scrollTo({
-                        top,
-                        behavior: "smooth",
-                    });
-                }
-            });
-        });
+          window.scrollTo({
+            top,
+            behavior: "smooth",
+          });
+        }
+      });
     });
+  });
 </script>
 
 <Layout
-    title={openGraph.about.title || name}
-    description={openGraph.about.description}
-    pagefindIgnore
+  title={openGraph.about.title || name}
+  description={openGraph.about.description}
+  pagefindIgnore
 >
-    <div class="layout-grid-left-sticky" slot="left">
-        <Card class="flex-col-card">
-            <h2 class="no-mt">
-                <a href="#team">1. L'équipe</a><br />
-                <a href="#about">2. Le HackLab</a><br />
-                <a href="#activities">3. Le projet</a><br />
-                <a href="#partners">4. Les partenaires</a>
-            </h2>
-        </Card>
-    </div>
-    <div class="layout-grid-right" slot="right">
-        <Card>
-            <div class="header-container">
-                <Icon
-                    type="lucide"
-                    name="users"
-                    width={24}
-                    height={24}
-                    class="glow-icon"
-                />
-                <h2 id="team">L'équipe</h2>
-            </div>
-            <div class="content-container">
-                <p class="text-default">
-                    Le HackLab est animé par une équipe de bénévoles aux profils
-                    variés&nbsp&nbsp: étudiants en cybersécurité, alumni de l’ESGI,
-                    professionnels en activité…
-                    <br />
-                    Chacun apporte sa spécialité&nbsp;—&nbsp;pentest, reverse, infra, développement,
-                    recherche&nbsp;—&nbsp;et son envie de partager.
-                    <br />
-                    Ce sont ces contributions individuelles qui font la richesse
-                    et la diversité du labo 💡
-                </p>
-            </div>
-        </Card>
-        <Card>
-            <div class="header-container">
-                <Icon
-                    type="lucide"
-                    name="flask-conical"
-                    width={24}
-                    height={24}
-                    class="glow-icon"
-                />
-                <h2 id="about">Le HackLab</h2>
-            </div>
-            <div class="content-container">
-                <p class="text-default">
-                    Le HackLab est un laboratoire étudiant libre dédié à la
-                    cybersécurité.<br />Créé à l’initiative d’étudiants et
-                    d’alumni de l’ESGI, il vise à expérimenter, apprendre et
-                    construire ensemble autour de la sécurité offensive et
-                    défensive.
-                </p>
-                <p class="text-default">
-                    Tout est fait maison, en dehors des cours et du travail,
-                    avec les moyens du bord, mais beaucoup de motivation.
-                </p>
-                <p class="text-default">
-                    On avance avec passion, sans pression, dans un esprit de
-                    liberté, de partage et de curiosité.
-                </p>
-            </div>
-        </Card>
-        <Card>
-            <div class="header-container">
-                <Icon
-                    type="lucide"
-                    name="rocket"
-                    width={24}
-                    height={24}
-                    class="glow-icon"
-                />
-                <h2 id="activities">Le projet</h2>
-            </div>
-            <div class="content-container">
-                <p class="text-default">
-                    Notre objectif est de proposer des sessions techniques
-                    accessibles à toutes et tous, sur des thématiques variées en
-                    cybersécurité.
-                    <br />
-                    L’idée est simple&nbsp&nbsp: permettre à chacun de monter en compétences
-                    sur un sujet spécifique, quel que soit son niveau.
-                    <br />
-                    Aucun format n’est imposé&nbsp;: ça peut être une présentation,
-                    une démo, un atelier, un projet en cours, un retour d’expérience…
-                    Étudiants, professionnels, autodidactes&nbsp;—&nbsp;tout le monde
-                    est bienvenu&nbsp;💡
-                </p>
-                <h3>📚 Ce qu’on fait concrètement</h3>
-                <p class="text-default">
-                    - Des <b>conférences</b> régulières sur des sujets techniques
-                    <br />
-                    - Des <b>projets de développement</b> collaboratifs (outils,
-                    scripts, automations…)
-                    <br />
-                    - Des <b>articles</b> publiés sur le site pour documenter nos
-                    travaux ou approfondir des notions
-                    <br />
-                    - Des <b>vidéos YouTube</b> avec les replays de nos conférences
-                    et ateliers
-                </p>
-                <h3>🙋‍♂️ Suivre les sessions</h3>
-                <p class="text-default">
-                    Nos événements ont lieu en général <b
-                        >en présentiel à l’ESGI, à partir de 19h.</b
-                    >
-                    <br />
-                    L’accès se fait via notre groupe <b>Meetup</b>, où chaque
-                    session est annoncée à l’avance.
-                    <br />
-                    Chaque session est suivie d’un moment convivial autour d’un verre
-                    &nbsp;—&nbsp;l’occasion d’échanger et de rencontrer les membres
-                    du labo dans une ambiance détendue 🍻
-                </p>
-                <h3>🎤 Proposer un sujet</h3>
-                <p class="text-default">
-                    Tout le monde peut proposer un sujet de présentation, peu
-                    importe le niveau ou la forme.
-                    <br />
-                    Si tu veux partager quelque chose, contacte-nous via nos canaux
-                    de communication&nbsp;—&nbsp;on est toujours partants pour découvrir
-                    de nouvelles choses et mettre en avant les contributions de chacun.
-                </p>
-            </div>
-        </Card>
-        <Card>
-            <div class="header-container">
-                <Icon
-                    type="lucide"
-                    name="handshake"
-                    width={24}
-                    height={24}
-                    class="glow-icon"
-                />
-                <h2 id="partners">Les partenaires</h2>
-            </div>
-            <div class="content-container">
-                <p class="text-default">
-                    Le HackLab est soutenu par l’<a
-                        href="https://www.esgi.fr/"
-                        target="_blank">ESGI</a
-                    >, notre partenaire principal.
-                    <br />
-                    L’école nous accompagne dans l’organisation de nos événements
-                    et met à disposition les moyens nécessaires pour faire vivre
-                    le projet&nbsp;: salles, matériel, visibilité, et soutien logistique.
-                </p>
+  <div class="layout-grid-left-sticky" slot="left">
+    <Card class="flex-col-card">
+      <h2 class="no-mt">
+        <a href="#team">1. L'équipe</a><br />
+        <a href="#about">2. Le HackLab</a><br />
+        <a href="#activities">3. Le projet</a><br />
+        <a href="#partners">4. Les partenaires</a>
+      </h2>
+    </Card>
+  </div>
+  <div class="layout-grid-right" slot="right">
+    <Card>
+      <div class="header-container">
+        <Icon
+          type="lucide"
+          name="users"
+          width={24}
+          height={24}
+          class="glow-icon"
+        />
+        <h2 id="team">L'équipe</h2>
+      </div>
+      <div class="content-container">
+        <p class="text-default">
+          Le HackLab est animé par une équipe de bénévoles aux profils
+          variés&nbsp&nbsp: étudiants en cybersécurité, alumni de l’ESGI,
+          professionnels en activité…
+          <br />
+          Chacun apporte sa spécialité&nbsp;—&nbsp;pentest, reverse, infra, développement,
+          recherche&nbsp;—&nbsp;et son envie de partager.
+          <br />
+          Ce sont ces contributions individuelles qui font la richesse et la diversité
+          du labo 💡
+        </p>
+      </div>
 
-                <p class="text-default">
-                    Grâce à ce partenariat, nous pouvons accueillir nos
-                    conférences en présentiel, proposer un cadre stable à nos
-                    activités, et encourager les initiatives étudiantes autour
-                    de la cybersécurité.
-                </p>
-
-                <p class="text-default">
-                    Nous sommes également ouverts à d'autres formes de soutien
-                    ou de collaboration. Si vous souhaitez contribuer au
-                    projet&nbsp;—&nbsp;en tant qu'entreprise, association ou
-                    individu&nbsp;—&nbsp;n’hésitez pas à nous contacter pour en
-                    discuter&nbsp;🤝
-                </p>
+      <section class="card-grid">
+        <Card>
+          <div class="team-pyramid">
+            <h3 class="pyramid-title">Responsable</h3>
+            <div class="pyramid-level">
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/geoffrey-lavigne/"
+                target="_blank"
+              >
+                <img src="/src/content/team/rembo.jpg" alt="Responsable" />
+                <div class="member-info">
+                  <span class="member-handle">@Rêmbo FW</span>
+                </div>
+              </a>
             </div>
+
+            <h3 class="pyramid-title">Co-responsable</h3>
+            <div class="pyramid-level">
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/jpettersen/"
+                target="_blank"
+              >
+                <img src="/src/content/team/gelven.jpg" alt="Co-responsable" />
+                <div class="member-info">
+                  <span class="member-handle">@Gelven</span>
+                </div>
+              </a>
+
+              <div class="team-member">
+                <img src="/src/content/team/spoon.jpg" alt="Co-responsable" />
+                <div class="member-info">
+                  <span class="member-handle">@Spoon</span>
+                </div>
+              </div>
+            </div>
+
+            <h3 class="pyramid-title">Administrateur</h3>
+            <div class="pyramid-level">
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/ryan-hennou/"
+                target="_blank"
+              >
+                <img src="/src/content/team/dropa.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@Dropa</span>
+                </div>
+              </a>
+
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/ryan-hennou/"
+                target="_blank"
+              >
+                <img src="/src/content/team/default.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@default</span>
+                </div>
+              </a>
+
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/ryan-hennou/"
+                target="_blank"
+              >
+                <img src="/src/content/team/default.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@default</span>
+                </div>
+              </a>
+
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/ryan-hennou/"
+                target="_blank"
+              >
+                <img src="/src/content/team/default.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@default</span>
+                </div>
+              </a>
+
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/ryan-hennou/"
+                target="_blank"
+              >
+                <img src="/src/content/team/default.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@default</span>
+                </div>
+              </a>
+
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/dylansandogo"
+                target="_blank"
+              >
+                <img src="/src/content/team/hsbf6.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@HSbF6</span>
+                </div>
+              </a>
+
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/ryan-hennou/"
+                target="_blank"
+              >
+                <img src="/src/content/team/default.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@default</span>
+                </div>
+              </a>
+
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/lucas-miller-a62444214/"
+                target="_blank"
+              >
+                <img src="/src/content/team/lulu.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@lululufr</span>
+                </div>
+              </a>
+
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/tom-baty-913825203/"
+                target="_blank"
+              >
+                <img src="/src/content/team/bageto.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@Bageto</span>
+                </div>
+              </a>
+
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/yannis-zribi-74a99a215/"
+                target="_blank"
+              >
+                <img src="/src/content/team/bonziski.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@BonziSki</span>
+                </div>
+              </a>
+
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/tom-baty-913825203/"
+                target="_blank"
+              >
+                <img src="/src/content/team/default.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@default</span>
+                </div>
+              </a>
+
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/tom-baty-913825203/"
+                target="_blank"
+              >
+                <img src="/src/content/team/default.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@default</span>
+                </div>
+              </a>
+
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/tom-baty-913825203/"
+                target="_blank"
+              >
+                <img src="/src/content/team/default.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@Bageto</span>
+                </div>
+              </a>
+
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/tom-baty-913825203/"
+                target="_blank"
+              >
+                <img src="/src/content/team/default.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@default</span>
+                </div>
+              </a>
+
+              <div class="team-member">
+                <img src="/src/content/team/default.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@SKIP</span>
+                </div>
+              </div>
+
+              
+              <div class="team-member">
+                <img src="/src/content/team/cuicui.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@CuiCui</span>
+                </div>
+            </div>
+
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/tom-baty-913825203/"
+                target="_blank"
+              >
+                <img src="/src/content/team/default.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@default</span>
+                </div>
+              </a>
+
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/tom-baty-913825203/"
+                target="_blank"
+              >
+                <img src="/src/content/team/default.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@default</span>
+                </div>
+              </a>
+
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/tom-baty-913825203/"
+                target="_blank"
+              >
+                <img src="/src/content/team/default.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@default</span>
+                </div>
+              </a>
+
+              <a
+                class="team-member"
+                href="https://www.linkedin.com/in/tom-baty-913825203/"
+                target="_blank"
+              >
+                <img src="/src/content/team/default.jpg" alt="Admin" />
+                <div class="member-info">
+                  <span class="member-handle">@default</span>
+                </div>
+              </a>
+            </div>
+          </div>
         </Card>
-    </div>
+      </section>
+    </Card>
+    <Card>
+      <div class="header-container">
+        <Icon
+          type="lucide"
+          name="flask-conical"
+          width={24}
+          height={24}
+          class="glow-icon"
+        />
+        <h2 id="about">Le HackLab</h2>
+      </div>
+      <div class="content-container">
+        <p class="text-default">
+          Le HackLab est un laboratoire étudiant libre dédié à la cybersécurité.<br
+          />Créé à l’initiative d’étudiants et d’alumni de l’ESGI, il vise à
+          expérimenter, apprendre et construire ensemble autour de la sécurité
+          offensive et défensive.
+        </p>
+        <p class="text-default">
+          Tout est fait maison, en dehors des cours et du travail, avec les
+          moyens du bord, mais beaucoup de motivation.
+        </p>
+        <p class="text-default">
+          On avance avec passion, sans pression, dans un esprit de liberté, de
+          partage et de curiosité.
+        </p>
+      </div>
+    </Card>
+    <Card>
+      <div class="header-container">
+        <Icon
+          type="lucide"
+          name="rocket"
+          width={24}
+          height={24}
+          class="glow-icon"
+        />
+        <h2 id="activities">Le projet</h2>
+      </div>
+      <div class="content-container">
+        <p class="text-default">
+          Notre objectif est de proposer des sessions techniques accessibles à
+          toutes et tous, sur des thématiques variées en cybersécurité.
+          <br />
+          L’idée est simple&nbsp&nbsp: permettre à chacun de monter en compétences
+          sur un sujet spécifique, quel que soit son niveau.
+          <br />
+          Aucun format n’est imposé&nbsp;: ça peut être une présentation, une démo,
+          un atelier, un projet en cours, un retour d’expérience… Étudiants, professionnels,
+          autodidactes&nbsp;—&nbsp;tout le monde est bienvenu&nbsp;💡
+        </p>
+        <h3>📚 Ce qu’on fait concrètement</h3>
+        <p class="text-default">
+          - Des <b>conférences</b> régulières sur des sujets techniques
+          <br />
+          - Des <b>projets de développement</b> collaboratifs (outils, scripts, automations…)
+          <br />
+          - Des <b>articles</b> publiés sur le site pour documenter nos travaux ou
+          approfondir des notions
+          <br />
+          - Des <b>vidéos YouTube</b> avec les replays de nos conférences et ateliers
+        </p>
+        <h3>🙋‍♂️ Suivre les sessions</h3>
+        <p class="text-default">
+          Nos événements ont lieu en général <b
+            >en présentiel à l’ESGI, à partir de 19h.</b
+          >
+          <br />
+          L’accès se fait via notre groupe <b>Meetup</b>, où chaque session est
+          annoncée à l’avance.
+          <br />
+          Chaque session est suivie d’un moment convivial autour d’un verre &nbsp;—&nbsp;l’occasion
+          d’échanger et de rencontrer les membres du labo dans une ambiance détendue
+          🍻
+        </p>
+        <h3>🎤 Proposer un sujet</h3>
+        <p class="text-default">
+          Tout le monde peut proposer un sujet de présentation, peu importe le
+          niveau ou la forme.
+          <br />
+          Si tu veux partager quelque chose, contacte-nous via nos canaux de communication&nbsp;—&nbsp;on
+          est toujours partants pour découvrir de nouvelles choses et mettre en avant
+          les contributions de chacun.
+        </p>
+      </div>
+    </Card>
+    <Card>
+      <div class="header-container">
+        <Icon
+          type="lucide"
+          name="handshake"
+          width={24}
+          height={24}
+          class="glow-icon"
+        />
+        <h2 id="partners">Les partenaires</h2>
+      </div>
+      <div class="content-container">
+        <p class="text-default">
+          Le HackLab est soutenu par l’<a
+            href="https://www.esgi.fr/"
+            target="_blank">ESGI</a
+          >, notre partenaire principal.
+          <br />
+          L’école nous accompagne dans l’organisation de nos événements et met à
+          disposition les moyens nécessaires pour faire vivre le projet&nbsp;: salles,
+          matériel, visibilité, et soutien logistique.
+        </p>
+
+        <p class="text-default">
+          Grâce à ce partenariat, nous pouvons accueillir nos conférences en
+          présentiel, proposer un cadre stable à nos activités, et encourager
+          les initiatives étudiantes autour de la cybersécurité.
+        </p>
+
+        <p class="text-default">
+          Nous sommes également ouverts à d'autres formes de soutien ou de
+          collaboration. Si vous souhaitez contribuer au projet&nbsp;—&nbsp;en
+          tant qu'entreprise, association ou individu&nbsp;—&nbsp;n’hésitez pas
+          à nous contacter pour en discuter&nbsp;🤝
+        </p>
+      </div>
+    </Card>
+  </div>
 </Layout>
