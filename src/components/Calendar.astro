@@ -1,4 +1,5 @@
 ---
+import calendarModule from '../scripts/calendar.js?url';
 ---
 
 <div id="calendar-wrapper">
@@ -6,7 +7,7 @@
 </div>
 
 <script type="module">
-  import('../scripts/calendar.js').then(({ renderCalendar }) => {
+  import(calendarModule).then(({ renderCalendar }) => {
     renderCalendar();
   });
 </script>
