@@ -2,7 +2,7 @@
 import "../../styles/article.css";
 import "../../styles/index.css";
 
-import ImageGlow from "../../components/ImageGlow.astro";
+import { Image } from 'astro:assets';
 import Card from "../../components/Card.astro";
 import Layout from "../../layouts/Layout.astro";
 
@@ -82,7 +82,7 @@ const { Content, headings } = await render(post);
   <article slot="right" data-pagefind-body>
     <Card>
       <div class="article-header" id="_top" data-pagefind-ignore>
-        <ImageGlow
+        <Image
           quality={100}
           class="article-image"
           src={post.data.image}
