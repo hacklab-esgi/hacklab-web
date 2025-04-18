@@ -1,5 +1,5 @@
 ---
-import calendarModule from '../scripts/calendar.js?url';
+const calendarUrl = new URL('../scripts/calendar.js', import.meta.url).toString();
 ---
 
 <div id="calendar-wrapper">
@@ -7,7 +7,8 @@ import calendarModule from '../scripts/calendar.js?url';
 </div>
 
 <script type="module">
-  import(calendarModule).then(({ renderCalendar }) => {
+  const moduleUrl = "{calendarUrl}";
+  import(moduleUrl).then(({ renderCalendar }) => {
     renderCalendar();
   });
 </script>
