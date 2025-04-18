@@ -32,6 +32,12 @@ importers:
       '@fullcalendar/interaction':
         specifier: ^6.1.17
         version: 6.1.17(@fullcalendar/core@6.1.17)
+      '@fullcalendar/list':
+        specifier: ^6.1.17
+        version: 6.1.17(@fullcalendar/core@6.1.17)
+      '@fullcalendar/timegrid':
+        specifier: ^6.1.17
+        version: 6.1.17(@fullcalendar/core@6.1.17)
       '@iconify-json/lucide':
         specifier: ^1.2.20
         version: 1.2.37
