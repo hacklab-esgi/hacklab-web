@@ -23,25 +23,12 @@ const path = Astro.url.pathname;
       <li class="nav-separator">/</li>
       <li>
         <a href="/blog" class:list={{ active: path === "/blog" }}>Articles</a>
-        <a
-          href="/api/articles-rss.xml"
-          title="Flux RSS des articles"
-        >
-          <Icon type="lucide" name="rss" width={24} height={24} class="nav-rss-icon" />
-        </a>
       </li>
       <li class="nav-separator">/</li>
       <li>
         <a href="/projects" class:list={{ active: path === "/projects" }}
           >Projets</a
         >
-        
-        <a
-          href="/api/projects-rss.xml"
-          title="Flux RSS des projets"
-        >
-          <Icon type="lucide" name="rss" width={24} height={24} class="nav-rss-icon" />
-        </a>
       </li>
       <li class="nav-separator">/</li>
       <li>

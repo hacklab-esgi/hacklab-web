@@ -41,7 +41,7 @@ const [posts, projects, quickInfo, socials] = await Promise.all([
 		</Card>
 		<Card>
 			<h3 class="no-mt">Réseaux sociaux</h3>
-			<ul class="overview-list">
+			<ul class="overview-list-media">
 				{socials.map((item) => (
 					<li>
 						<a href={item.data.link} class="socials-link" target="_blank">

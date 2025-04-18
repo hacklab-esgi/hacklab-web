@@ -1,3 +1,13 @@
 {
-  "editor.gotoLocation.multipleDefinitions": "goto"
+  "editor.gotoLocation.multipleDefinitions": "goto",
+  "importCost.largePackageColor": "#FFA500",
+  "importCost.mediumPackageColor": "#FFD700",
+  "importCost.smallPackageColor": "#00FF00",
+  "importCost.hideWhenIdle": true,
+  "importCost.showCalculatingDecoration": true,
+  "codemetrics.basics.Enabled": true,
+  "codemetrics.basics.DisplayMetrics": true,
+  "codemetrics.basics.DecorationMode": "Count",
+  "codemetrics.basics.ComplexityLevelCritical": 15,
+  "codemetrics.basics.ComplexityLevelWarning": 8
 }
