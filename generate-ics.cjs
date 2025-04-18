@@ -2,7 +2,7 @@ const fs = require('fs');
 const { createEvents } = require('ics');
 
 // Chemin vers le fichier JSON des événements
-const eventsData = JSON.parse(fs.readFileSync('./public/events/events.json', 'utf8'));
+const eventsData = JSON.parse(fs.readFileSync('/events/events.json', 'utf8'));
 
 // Transformation des événements
 const events = eventsData.map(ev => {
@@ -38,6 +38,6 @@ createEvents(events, (error, value) => {
     return;
   }
 
-  fs.writeFileSync('./public/calendar.ics', value);
+  fs.writeFileSync('/calendar.ics', value);
   console.log('Fichier calendar.ics généré avec succès.');
 });
