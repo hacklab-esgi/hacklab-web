@@ -1,14 +1,12 @@
 ---
-import calendarUrl from '../scripts/calendar.js?url';
-const inlineScript = `import("${calendarUrl}").then(mod => mod.renderCalendar());`;
+import CalendarClient from './calendar.jsx';
 ---
 
 <div id="calendar-wrapper">
   <div id="calendar"></div>
 </div>
 
-<script type="module" set:html={inlineScript}></script>
-
+<CalendarClient client:load />
 <style is:global>
   /* === CALENDAR WRAPPER === */
 #calendar-wrapper {
