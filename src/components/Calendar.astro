@@ -7,7 +7,7 @@ const calendarUrl = new URL('../scripts/calendar.js', import.meta.url).toString(
 </div>
 
 <script type="module">
-  const moduleUrl = "{calendarUrl}";
+  const moduleUrl = `${calendarUrl}`;
   import(moduleUrl).then(({ renderCalendar }) => {
     renderCalendar();
   });
