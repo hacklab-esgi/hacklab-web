@@ -1,12 +1,12 @@
 ---
-
+import calendarInit from '../scripts/calendar-init.js?url';
 ---
 
 <div id="calendar-wrapper">
   <div id="calendar"></div>
 </div>
 
-<script type="module" src="/calendar-init.js"></script>
+<script type="module" src={calendarInit}></script>
 <style is:global>
   /* === CALENDAR WRAPPER === */
 #calendar-wrapper {
