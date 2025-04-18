@@ -5,10 +5,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import spectre from './package/src';
 import netlify from '@astrojs/netlify';
-import node from '@astrojs/node';
 import { spectreDark } from './src/ec-theme';
-
-const isNetlify = process.env.ADAPTER === 'netlify';
 
 // https://astro.build/config
 export default defineConfig({
@@ -41,5 +38,5 @@ export default defineConfig({
       }
     })
   ],
-  adapter: isNetlify ? netlify() : node({ mode: 'standalone' }),
+  adapter:  netlify(),
 });
