@@ -32,6 +32,23 @@ html {
   height: 100%;
 }
 
+/* Icône RSS dans la navbar */
+.nav-rss-icon {
+  transform: scale(0.75); /* réduit visuellement l'icône à ~18x18 */
+  display: inline-block;
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+  vertical-align: middle;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.nav-rss-icon:hover {
+  opacity: 1;
+}
+
+
+
 body {
   margin: 0;
   padding: 0;

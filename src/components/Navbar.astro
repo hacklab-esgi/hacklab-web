@@ -7,46 +7,59 @@ const path = Astro.url.pathname;
 
 <nav>
   <div class="nav-container">
-  <a class="site-title" href="/">{name}</a>
-  <ul>
-    <li>
-      <a href="/about" class:list={{ active: path === "/about" }}
-        >Le laboratoire</a
-      >
-    </li>
-    <li class="nav-separator">/</li>
-    <li>
-      <a href="/join" class:list={{ active: path === "/join" }}
-        >Nous rejoindre</a
-      >
-    </li>
-    <li class="nav-separator">/</li>
-    <li>
-      <a href="/blog" class:list={{ active: path === "/blog" }}>Articles</a>
-    </li>
-    <li class="nav-separator">/</li>
-    <li>
-      <a href="/projects" class:list={{ active: path === "/projects" }}
-        >Projets</a
-      >
-    </li>
-    <li class="nav-separator">/</li>
-    <li>
-      <input id="search" type="text" placeholder="Search (Ctrl+K)" />
-      <div id="search-results"></div>
-    </li>
-  </ul>
-  <button class="mobile-nav-toggle">
-    <Icon
-      type="lucide"
-      name="menu"
-      width={24}
-      height={24}
-      class="menu-closed"
-    />
-    <Icon type="lucide" name="x" width={24} height={24} class="menu-open" />
-  </button>
-</div>
+    <a class="site-title" href="/">{name}</a>
+    <ul>
+      <li>
+        <a href="/about" class:list={{ active: path === "/about" }}
+          >Le laboratoire</a
+        >
+      </li>
+      <li class="nav-separator">/</li>
+      <li>
+        <a href="/join" class:list={{ active: path === "/join" }}
+          >Nous rejoindre</a
+        >
+      </li>
+      <li class="nav-separator">/</li>
+      <li>
+        <a href="/blog" class:list={{ active: path === "/blog" }}>Articles</a>
+        <a
+          href="/api/articles-rss.xml"
+          title="Flux RSS des articles"
+        >
+          <Icon type="lucide" name="rss" width={24} height={24} class="nav-rss-icon" />
+        </a>
+      </li>
+      <li class="nav-separator">/</li>
+      <li>
+        <a href="/projects" class:list={{ active: path === "/projects" }}
+          >Projets</a
+        >
+        
+        <a
+          href="/api/projects-rss.xml"
+          title="Flux RSS des projets"
+        >
+          <Icon type="lucide" name="rss" width={24} height={24} class="nav-rss-icon" />
+        </a>
+      </li>
+      <li class="nav-separator">/</li>
+      <li>
+        <input id="search" type="text" placeholder="Search (Ctrl+K)" />
+        <div id="search-results"></div>
+      </li>
+    </ul>
+    <button class="mobile-nav-toggle">
+      <Icon
+        type="lucide"
+        name="menu"
+        width={24}
+        height={24}
+        class="menu-closed"
+      />
+      <Icon type="lucide" name="x" width={24} height={24} class="menu-open" />
+    </button>
+  </div>
 </nav>
 <script is:inline>
   const searchElement = document.querySelector("#search");
