@@ -22,7 +22,7 @@ export default function CalendarClient() {
           headerToolbar: {
             left: 'prev,dynamicTitle,next',
             center: '',
-            right: 'today timeGridWeek,dayGridMonth,listYear downloadButton',
+            right: 'today timeGridWeek,dayGridMonth,listYear downloadButton subscribeButton',
           },
           customButtons: {
             dynamicTitle: { text: '' },
@@ -30,6 +30,13 @@ export default function CalendarClient() {
               text: '📥',
               click: () => window.open('/calendar.ics', '_blank'),
               hint: 'Télécharger le calendrier (.ics)',
+            },
+            subscribeButton: {
+              text: '📅',
+              click: () => {
+                window.location.href = 'webcal://hacklabesgi.netlify.app//calendar.ics';
+              },
+              hint: 'S’abonner au calendrier',
             },
           },
           buttonText: {

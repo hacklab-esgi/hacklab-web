@@ -147,6 +147,12 @@
   white-space: nowrap;
 }
 
+.glow-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+
 .team-pyramid {
   display: flex;
   flex-direction: column;
