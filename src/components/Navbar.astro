@@ -32,7 +32,7 @@ const path = Astro.url.pathname;
       </li>
       <li class="nav-separator">/</li>
       <li>
-        <input id="search" type="text" placeholder="Search (Ctrl+K)" />
+        <input id="search" type="text" placeholder="Search" />
         <div id="search-results"></div>
       </li>
     </ul>
@@ -56,10 +56,6 @@ const path = Astro.url.pathname;
   let focusIndex = -1;
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === "k" && e.ctrlKey) {
-      searchElement.focus();
-    }
-
     if (e.key === "Escape") {
       searchElement.blur();
       results.classList.remove("active");
@@ -99,7 +95,7 @@ const path = Astro.url.pathname;
   });
 
   searchElement?.addEventListener("blur", () => {
-    searchElement.placeholder = "Search (Ctrl+K)";
+    searchElement.placeholder = "Search";
   });
 
   searchElement?.addEventListener("blur", () => {
@@ -155,14 +151,6 @@ const path = Astro.url.pathname;
     navToggle.classList.toggle("active");
     document.querySelector("nav").classList.toggle("active");
   });
-
-  const handleTabletChange = () => {
-    if (window.matchMedia("(max-width: 640px)").matches) {
-      searchElement.placeholder = "Search";
-    } else {
-      searchElement.placeholder = "Search (Ctrl+K)";
-    }
-  };
 
   document.addEventListener("DOMContentLoaded", handleTabletChange);
   document.addEventListener("resize", handleTabletChange);
@@ -226,7 +214,7 @@ const path = Astro.url.pathname;
     border: none;
     outline: none;
     padding: 0.25rem 0.5rem;
-    width: 160px;
+    width: 100px;
   }
 
   #search::placeholder {
