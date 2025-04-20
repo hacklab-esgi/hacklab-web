@@ -1,7 +1,6 @@
 ---
 import '../styles/index.css';
 
-
 import Card from '../components/Card.astro';
 import Layout from '../layouts/Layout.astro';
 import Icon from '../components/Icon.astro';
@@ -9,14 +8,11 @@ import { getCollection } from 'astro:content';
 import { name, openGraph } from 'spectre:globals';
 import Calendar from '../components/Calendar.astro';
 
-const [posts, projects, quickInfo, socials] = await Promise.all([
+const [posts, projects, socials] = await Promise.all([
 	getCollection('posts', (post) => post.data.draft !== true),
 	getCollection('projects'),
-	getCollection('quickInfo'),
 	getCollection('socials')
 ]);
-
-// biome-ignore lint/style/noNonNullAssertion: Should always be defined.
 ---
 
 <Layout
@@ -29,12 +25,14 @@ const [posts, projects, quickInfo, socials] = await Promise.all([
 			<img width={80} height={80} src="/favicon.png" alt="HackLab logo" loading='eager' />
 			<h2>{name}</h2>
 			<ul class="overview-list">
-				{quickInfo.map((info) => (
-					<li>
-						<Icon type={info.data.icon.type} name={info.data.icon.name as any} width={24} height={24} class='glow-icon' />
-						<span>{info.data.text}</span>
-					</li>
-				))}
+				<li>
+					<Icon type="lucide" name="earth" width={24} height={24} class='glow-icon' />
+					<span>Made in France</span>
+				</li>
+				<li>
+					<Icon type="lucide" name="earth" width={24} height={24} class='glow-icon' />
+					<span>Laboratoire associatif de cybersécurité de l’ESGI.</span>
+				</li>
 			</ul>
 		</Card>
 		<Card>
