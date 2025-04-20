@@ -1,5 +1,3 @@
-![Spectre, a terminal-inspired theme for Astro.](./images/README.png)
-
 Spectre is a terminal-inspired theme for Astro, built using TypeScript and Astro.
 
 ## Getting Started

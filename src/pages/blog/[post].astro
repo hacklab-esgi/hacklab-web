@@ -70,7 +70,7 @@ const { Content, headings } = await render(post);
           <a href={`#_top`} class="active">{post.data.title}</a>
         </li>
         {
-          headings.map((heading, i) => (
+          headings.map((heading) => (
             <li class="toc-li" data-depth={heading.depth}>
               <a href={`#${heading.slug}`}>{heading.text}</a>
             </li>
