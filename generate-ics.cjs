@@ -9,9 +9,12 @@ const events = eventsData.map(ev => {
   const startDate = new Date(ev.start);
   const endDate = new Date(startDate.getTime() + ev.duration * 60 * 60 * 1000);
 
-  return {
+  const description = ev.description || '';
+  const speakerInfo = ev.speaker ? `\n\nIntervenant(s) : ${ev.speaker}` : '';
+
+const event = {
     title: ev.title,
-    description: ev.description,
+    description: description + speakerInfo,
     location: ev.location,
     start: [
       startDate.getFullYear(),
@@ -27,8 +30,12 @@ const events = eventsData.map(ev => {
       endDate.getHours(),
       endDate.getMinutes()
     ],
-    url: ev.url
-  };
+  };  
+  if (ev.url && ev.url.trim() !== '') {
+    event.url = ev.url;
+  }
+
+  return event;
 });
 
 // Création du fichier ICS

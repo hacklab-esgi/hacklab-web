@@ -52,16 +52,24 @@ export default function CalendarClient() {
               buttonText: 'Année',
             },
           },
-          events: events.map(ev => ({
-            title: ev.title,
-            start: ev.start,
-            extendedProps: {
-              duration: ev.duration,
-              location: ev.location,
-              description: ev.description,
-              url: ev.url,
-            },
-          })),
+          events: events.map(ev => {
+            const base = {
+              title: ev.title,
+              start: ev.start,
+              extendedProps: {
+                duration: ev.duration,
+                location: ev.location,
+                description: ev.description,
+                speaker: ev.speaker,
+              },
+            };
+          
+            if (ev.url && ev.url.trim() !== '') {
+              base.extendedProps.url = ev.url;
+            }
+          
+            return base;
+          }),
           eventDidMount(info) {
             const { location, description, url } = info.event.extendedProps;
             const startDate = new Date(info.event.start);
@@ -93,6 +101,10 @@ export default function CalendarClient() {
               🕒 ${heure}<br/>
               📍 ${location}<br/>
               📝 ${description || 'Aucune description'}<br/>
+              ${info.event.extendedProps.speaker && info.event.extendedProps.speaker.trim() !== ''
+                ? `👤 ${info.event.extendedProps.speaker}<br/>`
+                : ''
+              }
             `;
             tooltip.style.display = 'none';
             document.body.appendChild(tooltip);

@@ -1,25 +1,101 @@
 [
   {
-    "title": "Session Exploitation binaire",
-    "start": "2025-04-21T19:00:00",
+    "title": "L'énumération sur un système Linux pour l'Attaque / Défense",
+    "start": "2024-10-24T16:00:00",
+    "duration": 1,
+    "location": "ESGI Paris",
+    "speaker": "Admin 3e année",
+    "description": "Trouver et exploiter des éléments pour une évélation de privilèges</br>Limiter les vecteurs d'attaque de notre système",
+    "url": ""
+  },
+  {
+    "title": "Présentation Basic exploitation AD",
+    "start": "2024-12-19T16:00:00",
+    "duration": 1,
+    "location": "ESGI Paris, A07",
+    "speaker": "Bonziski, Spoon, Azox, lululufr",
+    "description": "Au programme:</br>- Présentation des concepts principaux</br>- Exemple d'exploitation kerberos</br>  - Kerberoasting</br>  - AS rep roasting</br>  - Golden ticket</br>- Exemple de privesc AD</br>  - Unquoted service Path</br>  - Insecure service Permissions</br></br>Accesssible pour tous les niveaux.",
+    "url": ""
+  },
+  {
+    "title": "L'aléatoire au cœur de la sécurité informatique",
+    "start": "2025-01-23T15:45:00",
+    "duration": 1,
+    "location": "ESGI Paris",
+    "speaker": "balkouille, SKIP, Hiruko",
+    "description": "Nous avons le plaisir de vous inviter à une conférence passionnante sur le thème : 'L'aléatoire au cœur de la sécurité informatique', qui se tiendra ce jeudi 23 Janvier 2025.</br></br>Un mauvais aléatoire peut compromettre vos systèmes les plus sécurisés. Venez découvrir pourquoi l'entropie est essentielle en cryptographie, les erreurs à éviter et les meilleures pratiques pour renforcer la sécurité de vos données.</br>Au programme :</br>- Différence entre hasard 'vrai' et pseudo-aléatoire.</br>- Rôle et utilisation de l'entropie dans nos systèmes modernes.</br>- Bonnes pratiques et outils pour auditer et améliorer l'aléatoire de vos systèmes.",
+    "url": ""
+  },
+  {
+    "title": "RETEX post-études",
+    "start": "2025-02-13T19:00:00",
+    "duration": 2,
+    "location": "ESGI Paris, A07",
+    "speaker": "Baptiste Demarche, Antoine Fevre, Joakim Pettersen, Léo Pérochon",
+    "description": "💡 Au programme :</br>- Leur retour d’expérience sur la recherche d’emploi 💼</br>- Leur parcours professionnel 🚀</br>- Leurs projets futurs 🔮</br>- Une session de questions/réponses 🎤",
+    "url": ""
+  },
+  {
+    "title": "Présentation de Exegol",
+    "start": "2025-02-24T19:00:00",
     "duration": 2,
     "location": "ESGI Paris",
-    "description": "Présentation d’une vulnérabilité binaire simple.",
+    "speaker": "Charlie Bromberg aka Shutdown",
+    "description": "💡 Au programme :</br>- Présentation du projet Exegol</br>- Prise en main et pratique</br>- AMA (Ask Me Anything)",
+    "url": ""
+  },
+  {
+    "title": "La présentation d’un tiering model adaptatif",
+    "start": "2025-03-19T19:00:00",
+    "duration": 1,
+    "location": "ESGI Paris, A07",
+    "speaker": "NZR, Bageto",
+    "description": "Vous avez de bonnes bases en systèmes et réseaux ? Vous avez suivi la conférence précédente ou vous avez de bonnes connaissances en Active Directory ? Alors cette conférence est faite pour vous !",
+    "url": ""
+  },
+  {
+    "title": "Hacking IoT: Du reverse de firmware jusqu'aux attaques sans fils",
+    "start": "2025-03-27T20:30:00",
+    "duration": 1,
+    "location": "Discord HackLab ESGI",
+    "speaker": "HSbF6",
+    "description": "Ils sont tout autour de nous, ils ont une importance cruciale dans notre vie et pourtant… Sont-ils réellement sécurisés ? Comment les objets connectés que vous jetez peuvent trahir vos secrets ? Pourquoi l'alarme de votre domicile ne vous protège (peut-être) pas ?</br></br>Pendant 1h, découvrez les secrets de la sécurité des loT !",
+    "url": ""
+  },
+  {
+    "title": "Rootkit noyau en langage Rust",
+    "start": "2025-04-7T19:00:00",
+    "duration": 1,
+    "location": "ESGI Paris, A07",
+    "speaker": "Rafik Frarma, Jules Leveillard, Antoine C., Mathis L.",
+    "description": "À travers cette présentation, vous apprendrez ce qu'est un rootkit et saurez reconnaître ses différents types se promenant sur le darkweb. Nous vous détaillerons des techniques et autres fourberies permettant à un rootkit d'être indétectable par le système. Nous verrons également les nombreuses contre-mesures plus ou moins efficaces et dresserons un portrait de célèbres rootkit. Par-dessus tout, nous vous proposons une approche programmatique pour créer son propre rootkit en langage Rust. Sortez votre costume de ninja, car nous allons nous camoufler dans les méandres du système Windows ; préparez-vous à en tromper ses gardiens.",
+    "url": ""
+  },
+  {
+    "title": "Explication des CTF",
+    "start": "2025-04-11T21:00:00",
+    "duration": 1,
+    "location": "Discord HackLab ESGI",
+    "speaker": "lululufr, Gelven",
+    "description": "🧠 C’est quoi un CTF (Capture The Flag) ?</br>🔍 Comment fonctionne une team CTF ?</br>💻 Pourquoi s’y investir quand on fait de la cybersécurité ?</br></br>Nous vous expliquerons tout ce vendredi lors d’une session ouverte à toutes et tous.</br></br>Un bon moyen de découvrir un univers aussi formateur que stimulant 👾",
+    "url": ""
+  },
+  {
+    "title": "Détecter les images manipulées par IA : objectif réaliste ou mission impossible ? ",
+    "start": "2025-04-28T19:00:00",
+    "duration": 1,
+    "location": "ESGI Paris, A07",
+    "speaker": "Rony Abecidan",
+    "description": "👀 Aujourd’hui, n’importe qui peut générer une fausse image bluffante avec une IA.</br>Sur les réseaux, dans la pub, voire dans des contextes sensibles... les dérives sont déjà là.</br>Mais est-ce qu’on peut encore les repérer ?</br>Les outils actuels sont-ils vraiment efficaces… ou à côté de la plaque ? 🤖🔍</br></br>👉 Rony Abecidan viendra nous expliquer les vraies limites des détecteurs actuels, pourquoi c’est un enjeu critique en cybersécurité, et ce qu’il reste à inventer pour ne pas se faire berner.",
     "url": "https://meetup.com/exploitation-binaire"
   },
   {
-    "title": "CTF interne",
-    "start": "2025-05-05T19:00:00",
-    "duration": 2,
-    "location": "Salle 204",
-    "description": "CTF interne pour les membres réguliers du HackLab."
-  },
-  {
-    "title": "Présentation OSINT",
-    "start": "2025-05-15T19:00:00",
-    "duration": 2,
+    "title": "GEOINT - Analyse d'une frappe en ukraine",
+    "start": "2025-05-15T15:45:00",
+    "duration": 1,
     "location": "ESGI Paris",
-    "description": "Initiation aux techniques OSINT.",
-    "url": "https://meetup.com/osint-session"
+    "speaker": "CuiCui",
+    "description": "Cette présentation retrace l’analyse géospatiale et informationnelle de l’attaque russe sur la ville de Sumy. En croisant des images satellites, des vidéos open source, elle identifie les points d’impact, la zone de lancement probable et les cibles visées.</br></br>Disclaimer : cette présentation n’est pas à but politique, de plus certaines vidéos et photo de guerre pourraient être diffusées (pas de cadavres bien sûr ), si cela vous perturbe merci de ne pas venir.",
+    "url": "https://meetup.com/exploitation-binaire"
   }
 ]
