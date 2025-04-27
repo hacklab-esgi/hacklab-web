@@ -157,27 +157,38 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
-  padding-top: 2rem;
 }
 
 .pyramid-level {
   display: flex;
-  gap: 1.5rem;
-  justify-content: center;
   flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.pyramid-title {
+  color: var(--primary);
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
 }
 
 .team-member {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: #1a1a1a;
+  background-color: #1a1a1a;
   border: 1px solid #353535;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: background 0.2s ease;
+  border-radius: 0.75rem;
+  text-align: center;
+  padding: 1rem;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
 }
 
 .team-member:hover {
@@ -191,9 +202,16 @@
   object-fit: cover;
 }
 
+.team-member span {
+  font-size: 0.85rem;
+  word-break: break-word;
+  color: white;
+}
+
 .member-info {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .member-name {
@@ -204,12 +222,7 @@
 
 .member-handle {
   font-size: 0.85rem;
-  color: #888;
-}
-
-.pyramid-title {
-  text-align: center;
-  font-size: 1.1rem;
-  margin-bottom: -1rem;
-  color: var(--primary);
+  color: white;
+  word-break: break-word;
+  max-width: 100%;
 }

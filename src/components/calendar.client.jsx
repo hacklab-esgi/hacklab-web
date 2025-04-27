@@ -14,7 +14,7 @@ export default function CalendarClient() {
       .then(events => {
         const calendar = new Calendar(el, {
           plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
-          initialView: 'dayGridMonth',
+          initialView: window.matchMedia('(max-width: 768px)').matches ? 'listYear' : 'dayGridMonth',
           locale: 'fr',
           firstDay: 1,
           hiddenDays: [0],
@@ -22,19 +22,14 @@ export default function CalendarClient() {
           headerToolbar: {
             left: 'prev,dynamicTitle,next',
             center: '',
-            right: 'today timeGridWeek,dayGridMonth,listYear downloadButton subscribeButton',
+            right: 'today timeGridWeek,dayGridMonth,listYear subscribeButton',
           },
           customButtons: {
             dynamicTitle: { text: '' },
-            downloadButton: {
-              text: '📥',
-              click: () => window.open('/calendar.ics', '_blank'),
-              hint: 'Télécharger le calendrier (.ics)',
-            },
             subscribeButton: {
               text: '📅',
               click: () => {
-                window.location.href = 'webcal://hacklabesgi.netlify.app//calendar.ics';
+                window.location.href = 'webcal://hacklabesgi.netlify.app/calendar.ics';
               },
               hint: 'S’abonner au calendrier',
             },
@@ -150,7 +145,8 @@ export default function CalendarClient() {
           if (button) button.textContent = title;
         };
 
-        calendar.on('datesSet', updateDynamicTitle);
+        calendar.on('datesSet', (info) => {updateDynamicTitle()});
+
         calendar.render();
       });
   }, []);

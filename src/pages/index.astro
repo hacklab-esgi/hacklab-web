@@ -1,108 +1,186 @@
 ---
-import '../styles/index.css';
+import "../styles/index.css";
 
-import Card from '../components/Card.astro';
-import Layout from '../layouts/Layout.astro';
-import Icon from '../components/Icon.astro';
-import { getCollection } from 'astro:content';
-import { name, openGraph } from 'spectre:globals';
-import Calendar from '../components/Calendar.astro';
+import Card from "../components/Card.astro";
+import Layout from "../layouts/Layout.astro";
+import Icon from "../components/Icon.astro";
+import { getCollection } from "astro:content";
+import { name, openGraph } from "spectre:globals";
+import Calendar from "../components/Calendar.astro";
 
 const [posts, projects, socials] = await Promise.all([
-	getCollection('posts', (post) => post.data.draft !== true),
-	getCollection('projects'),
-	getCollection('socials')
+  getCollection("posts", (post) => post.data.draft !== true),
+  getCollection("projects"),
+  getCollection("socials"),
 ]);
 ---
 
 <Layout
-	title={openGraph.home.title || name}
-	description={openGraph.home.description}
-	pagefindIgnore
+  title={openGraph.home.title || name}
+  description={openGraph.home.description}
+  pagefindIgnore
 >
-	<div class="layout-grid-left-sticky" slot="left">
-		<Card class="flex-col-card">
-			<img width={80} height={80} src="/favicon.png" alt="HackLab logo" loading='eager' />
-			<h2>{name}</h2>
-			<ul class="overview-list">
-				<li>
-					<Icon type="lucide" name="earth" width={24} height={24} class='glow-icon' />
-					<span>Made in France</span>
-				</li>
-				<li>
-					<Icon type="lucide" name="earth" width={24} height={24} class='glow-icon' />
-					<span>Laboratoire associatif de cybersécurité de l’ESGI.</span>
-				</li>
-			</ul>
-		</Card>
-		<Card>
-			<h3 class="no-mt">Réseaux sociaux</h3>
-			<ul class="overview-list-media">
-				{socials.map((item) => (
-					<li>
-						<a href={item.data.link} class="socials-link" target="_blank">
-							<Icon type={item.data.icon.type} name={item.data.icon.name as any} width={24} height={24} class='glow-icon' />
-							<span>{item.data.text}</span>
-						</a>
-					</li>
-				))}
-			</ul>
-		</Card>
-	</div>
-	<div class="layout-grid-right" slot="right">
-		<Card>
-			<div class="header-container">
-				<Icon type='lucide' name="user" width={24} height={24} class='glow-icon' />
-				<h2>Nos valeurs</h2>
-			</div>
-			<section class="card-grid">
-				<Card><b>By Tryharders</b><br/><br/>Organisées par des étudiants et des alumni de l'<a href="https://www.esgi.fr/" target="_blank">ESGI</a>.&nbsp;🎓<br/><br/>Notre objectif&nbsp: expérimenter, apprendre ensemble et partager autour de la cybersécurité.&nbsp;🧠</Card>
-				<Card><b>Open to All</b><br/><br/>Nos sessions sont ouvertes à tous, que vous soyez étudiant, professionnel ou simplement curieux.&nbsp;🙌</Card>
-				<Card><b>Built Together</b><br/><br/>Toute proposition est la bienvenue&nbsp;!<br/><br/>Venez partager vos idées, vos recherches ou juste votre passion avec nous&nbsp;🤝💡</Card>
-			</section>
-		</Card>
-		<Card>
-			<div class="header-container">
-				<Icon type='lucide' name="rss" width={24} height={24} class='glow-icon' />
-				<h2>Prochaines conférences</h2>
-			</div>
-			<div class="content-container">
-				<Calendar />
-			</div>
-		</Card>
-		<Card>
-			<div class="header-container">
-				<Icon type='lucide' name="rss" width={24} height={24} class='glow-icon' />
-				<h2>Derniers articles</h2>
-			</div>
-			<div class="content-container">
-				{posts.sort((a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime()).slice(0, 2).map((post) => (
-					<a href={`/blog/${post.id}`} class="post-container">
-						<div class="post-header">
-							<h3>{post.data.title}</h3>
-							<span class="post-date">{post.data.createdAt.toLocaleDateString()}</span>
-						</div>
-						<span>{post.data.description}</span>
-					</a>
-				))}
-			</div>
-		</Card>
-		<Card>
-			<div class="header-container">
-				<Icon type='lucide' name="folder-git" width={24} height={24} class='glow-icon' />
-				<h2>Derniers projets</h2>
-			</div>
-			<div class="content-container">
-				{projects.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).slice(0, 2).map((project) => (
-					<a href={`/projects/${project.id}`} class="post-container">
-						<div class="post-header">
-							<h3>{project.data.title}</h3>
-							<span class="post-date">{project.data.date.toLocaleDateString()}</span>
-						</div>
-						<span>{project.data.description}</span>
-					</a>
-				))}
-			</div>
-		</Card>
-	</div>
+  <div class="layout-grid-left-sticky" slot="left">
+    <Card class="flex-col-card">
+      <img
+        width={80}
+        height={80}
+        src="/favicon.png"
+        alt="HackLab logo"
+        loading="eager"
+      />
+      <h2>{name}</h2>
+      <ul class="overview-list">
+        <li>
+          <Icon
+            type="lucide"
+            name="earth"
+            width={24}
+            height={24}
+            class="glow-icon"
+          />
+          <span>Made in France</span>
+        </li>
+        <li>
+          <Icon
+            type="lucide"
+            name="earth"
+            width={24}
+            height={24}
+            class="glow-icon"
+          />
+          <span>Laboratoire associatif de cybersécurité de l’ESGI.</span>
+        </li>
+      </ul>
+    </Card>
+      <Card>
+        <h3 class="no-mt">Réseaux sociaux</h3>
+        <ul class="overview-list-media">
+          {
+            socials.map((item) => (
+              <li>
+                <a href={item.data.link} class="socials-link" target="_blank">
+                  <Icon
+                    type={item.data.icon.type}
+                    name={item.data.icon.name as any}
+                    width={24}
+                    height={24}
+                    class="glow-icon"
+                  />
+                  <span>{item.data.text}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </Card>
+  </div>
+  <div class="layout-grid-right" slot="right">
+    <Card>
+      <div class="header-container">
+        <Icon
+          type="lucide"
+          name="user"
+          width={24}
+          height={24}
+          class="glow-icon"
+        />
+        <h2>Nos valeurs</h2>
+      </div>
+      <section class="card-grid">
+        <Card
+          ><b>By Tryharders</b><br /><br />Organisées par des étudiants et des
+          alumni de l'<a href="https://www.esgi.fr/" target="_blank">ESGI</a
+          >.&nbsp;🎓<br /><br />Notre objectif&nbsp: expérimenter, apprendre
+          ensemble et partager autour de la cybersécurité.&nbsp;🧠</Card
+        >
+        <Card
+          ><b>Open to All</b><br /><br />Nos sessions sont ouvertes à tous, que
+          vous soyez étudiant, professionnel ou simplement curieux.&nbsp;🙌</Card
+        >
+        <Card
+          ><b>Built Together</b><br /><br />Toute proposition est la
+          bienvenue&nbsp;!<br /><br />Venez partager vos idées, vos recherches
+          ou juste votre passion avec nous&nbsp;🤝💡</Card
+        >
+      </section>
+    </Card>
+    <Card>
+      <div class="header-container">
+        <Icon
+          type="lucide"
+          name="rss"
+          width={24}
+          height={24}
+          class="glow-icon"
+        />
+        <h2>Prochaines conférences</h2>
+      </div>
+      <div class="content-container">
+        <Calendar />
+      </div>
+    </Card>
+    <Card>
+      <div class="header-container">
+        <Icon
+          type="lucide"
+          name="rss"
+          width={24}
+          height={24}
+          class="glow-icon"
+        />
+        <h2>Derniers articles</h2>
+      </div>
+      <div class="content-container">
+        {
+          posts
+            .sort(
+              (a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime()
+            )
+            .slice(0, 2)
+            .map((post) => (
+              <a href={`/blog/${post.id}`} class="post-container">
+                <div class="post-header">
+                  <h3>{post.data.title}</h3>
+                  <span class="post-date">
+                    {post.data.createdAt.toLocaleDateString()}
+                  </span>
+                </div>
+                <span>{post.data.description}</span>
+              </a>
+            ))
+        }
+      </div>
+    </Card>
+    <Card>
+      <div class="header-container">
+        <Icon
+          type="lucide"
+          name="folder-git"
+          width={24}
+          height={24}
+          class="glow-icon"
+        />
+        <h2>Derniers projets</h2>
+      </div>
+      <div class="content-container">
+        {
+          projects
+            .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+            .slice(0, 2)
+            .map((project) => (
+              <a href={`/projects/${project.id}`} class="post-container">
+                <div class="post-header">
+                  <h3>{project.data.title}</h3>
+                  <span class="post-date">
+                    {project.data.date.toLocaleDateString()}
+                  </span>
+                </div>
+                <span>{project.data.description}</span>
+              </a>
+            ))
+        }
+      </div>
+    </Card>
+  </div>
 </Layout>
