@@ -1,0 +1,50 @@
+name: Proposer un article 📝
+description: Proposez ici votre article de blog pour HackLab !
+title: "[Article] Votre titre ici"
+labels: ["article"]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Titre
+      placeholder: "Ex: Analyse d'une faille CVE-2025-0001"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Courte description de l'article (1 ou 2 phrases)
+      placeholder: "Cet article explique comment exploiter..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: content
+    attributes:
+      label: Contenu complet (en Markdown)
+      placeholder: |
+        ## Introduction
+        Voici comment exploiter une vulnérabilité...
+        
+        ## Méthodologie
+        ...
+    validations:
+      required: true
+
+  - type: input
+    id: author
+    attributes:
+      label: Auteur
+      placeholder: "Ex: HackLab ESGI"
+    validations:
+      required: true
+
+  - type: input
+    id: tags
+    attributes:
+      label: Tags (séparés par des virgules)
+      placeholder: "web, sécurité, reverse"
+    validations:
+      required: true

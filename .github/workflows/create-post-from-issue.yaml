@@ -1,0 +1,46 @@
+name: 🛠️ Créer un article depuis une Issue
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  generate-post:
+    if: github.event.issue.labels.*.name contains 'article'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Créer le fichier de l'article
+        run: |
+          mkdir -p src/content/posts
+          FILE_NAME="src/content/posts/$(date +'%Y-%m-%d')-${{ github.event.issue.number }}.mdx"
+          echo "---" > $FILE_NAME
+          echo "title: \"${{ github.event.issue.title }}\"" >> $FILE_NAME
+          echo "description: \"$(echo "${{ github.event.issue.body }}" | grep -oP '(?<=\*\*Description\*\*\n\n).*?(?=\n\n)' | tr -d '\r')\"" >> $FILE_NAME
+          echo "createdAt: $(date +'%Y-%m-%d')" >> $FILE_NAME
+          echo "author: \"$(echo "${{ github.event.issue.body }}" | grep -oP '(?<=\*\*Auteur\*\*\n\n).*?(?=\n\n)' | tr -d '\r')\"" >> $FILE_NAME
+          echo "tags: [$(echo "${{ github.event.issue.body }}" | grep -oP '(?<=\*\*Tags\*\*\n\n).*?(?=\n\n)' | sed 's/, */, /g')]" >> $FILE_NAME
+          echo "draft: true" >> $FILE_NAME
+          echo "---" >> $FILE_NAME
+          echo "" >> $FILE_NAME
+          echo "$(echo "${{ github.event.issue.body }}" | grep -oP '(?<=\*\*Contenu complet \(en Markdown\)\*\*\n\n).*' | tr -d '\r')" >> $FILE_NAME
+
+      - name: Commit & Push sur une branche dédiée
+        run: |
+          BRANCH="article-from-issue-${{ github.event.issue.number }}"
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          git checkout -b $BRANCH
+          git add src/content/posts/
+          git commit -m "🔖 Nouvel article depuis l'issue #${{ github.event.issue.number }}"
+          git push origin $BRANCH
+
+      - name: Créer la Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          branch: article-from-issue-${{ github.event.issue.number }}
+          title: "🔖 Proposer article: ${{ github.event.issue.title }}"
+          body: "Cet article a été généré depuis l'issue #${{ github.event.issue.number }}.\n\nMerci de relire et valider avant de merger."
+          base: main
