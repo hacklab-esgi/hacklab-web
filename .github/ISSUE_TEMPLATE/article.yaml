@@ -1,12 +1,11 @@
 name: Proposer un article 📝
-description: Proposez ici votre article de blog pour HackLab !
-title: "[Article] Votre titre ici"
+description: Proposez ici votre article de blog pour le HackLab !
 labels: ["article"]
 body:
   - type: input
     id: title
     attributes:
-      label: Titre
+      label: Titre de l'Article
       placeholder: "Ex: Analyse d'une faille CVE-2025-0001"
     validations:
       required: true

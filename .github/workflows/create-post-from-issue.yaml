@@ -2,45 +2,83 @@ name: 🛠️ Créer un article depuis une Issue
 
 on:
   issues:
-    types: [opened, edited]
+    types: [opened]
 
 jobs:
-  generate-post:
-    if: contains(join(github.event.issue.labels.*.name, ','), 'article')
+  create-article:
+    if: |
+      contains(github.event.issue.labels.*.name, 'article')
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Créer le fichier de l'article
-        run: |
-          mkdir -p src/content/posts
-          FILE_NAME="src/content/posts/$(date +'%d-%m-%Y')-${{ github.event.issue.number }}.mdx"
-          echo "---" > $FILE_NAME
-          echo "title: \"${{ github.event.issue.title }}\"" >> $FILE_NAME
-          echo "description: \"$(echo "${{ github.event.issue.body }}" | grep -oP '(?<=\*\*Description\*\*\n\n).*?(?=\n\n)' | tr -d '\r')\"" >> $FILE_NAME
-          echo "createdAt: $(date +'%Y-%m-%d')" >> $FILE_NAME
-          echo "author: \"$(echo "${{ github.event.issue.body }}" | grep -oP '(?<=\*\*Auteur\*\*\n\n).*?(?=\n\n)' | tr -d '\r')\"" >> $FILE_NAME
-          echo "tags: [$(echo "${{ github.event.issue.body }}" | grep -oP '(?<=\*\*Tags\*\*\n\n).*?(?=\n\n)' | sed 's/, */, /g')]" >> $FILE_NAME
-          echo "draft: true" >> $FILE_NAME
-          echo "---" >> $FILE_NAME
-          echo "" >> $FILE_NAME
-          echo "$(echo "${{ github.event.issue.body }}" | grep -oP '(?<=\*\*Contenu complet \(en Markdown\)\*\*\n\n).*' | tr -d '\r')" >> $FILE_NAME
-
-      - name: Commit & Push sur une branche dédiée
-        run: |
-          BRANCH="article-from-issue-${{ github.event.issue.number }}"
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "actions@github.com"
-          git checkout -b $BRANCH
-          git add src/content/posts/
-          git commit -m "🔖 Nouvel article depuis l'issue #${{ github.event.issue.number }}"
-          git push origin $BRANCH
-
-      - name: Créer la Pull Request
-        uses: peter-evans/create-pull-request@v5
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          branch: article-from-issue-${{ github.event.issue.number }}
-          title: "🔖 Proposer article: ${{ github.event.issue.title }}"
-          body: "Cet article a été généré depuis l'issue #${{ github.event.issue.number }}.\n\nMerci de relire et valider avant de merger."
-          base: main
+          node-version: 20
+
+      - name: Create article from Issue
+        run: |
+          TITLE="$(echo "${{ github.event.issue.body }}" | grep -Po '(?<=### Titre de l\\'Article\\n).*' | head -1 | xargs)"
+          DESCRIPTION="$(echo "${{ github.event.issue.body }}" | grep -Po '(?<=### Description\\n).*' | head -1 | xargs)"
+          CONTENT="$(echo "${{ github.event.issue.body }}" | awk '/### Contenu complet/{flag=1;next}/### Auteur/{flag=0}flag')"
+          AUTHOR="$(echo "${{ github.event.issue.body }}" | grep -Po '(?<=### Auteur\\n).*' | head -1 | xargs)"
+          TAGS_RAW="$(echo "${{ github.event.issue.body }}" | grep -Po '(?<=### Tags \\(séparés par des virgules\\)\\n).*' | head -1 | xargs)"
+          
+          # Nettoyer le titre pour créer un slug
+          SLUG=$(echo "$TITLE" | iconv -t ascii//TRANSLIT | sed 's/[^A-Za-z0-9 ]//g' | tr 'A-Z' 'a-z' | sed 's/ /-/g')
+
+          # Nettoyer les tags
+          TAGS=$(echo "$TAGS_RAW" | sed 's/, */,\\n  - /g')
+
+          # Date actuelle
+          DATE=$(date +"%m-%d-%Y")
+
+          # Créer dossier
+          mkdir -p src/content/posts
+
+          # Générer fichier
+          cat << EOF > "src/content/posts/$SLUG.md"
+---
+title: "$TITLE"
+description: "$DESCRIPTION"
+createdAt: $DATE
+author: $AUTHOR
+draft: true
+tags:
+  - $TAGS
+---
+
+$CONTENT
+EOF
+
+      - name: Create new branch and push
+        run: |
+          BRANCH_NAME="content/articles/$SLUG"
+          git checkout -b "$BRANCH_NAME"
+          git add src/content/posts/
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git commit -m "📝 Create article: $TITLE"
+          git push origin "$BRANCH_NAME"
+
+      - name: Create Pull Request
+        uses: devops-infra/action-pull-request@v0.5.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          source_branch: "content/articles/$SLUG"
+          target_branch: "main"
+          title: "📝 Nouvel article: $TITLE"
+          body: |
+            Un nouvel article a été proposé par **$AUTHOR**.
+
+            Merci de faire une relecture avant de merger !
+          reviewers: ""
+          assignees: ""
+          labels: "article,review-needed"
