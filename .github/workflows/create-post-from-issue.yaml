@@ -62,15 +62,15 @@ jobs:
       - name: Commit + Push 💪
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "📝 Nouveau post: ${{ env.TITLE }}"
-          branch: article_${{ env.SLUG }}
+          commit_message: "📝 Nouveau post: $TITLE
+          branch: article_$SLUG
           create_branch: true
 
       - name: Créer une Pull Request 🔀
         uses: peter-evans/create-pull-request@v5
         with:
-          title: "📝 Proposition d'article: ${{ env.TITLE }}"
+          title: "📝 Proposition d'article: $TITLE
           body: "Cet article a été proposé automatiquement depuis une Issue.\n\nMerci de le relire et de valider !"
           labels: article
           base: master
-          branch: article/${{ env.SLUG }}
+          branch: article_$SLUG
