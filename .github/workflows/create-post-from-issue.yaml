@@ -6,7 +6,7 @@ on:
 
 jobs:
   generate-post:
-    if: github.event.issue.labels.*.name contains 'article'
+    if: contains(join(github.event.issue.labels.*.name, ','), 'article')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
