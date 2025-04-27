@@ -129,12 +129,30 @@
   list-style: none;
 }
 
+.layout-desktop-only {
+  display: block;
+}
+
+.layout-mobile-only {
+  display: none;
+}
+
 /* Deux colonnes uniquement si la hauteur de l'écran est faible */
 @media screen and (max-height: 1300px) {
   .overview-list-media {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+@media screen and (max-width: 1380px) {
+  .layout-desktop-only {
+    display: none;
+  }
+  .layout-mobile-only {
+    display: block;
+  }
+}
+
 
 /* Style pour chaque item */
 .socials-link {

@@ -53,7 +53,7 @@ const [posts, projects, socials] = await Promise.all([
         </li>
       </ul>
     </Card>
-      <Card>
+      <Card class="layout-desktop-only">
         <h3 class="no-mt">Réseaux sociaux</h3>
         <ul class="overview-list-media">
           {
@@ -191,6 +191,27 @@ const [posts, projects, socials] = await Promise.all([
             ))
         }
       </div>
+    </Card>
+    <Card class="layout-mobile-only">
+      <h3 class="no-mt">Réseaux sociaux</h3>
+      <ul class="overview-list-media">
+        {
+          socials.map((item) => (
+            <li>
+              <a href={item.data.link} class="socials-link" target="_blank">
+                <Icon
+                  type={item.data.icon.type}
+                  name={item.data.icon.name as any}
+                  width={24}
+                  height={24}
+                  class="glow-icon"
+                />
+                <span>{item.data.text}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </Card>
   </div>
 </Layout>
