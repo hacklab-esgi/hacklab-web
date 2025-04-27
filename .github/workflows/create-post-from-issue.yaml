@@ -15,7 +15,7 @@ jobs:
       - name: Créer le fichier de l'article
         run: |
           mkdir -p src/content/posts
-          FILE_NAME="src/content/posts/$(date +'%Y-%m-%d')-${{ github.event.issue.number }}.mdx"
+          FILE_NAME="src/content/posts/$(date +'%d-%m-%Y')-${{ github.event.issue.number }}.mdx"
           echo "---" > $FILE_NAME
           echo "title: \"${{ github.event.issue.title }}\"" >> $FILE_NAME
           echo "description: \"$(echo "${{ github.event.issue.body }}" | grep -oP '(?<=\*\*Description\*\*\n\n).*?(?=\n\n)' | tr -d '\r')\"" >> $FILE_NAME
