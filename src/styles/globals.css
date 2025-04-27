@@ -1,6 +1,15 @@
+@font-face {
+  font-family: 'ConsolasWeb';
+  src: url('/fonts/Consolas.woff2') format('woff2'),
+       url('/fonts/Consolas.ttf') format('truetype');
+  font-display: swap;
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
-  --font-sans: Consolas, sans-serif;
-  --font-heading: Consolas, monospace;
+  --font-sans: 'ConsolasWeb', Consolas, sans-serif;
+  --font-heading: 'ConsolasWeb', Consolas, monospace;
   --primary: #095496;
   --primary-rgb: 9, 84, 150;
   --primary-light: #045b83;
