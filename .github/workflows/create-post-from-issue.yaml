@@ -4,6 +4,10 @@ on:
   issues:
     types: [opened, edited]
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   create-article:
     if: contains(github.event.issue.labels.*.name, 'article')
@@ -13,66 +17,51 @@ jobs:
       - name: Checkout du dépôt
         uses: actions/checkout@v4
 
-      - name: Nettoyer les données de l'Issue
+      - name: Extraction des données de l'Issue
         id: extract
         run: |
-          BODY=$(echo "${{ github.event.issue.body }}")
+          echo "TITLE=$(echo \"${{ github.event.issue.body }}\" | grep -oP '(?<=\*\*Titre de l\'Article\*\*\n).*' | head -n 1 | sed 's/\r//g')" >> "$GITHUB_ENV"
+          echo "DESCRIPTION=$(echo \"${{ github.event.issue.body }}\" | grep -oP '(?<=\*\*Description\*\*\n).*' | head -n 1 | sed 's/\r//g')" >> "$GITHUB_ENV"
+          echo "CONTENT=$(echo \"${{ github.event.issue.body }}\" | awk '/\*\*Contenu complet/ {flag=1; next} /\*\*Auteur/ {flag=0} flag' | sed 's/\r//g')" >> "$GITHUB_ENV"
+          echo "AUTHOR=$(echo \"${{ github.event.issue.body }}\" | grep -oP '(?<=\*\*Auteur\*\*\n).*' | head -n 1 | sed 's/\r//g')" >> "$GITHUB_ENV"
+          echo "TAGS=$(echo \"${{ github.event.issue.body }}\" | grep -oP '(?<=\*\*Tags \(s\u00e9par\u00e9s par des virgules\)\*\*\n).*' | head -n 1 | sed 's/\r//g')" >> "$GITHUB_ENV"
 
-          TITLE=$(echo "$BODY" | awk '/^### Titre de l.Article/{getline; print}' | xargs)
-          DESCRIPTION=$(echo "$BODY" | awk '/^### Description/{getline; print}' | xargs)
-          AUTHOR=$(echo "$BODY" | awk '/^### Auteur/{getline; print}' | xargs)
-          TAGS=$(echo "$BODY" | awk '/^### Tags/{getline; print}' | xargs)
 
-          # Extrait tout le contenu après "### Contenu complet" jusqu'à la fin
-          CONTENT=$(echo "$BODY" | awk '/^### Contenu complet/{found=1; next} found' | sed 's/^/  /')
-
-          SLUG=$(echo "$TITLE" | iconv -f utf8 -t ascii//TRANSLIT | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/^-+|-+$//g')
-          DATE=$(date +"%d-%m-%Y")
-
-          echo "slug=$SLUG" >> $GITHUB_OUTPUT
-          echo "title=$TITLE" >> $GITHUB_OUTPUT
-          echo "description=$DESCRIPTION" >> $GITHUB_OUTPUT
-          echo "author=$AUTHOR" >> $GITHUB_OUTPUT
-          echo "tags=$TAGS" >> $GITHUB_OUTPUT
-
-          # On sauve temporairement CONTENT dans un fichier séparé
-          echo "$CONTENT" > content_temp.txt
-
-      - name: Créer l'article
+      - name: Génération du fichier article
         run: |
-          mkdir -p content/posts
+          SLUG=$(echo "$TITLE" | iconv -f utf8 -t ascii//TRANSLIT | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//;s/-$//')
+          DATE=$(date +"%d-%m-%Y")
+          FILE="src/content/posts/$SLUG.md"
 
-          FILE="content/posts/${{ steps.extract.outputs.slug }}.md"
-
-          if [ -f "$FILE" ]; then
-            echo "❌ Le fichier existe déjà, on stoppe."
-            exit 1
-          fi
+          mkdir -p src/content/posts
 
           echo "---" > "$FILE"
-          echo "title: \"${{ steps.extract.outputs.title }}\"" >> "$FILE"
-          echo "description: \"${{ steps.extract.outputs.description }}\"" >> "$FILE"
-          echo "createdAt: \"${{ steps.extract.outputs.date }}\"" >> "$FILE"
-          echo "author: \"${{ steps.extract.outputs.author }}\"" >> "$FILE"
+          echo "title: \"$TITLE\"" >> "$FILE"
+          echo "description: \"$DESCRIPTION\"" >> "$FILE"
+          echo "createdAt: $DATE" >> "$FILE"
+          echo "author: $AUTHOR" >> "$FILE"
           echo "draft: true" >> "$FILE"
           echo "tags:" >> "$FILE"
-
-          for tag in $(echo "${{ steps.extract.outputs.tags }}" | tr ',' '\n'); do
+          for tag in $(echo $TAGS | tr ',' '\n'); do
             echo "  - $(echo $tag | xargs)" >> "$FILE"
           done
-
           echo "---" >> "$FILE"
+
           echo "" >> "$FILE"
-
-          # Ajoute proprement le contenu
-          cat content_temp.txt >> "$FILE"
-
-          # Nettoyage du fichier temporaire
-          rm content_temp.txt
-
+          echo "$CONTENT" >> "$FILE"
 
       - name: Commit + Push dans main
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "📝 Nouvel article: ${{ steps.extract.outputs.title }}"
-          branch: master
+          commit_message: "📝 Nouveau post: $TITLE"
+          branch: article/${{ env.SLUG }}
+          create_branch: true
+
+      - name: Créer une Pull Request 🔀
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: "📝 Proposition d'article: $TITLE"
+          body: "Cet article a été proposé automatiquement depuis une Issue.\n\nMerci de le relire et de valider !"
+          labels: article
+          base: master
+          branch: article/${{ env.SLUG }}
