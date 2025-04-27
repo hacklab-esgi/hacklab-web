@@ -195,6 +195,24 @@ main {
   color: #c7c7c7;
 }
 
+.post-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+
+.post-description {
+  font-size: 0.85rem;
+  color: #c7c7c7;
+}
+
+.post-author {
+  font-size: 1rem;
+  color: #999;
+  white-space: nowrap; /* évite que l'auteur passe à la ligne */
+}
+
 .text-glow {
   color: var(--primary);
   filter: drop-shadow(0 0 12px var(--primary));
@@ -227,6 +245,11 @@ main {
   }
 
   .post-header {
+    flex-direction: column;
+    gap: .5rem;
+  }
+
+  .post-info {
     flex-direction: column;
     gap: .5rem;
   }

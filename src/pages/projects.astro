@@ -59,10 +59,15 @@ const projects = await getCollection("projects");
                 <div class="post-header">
                   <h3>{post.data.title}</h3>
                   <span class="post-date">
-                    {post.data.date.toLocaleDateString()}
+                    {post.data.date.toLocaleDateString('fr-FR')}
                   </span>
                 </div>
-                <span>{post.data.description}</span>
+                <div class="post-info">
+                  <span class="post-description">{post.data.description}</span>
+                  {post.data.author && (
+                    <span class="post-author">By @{post.data.author}</span>
+                  )}
+                </div>
               </a>
             ))
         }

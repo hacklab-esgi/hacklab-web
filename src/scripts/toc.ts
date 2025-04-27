@@ -2,11 +2,35 @@ const tocLinks = document.querySelectorAll<HTMLAnchorElement>('.toc-li a');
 const headings = document.querySelectorAll<HTMLElement>('#_top, article h1, article h2, article h3, article h4');
 const tocMap = new Map<Element, HTMLElement>();
 
+const OFFSET_MAIN_TITLE = 152; // Décalage si on clique sur le titre principal
+const OFFSET_SECTION = 100;    // Décalage pour les autres sections
+
 // Map TOC links to their corresponding headings
 for (const link of tocLinks) {
   const id = link.href.split('#')[1];
   const heading = document.getElementById(id);
   if (heading) tocMap.set(heading, link as HTMLElement);
+
+  // Ajout du comportement de scroll propre
+  link.addEventListener('click', (e) => {
+    const targetId = link.getAttribute('href')?.substring(1);
+    if (!targetId) return;
+
+    const targetElement = document.getElementById(targetId);
+    if (!targetElement) return;
+
+    e.preventDefault();
+
+    const isMainTitle = targetId === '_top';
+    const offset = isMainTitle ? OFFSET_MAIN_TITLE : OFFSET_SECTION;
+
+    const top = targetElement.getBoundingClientRect().top + window.scrollY - offset;
+
+    window.scrollTo({
+      top,
+      behavior: 'smooth',
+    });
+  });
 }
 
 function checkVisibility(el: HTMLElement) {
@@ -19,20 +43,14 @@ const observer = new IntersectionObserver(() => {
   let visible: HTMLElement | null = null;
 
   for (const heading of headings) {
-    // check if this specific heading is visible on the screen
     const isVisible = checkVisibility(heading);
-
     const link = tocMap.get(heading);
 
-    if (!isVisible) {
-      continue;
-    }
+    if (!isVisible) continue;
 
-    if(link) link.classList.add('active');
+    if (link) link.classList.add('active');
 
-    if (!visible) {
-      visible = heading;
-    }
+    if (!visible) visible = heading;
 
     break;
   }

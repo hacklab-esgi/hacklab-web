@@ -51,7 +51,10 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 const { Content, headings } = await render(post);
+
 ---
+
+
 
 <Layout
   title={post.data.title}
@@ -64,7 +67,7 @@ const { Content, headings } = await render(post);
 >
   <div class="layout-grid-left-sticky" slot="left">
     <Card class="toc-card">
-      <h2 class="no-mt">Table of contents</h2>
+      <h2 class="no-mt">Sommaire</h2>
       <ol>
         <li class="toc-li">
           <a href={`#_top`} class="active">{post.data.title}</a>
@@ -81,25 +84,32 @@ const { Content, headings } = await render(post);
   </div>
   <article slot="right" data-pagefind-body>
     <Card>
-      <div class="article-header" id="_top" data-pagefind-ignore>
-        <Image
-          quality={100}
-          class="article-image"
-          src={post.data.image}
-          alt={post.data.title}
-        />
+      <div class={`article-header ${!post.data.image ? 'no-image' : ''}`} id="_top" data-pagefind-ignore>
+        {
+          post.data.image && (
+            <Image
+              quality={100}
+              class="article-image"
+              src={post.data.image}
+              alt={post.data.title}
+            />
+          )
+        }
         <div class="header">
           <div>
             <h1 class="no-mt article-h1">{post.data.title}</h1>
           </div>
           <div class="article-info">
-            <span>{post.data.createdAt.toLocaleDateString()}</span>
-            <span>/</span>
+            <span>📅&nbsp;{post.data.createdAt.toLocaleDateString('fr-FR')}</span>
             <span
-              >{timeToRead(post)} minute{timeToRead(post) === 1 ? "" : "s"} to read</span
+              >⏱️&nbsp;{timeToRead(post)}&nbsp;minute{timeToRead(post) === 1 ? "" : "s"}&nbsp;à&nbsp;lire</span
             >
-            <span>/</span>
-            <span>Tags: {post.data.tags.map((tag) => tag.id).join(", ")}</span>
+            <span>🏷️&nbsp;Tags:&nbsp;{post.data.tags.map((tag) => tag.id).join(", ")}</span>
+            {post.data.author && (
+              <>
+                <span>✍️&nbsp;By&nbsp;@{post.data.author}</span>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -152,7 +162,6 @@ const { Content, headings } = await render(post);
     position: sticky;
     top: 2rem;
   }
-
   article {
     display: flex;
     flex-direction: column;
@@ -163,9 +172,10 @@ const { Content, headings } = await render(post);
     border-color: #353535 !important;
   }
 
+
   @media screen and (max-width: 640px) {
-    article {
-      gap: 1rem;
-    }
+  article {
+    gap: 1rem;
   }
+}
 </style>

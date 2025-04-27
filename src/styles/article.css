@@ -88,6 +88,7 @@ ol li a.active {
   width: 100%;
   height: fit-content;
   scroll-margin-top: 2rem;
+  min-height: 6rem;
 }
 
 .header {
@@ -99,6 +100,13 @@ ol li a.active {
   left: 1rem;
   max-width: calc(100% - 3rem);
   z-index: 2;
+}
+
+.article-header.no-image .header {
+  position: relative;
+  bottom: 0;
+  left: 0;
+  margin-top: 1rem;
 }
 
 .article-h1 {
@@ -116,18 +124,19 @@ ol li a.active {
 
 .article-info {
   display: flex;
-  flex-direction: row;
-  gap: .5rem;
-  font-family: 'Ghost Mono', monospace;
-  background: #ffffff;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: #ffffff; /* fond blanc pour les infos */
   color: #000000;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-  padding: 0 .75rem;
+  padding: 0.75rem;
+  gap: 0.5rem;
+  font-size: 0.925rem;
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
   width: fit-content;
 }
 
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 740px) {
   .header {
     position: relative;
     bottom: 0;
@@ -139,16 +148,9 @@ ol li a.active {
 
   .article-h1 {
     display: inline;
-    background-color: transparent;
-    padding: 0;
-    color: white;
-  }
-
-  .article-info {
-    display: block;
-    background-color: transparent;
-    padding: 0;
-    color: white;
+    background-color: #ffffff; /* <-- on garde le fond blanc même en mobile */
+    padding: 0.25rem 0.675rem;
+    color: #000000; /* texte noir */
   }
 }
 
