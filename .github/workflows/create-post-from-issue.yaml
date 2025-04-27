@@ -75,4 +75,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "📝 Nouvel article: ${{ steps.extract.outputs.title }}"
-          branch: main
+          branch: master
