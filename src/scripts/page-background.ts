@@ -82,14 +82,8 @@ class PageBackground {
     const fontSize = Math.max(16, Math.min(32, window.innerWidth / 40));
   
     // Loop through the canvas and draw the text
-    for(let i = 0; i < lines; i++) {
-      for(let j = 0; j < letters; j++) {
-        this.baseCtx.font = `${fontSize}px Consolas, monospace`;
-        this.baseCtx.textAlign = 'start';
-        this.baseCtx.textBaseline = 'top';
-        this.baseCtx.fillStyle = 'rgba(255, 255, 255, 0.01)';
-        this.baseCtx.fillText(text[j % text.length], j * 17, i * 35);
-      
+    for (let i = 0; i < lines; i++) {
+      for (let j = 0; j < letters; j++) {
         this.letterPositions.push({
           x: j * 17,
           y: i * 35,
