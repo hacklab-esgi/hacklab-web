@@ -16,17 +16,17 @@ jobs:
       - name: Nettoyer les données de l'Issue
         id: extract
         run: |
-          # Extraction des champs
-          TITLE="$(echo "${{ github.event.issue.body }}" | awk '/^### Titre de l.Article/{getline; print}' | xargs)"
-          DESCRIPTION="$(echo "${{ github.event.issue.body }}" | awk '/^### Description/{getline; print}' | xargs)"
-          CONTENT="$(echo "${{ github.event.issue.body }}" | awk '/^### Contenu complet/{getline; getline; print}' RS='' | sed 's/^/    /')"
-          AUTHOR="$(echo "${{ github.event.issue.body }}" | awk '/^### Auteur/{getline; print}' | xargs)"
-          TAGS="$(echo "${{ github.event.issue.body }}" | awk '/^### Tags/{getline; print}' | xargs)"
+          BODY=$(echo "${{ github.event.issue.body }}")
 
-          # Nettoyage du titre pour créer un slug
+          TITLE=$(echo "$BODY" | awk '/^### Titre de l.Article/{getline; print}' | xargs)
+          DESCRIPTION=$(echo "$BODY" | awk '/^### Description/{getline; print}' | xargs)
+          AUTHOR=$(echo "$BODY" | awk '/^### Auteur/{getline; print}' | xargs)
+          TAGS=$(echo "$BODY" | awk '/^### Tags/{getline; print}' | xargs)
+
+          # Extrait tout le contenu après "### Contenu complet" jusqu'à la fin
+          CONTENT=$(echo "$BODY" | awk '/^### Contenu complet/{found=1; next} found' | sed 's/^/  /')
+
           SLUG=$(echo "$TITLE" | iconv -f utf8 -t ascii//TRANSLIT | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/^-+|-+$//g')
-
-          # Date au format dd-MM-yyyy
           DATE=$(date +"%d-%m-%Y")
 
           echo "slug=$SLUG" >> $GITHUB_OUTPUT
@@ -34,7 +34,9 @@ jobs:
           echo "description=$DESCRIPTION" >> $GITHUB_OUTPUT
           echo "author=$AUTHOR" >> $GITHUB_OUTPUT
           echo "tags=$TAGS" >> $GITHUB_OUTPUT
-          echo "content=$CONTENT" >> $GITHUB_OUTPUT
+
+          # On sauve temporairement CONTENT dans un fichier séparé
+          echo "$CONTENT" > content_temp.txt
 
       - name: Créer l'article
         run: |
@@ -55,14 +57,19 @@ jobs:
           echo "draft: true" >> "$FILE"
           echo "tags:" >> "$FILE"
 
-          # Ajouter chaque tag proprement
           for tag in $(echo "${{ steps.extract.outputs.tags }}" | tr ',' '\n'); do
             echo "  - $(echo $tag | xargs)" >> "$FILE"
           done
 
           echo "---" >> "$FILE"
           echo "" >> "$FILE"
-          echo "${{ steps.extract.outputs.content }}" >> "$FILE"
+
+          # Ajoute proprement le contenu
+          cat content_temp.txt >> "$FILE"
+
+          # Nettoyage du fichier temporaire
+          rm content_temp.txt
+
 
       - name: Commit + Push dans main
         uses: stefanzweifel/git-auto-commit-action@v5
