@@ -2,83 +2,70 @@ name: 🛠️ Créer un article depuis une Issue
 
 on:
   issues:
-    types: [opened]
+    types: [opened, edited]
 
 jobs:
   create-article:
-    if: |
-      contains(github.event.issue.labels.*.name, 'article')
+    if: contains(github.event.issue.labels.*.name, 'article')
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: write
-      pull-requests: write
-
     steps:
-      - name: Checkout
+      - name: Checkout du dépôt
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Create article from Issue
+      - name: Nettoyer les données de l'Issue
+        id: extract
         run: |
-          TITLE="$(echo "${{ github.event.issue.body }}" | grep -Po '(?<=### Titre de l\\'Article\\n).*' | head -1 | xargs)"
-          DESCRIPTION="$(echo "${{ github.event.issue.body }}" | grep -Po '(?<=### Description\\n).*' | head -1 | xargs)"
-          CONTENT="$(echo "${{ github.event.issue.body }}" | awk '/### Contenu complet/{flag=1;next}/### Auteur/{flag=0}flag')"
-          AUTHOR="$(echo "${{ github.event.issue.body }}" | grep -Po '(?<=### Auteur\\n).*' | head -1 | xargs)"
-          TAGS_RAW="$(echo "${{ github.event.issue.body }}" | grep -Po '(?<=### Tags \\(séparés par des virgules\\)\\n).*' | head -1 | xargs)"
-          
-          # Nettoyer le titre pour créer un slug
-          SLUG=$(echo "$TITLE" | iconv -t ascii//TRANSLIT | sed 's/[^A-Za-z0-9 ]//g' | tr 'A-Z' 'a-z' | sed 's/ /-/g')
+          # Extraction des champs
+          TITLE="$(echo "${{ github.event.issue.body }}" | awk '/^### Titre de l.Article/{getline; print}' | xargs)"
+          DESCRIPTION="$(echo "${{ github.event.issue.body }}" | awk '/^### Description/{getline; print}' | xargs)"
+          CONTENT="$(echo "${{ github.event.issue.body }}" | awk '/^### Contenu complet/{getline; getline; print}' RS='' | sed 's/^/    /')"
+          AUTHOR="$(echo "${{ github.event.issue.body }}" | awk '/^### Auteur/{getline; print}' | xargs)"
+          TAGS="$(echo "${{ github.event.issue.body }}" | awk '/^### Tags/{getline; print}' | xargs)"
 
-          # Nettoyer les tags
-          TAGS=$(echo "$TAGS_RAW" | sed 's/, */,\\n  - /g')
+          # Nettoyage du titre pour créer un slug
+          SLUG=$(echo "$TITLE" | iconv -f utf8 -t ascii//TRANSLIT | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/^-+|-+$//g')
 
-          # Date actuelle
-          DATE=$(date +"%m-%d-%Y")
+          # Date au format dd-MM-yyyy
+          DATE=$(date +"%d-%m-%Y")
 
-          # Créer dossier
-          mkdir -p src/content/posts
+          echo "slug=$SLUG" >> $GITHUB_OUTPUT
+          echo "title=$TITLE" >> $GITHUB_OUTPUT
+          echo "description=$DESCRIPTION" >> $GITHUB_OUTPUT
+          echo "author=$AUTHOR" >> $GITHUB_OUTPUT
+          echo "tags=$TAGS" >> $GITHUB_OUTPUT
+          echo "content=$CONTENT" >> $GITHUB_OUTPUT
 
-          # Générer fichier
-          cat << EOF > "src/content/posts/$SLUG.md"
----
-title: "$TITLE"
-description: "$DESCRIPTION"
-createdAt: $DATE
-author: $AUTHOR
-draft: true
-tags:
-  - $TAGS
----
-
-$CONTENT
-EOF
-
-      - name: Create new branch and push
+      - name: Créer l'article
         run: |
-          BRANCH_NAME="content/articles/$SLUG"
-          git checkout -b "$BRANCH_NAME"
-          git add src/content/posts/
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git commit -m "📝 Create article: $TITLE"
-          git push origin "$BRANCH_NAME"
+          mkdir -p content/posts
 
-      - name: Create Pull Request
-        uses: devops-infra/action-pull-request@v0.5.2
+          FILE="content/posts/${{ steps.extract.outputs.slug }}.md"
+
+          if [ -f "$FILE" ]; then
+            echo "❌ Le fichier existe déjà, on stoppe."
+            exit 1
+          fi
+
+          echo "---" > "$FILE"
+          echo "title: \"${{ steps.extract.outputs.title }}\"" >> "$FILE"
+          echo "description: \"${{ steps.extract.outputs.description }}\"" >> "$FILE"
+          echo "createdAt: \"${{ steps.extract.outputs.date }}\"" >> "$FILE"
+          echo "author: \"${{ steps.extract.outputs.author }}\"" >> "$FILE"
+          echo "draft: true" >> "$FILE"
+          echo "tags:" >> "$FILE"
+
+          # Ajouter chaque tag proprement
+          for tag in $(echo "${{ steps.extract.outputs.tags }}" | tr ',' '\n'); do
+            echo "  - $(echo $tag | xargs)" >> "$FILE"
+          done
+
+          echo "---" >> "$FILE"
+          echo "" >> "$FILE"
+          echo "${{ steps.extract.outputs.content }}" >> "$FILE"
+
+      - name: Commit + Push dans main
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          source_branch: "content/articles/$SLUG"
-          target_branch: "main"
-          title: "📝 Nouvel article: $TITLE"
-          body: |
-            Un nouvel article a été proposé par **$AUTHOR**.
-
-            Merci de faire une relecture avant de merger !
-          reviewers: ""
-          assignees: ""
-          labels: "article,review-needed"
+          commit_message: "📝 Nouvel article: ${{ steps.extract.outputs.title }}"
+          branch: main
