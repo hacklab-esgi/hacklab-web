@@ -9,23 +9,30 @@ permissions:
   pull-requests: write
 
 jobs:
-  create-article:
+  create-post:
     if: contains(github.event.issue.labels.*.name, 'article')
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout du dépôt
+      - name: Checkout 👉🏼 Repo
         uses: actions/checkout@v4
+
+      - name: Sauvegarder l'Issue dans un fichier temporaire
+        run: echo "${{ github.event.issue.body }}" > issue.md
 
       - name: Extraction des données de l'Issue
         id: extract
         run: |
-          echo "TITLE=$(echo \"${{ github.event.issue.body }}\" | grep -oP '(?<=\*\*Titre de l\'Article\*\*\n).*' | head -n 1 | sed 's/\r//g')" >> "$GITHUB_ENV"
-          echo "DESCRIPTION=$(echo \"${{ github.event.issue.body }}\" | grep -oP '(?<=\*\*Description\*\*\n).*' | head -n 1 | sed 's/\r//g')" >> "$GITHUB_ENV"
-          echo "CONTENT=$(echo \"${{ github.event.issue.body }}\" | awk '/\*\*Contenu complet/ {flag=1; next} /\*\*Auteur/ {flag=0} flag' | sed 's/\r//g')" >> "$GITHUB_ENV"
-          echo "AUTHOR=$(echo \"${{ github.event.issue.body }}\" | grep -oP '(?<=\*\*Auteur\*\*\n).*' | head -n 1 | sed 's/\r//g')" >> "$GITHUB_ENV"
-          echo "TAGS=$(echo \"${{ github.event.issue.body }}\" | grep -oP '(?<=\*\*Tags \(s\u00e9par\u00e9s par des virgules\)\*\*\n).*' | head -n 1 | sed 's/\r//g')" >> "$GITHUB_ENV"
+          TITLE=$(awk '/^\s*- type: input/{getline;getline; print}' issue.md | head -n 1 | sed 's/\r//g')
+          DESCRIPTION=$(awk '/^\s*- type: textarea/{getline;getline; print}' issue.md | head -n 1 | sed 's/\r//g')
+          CONTENT=$(awk '/^\s*- type: textarea/{flag=1; next} /^\s*- type: input/{flag=0} flag' issue.md | sed 's/\r//g')
+          AUTHOR=$(awk '/^\s*- type: input/{getline;getline; print}' issue.md | tail -n 2 | head -n 1 | sed 's/\r//g')
+          TAGS=$(awk '/^\s*- type: input/{getline;getline; print}' issue.md | tail -n 1 | sed 's/\r//g')
 
+          echo "TITLE=$TITLE" >> $GITHUB_ENV
+          echo "DESCRIPTION=$DESCRIPTION" >> $GITHUB_ENV
+          echo "CONTENT=$CONTENT" >> $GITHUB_ENV
+          echo "AUTHOR=$AUTHOR" >> $GITHUB_ENV
+          echo "TAGS=$TAGS" >> $GITHUB_ENV
 
       - name: Génération du fichier article
         run: |
@@ -50,18 +57,20 @@ jobs:
           echo "" >> "$FILE"
           echo "$CONTENT" >> "$FILE"
 
-      - name: Commit + Push dans main
+          echo "SLUG=$SLUG" >> $GITHUB_ENV
+
+      - name: Commit + Push 💪
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "📝 Nouveau post: $TITLE"
+          commit_message: "📝 Nouveau post: ${{ env.TITLE }}"
           branch: article/${{ env.SLUG }}
           create_branch: true
 
       - name: Créer une Pull Request 🔀
         uses: peter-evans/create-pull-request@v5
         with:
-          title: "📝 Proposition d'article: $TITLE"
+          title: "📝 Proposition d'article: ${{ env.TITLE }}"
           body: "Cet article a été proposé automatiquement depuis une Issue.\n\nMerci de le relire et de valider !"
           labels: article
-          base: master
+          base: main
           branch: article/${{ env.SLUG }}
