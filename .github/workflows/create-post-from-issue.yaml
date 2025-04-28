@@ -95,10 +95,14 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b article-$slug
 
+      - name: Nettoyer le fichier temporaire issue_body.txt
+        run: rm -f issue_body.txt
+
+
       - name: Générer le fichier article
         run: |
           DATE=$(date +"%d-%m-%Y")
-          FILE="src/content/posts/${{ env.SLUG }}.md"
+          FILE="src/content/posts/${{ env.SLUG }}.mdx"
 
           mkdir -p src/content/posts
 
@@ -118,7 +122,7 @@ jobs:
 
       - name: Commit les changements
         run: |
-          git add src/content/posts/${{ env.SLUG }}.md
+          git add src/content/posts/${{ env.SLUG }}.mdx
           git commit -m "📝 Proposer article: ${{ env.TITLE }}"
 
 
