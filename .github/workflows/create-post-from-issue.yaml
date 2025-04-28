@@ -18,11 +18,11 @@ jobs:
 
       - name: Extraction des données de l'Issue
         id: extract
-        env:
-          ISSUE_BODY: ${{ github.event.issue.body }}
         run: |
-          echo "$ISSUE_BODY" > issue_body.txt
+          # Écrire le body brut dans un fichier texte
+          echo "${{ github.event.issue.body }}" > issue_body.txt
 
+          # Lire correctement depuis ce fichier sans exécuter
           TITLE=$(awk '/^### Titre de l'\''Article/{getline; print}' issue_body.txt | xargs)
           DESCRIPTION=$(awk '/^### Description/{getline; print}' issue_body.txt | xargs)
           AUTHOR=$(awk '/^### Auteur/{getline; print}' issue_body.txt | xargs)
@@ -44,6 +44,7 @@ jobs:
           echo "CONTENT<<EOF" >> $GITHUB_ENV
           echo "$CONTENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
+
 
 
       - name: Générer le fichier article
