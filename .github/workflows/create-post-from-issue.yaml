@@ -50,27 +50,24 @@ jobs:
 
       - name: Générer le fichier article
         run: |
-          SLUG=$(echo "$TITLE" | iconv -f utf8 -t ascii//TRANSLIT | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//;s/-$//')
           DATE=$(date +"%Y-%m-%d")
-          FILE="src/content/posts/$SLUG.md"
+          FILE="src/content/posts/${{ env.SLUG }}.md"
 
           mkdir -p src/content/posts
 
           echo "---" > "$FILE"
-          echo "title: \"$TITLE\"" >> "$FILE"
-          echo "description: \"$DESCRIPTION\"" >> "$FILE"
+          echo "title: \"${{ env.TITLE }}\"" >> "$FILE"
+          echo "description: \"${{ env.DESCRIPTION }}\"" >> "$FILE"
           echo "createdAt: $DATE" >> "$FILE"
-          echo "author: \"$AUTHOR\"" >> "$FILE"
+          echo "author: \"${{ env.AUTHOR }}\"" >> "$FILE"
           echo "draft: true" >> "$FILE"
           echo "tags:" >> "$FILE"
-          for tag in $(echo $TAGS | tr ',' '\n'); do
+          for tag in $(echo "${{ env.TAGS }}" | tr ',' '\n'); do
             echo "  - $(echo $tag | xargs)" >> "$FILE"
           done
           echo "---" >> "$FILE"
           echo "" >> "$FILE"
-          echo "$CONTENT" >> "$FILE"
-
-          echo "SLUG=$SLUG" >> $GITHUB_ENV
+          echo "${{ env.CONTENT }}" >> "$FILE"
 
       - name: Commit + Push 💪
         uses: stefanzweifel/git-auto-commit-action@v5
