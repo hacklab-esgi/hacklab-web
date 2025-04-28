@@ -121,9 +121,22 @@ jobs:
           git add .
           git commit -m "📝 Proposer article: ${{ env.TITLE }}"
 
+      - name: Vérification Git avant Push 🔎
+        run: |
+          git status
+          git log --oneline -n 5
+          ls -l src/content/posts/
+
+
       - name: Push to remote 🚀
         run: |
           git push --set-upstream origin article-${{ env.SLUG }}
+
+      - name: Vérification Git avant Push 🔎s
+        run: |
+          git status
+          git log --oneline -n 5
+          ls -l src/content/posts/
 
 
       - name: Créer Pull Request 🔀
