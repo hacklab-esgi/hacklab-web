@@ -16,28 +16,36 @@ jobs:
       - name: Checkout 👉🏼 Repo
         uses: actions/checkout@v4
 
-      - name: Sauvegarder l'Issue dans un fichier temporaire
-        run: echo "${{ github.event.issue.body }}" > issue.md
-
-      - name: Extraction des données de l'Issue
+      - name: Extraire les données de l'Issue
         id: extract
         run: |
-          TITLE=$(awk '/^\s*- type: input/{getline;getline; print}' issue.md | head -n 1 | sed 's/\r//g')
-          DESCRIPTION=$(awk '/^\s*- type: textarea/{getline;getline; print}' issue.md | head -n 1 | sed 's/\r//g')
-          CONTENT=$(awk '/^\s*- type: textarea/{flag=1; next} /^\s*- type: input/{flag=0} flag' issue.md | sed 's/\r//g')
-          AUTHOR=$(awk '/^\s*- type: input/{getline;getline; print}' issue.md | tail -n 2 | head -n 1 | sed 's/\r//g')
-          TAGS=$(awk '/^\s*- type: input/{getline;getline; print}' issue.md | tail -n 1 | sed 's/\r//g')
+          body="${{ github.event.issue.body }}"
+          
+          TITLE=$(echo "$body" | awk '/^### Titre de l'\''Article/{getline; print}' | xargs)
+          DESCRIPTION=$(echo "$body" | awk '/^### Description/{getline; print}' | xargs)
+          CONTENT=$(echo "$body" | awk '/^### Contenu complet/{flag=1; next} /^### Auteur/{flag=0} flag' | sed 's/\r//' )
+          AUTHOR=$(echo "$body" | awk '/^### Auteur/{getline; print}' | xargs)
+          TAGS=$(echo "$body" | awk '/^### Tags/{getline; print}' | xargs)
 
-          echo "TITLE=$TITLE" >> $GITHUB_ENV
-          echo "DESCRIPTION=$DESCRIPTION" >> $GITHUB_ENV
-          echo "CONTENT=$CONTENT" >> $GITHUB_ENV
+          echo "TITLE<<EOF" >> $GITHUB_ENV
+          echo "$TITLE" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+          echo "DESCRIPTION<<EOF" >> $GITHUB_ENV
+          echo "$DESCRIPTION" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+          echo "CONTENT<<EOF" >> $GITHUB_ENV
+          echo "$CONTENT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
           echo "AUTHOR=$AUTHOR" >> $GITHUB_ENV
           echo "TAGS=$TAGS" >> $GITHUB_ENV
 
-      - name: Génération du fichier article
+      - name: Générer le fichier article
         run: |
           SLUG=$(echo "$TITLE" | iconv -f utf8 -t ascii//TRANSLIT | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//;s/-$//')
-          DATE=$(date +"%d-%m-%Y")
+          DATE=$(date +"%Y-%m-%d")
           FILE="src/content/posts/$SLUG.md"
 
           mkdir -p src/content/posts
@@ -46,14 +54,13 @@ jobs:
           echo "title: \"$TITLE\"" >> "$FILE"
           echo "description: \"$DESCRIPTION\"" >> "$FILE"
           echo "createdAt: $DATE" >> "$FILE"
-          echo "author: $AUTHOR" >> "$FILE"
+          echo "author: \"$AUTHOR\"" >> "$FILE"
           echo "draft: true" >> "$FILE"
           echo "tags:" >> "$FILE"
           for tag in $(echo $TAGS | tr ',' '\n'); do
             echo "  - $(echo $tag | xargs)" >> "$FILE"
           done
           echo "---" >> "$FILE"
-
           echo "" >> "$FILE"
           echo "$CONTENT" >> "$FILE"
 
@@ -62,15 +69,18 @@ jobs:
       - name: Commit + Push 💪
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "📝 Nouveau post: $TITLE
-          branch: article_$SLUG
+          commit_message: "📝 Nouveau post: ${{ env.TITLE }}"
+          branch: "article_${{ env.SLUG }}"
           create_branch: true
 
       - name: Créer une Pull Request 🔀
         uses: peter-evans/create-pull-request@v5
         with:
-          title: "📝 Proposition d'article: $TITLE
-          body: "Cet article a été proposé automatiquement depuis une Issue.\n\nMerci de le relire et de valider !"
+          title: "📝 Proposition d'article: ${{ env.TITLE }}"
+          body: |
+            Cet article a été proposé automatiquement depuis une Issue.
+
+            Merci de le relire et de valider !
           labels: article
           base: master
-          branch: article_$SLUG
+          branch: "article_${{ env.SLUG }}"
