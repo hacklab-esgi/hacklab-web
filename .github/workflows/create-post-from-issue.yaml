@@ -19,62 +19,59 @@ jobs:
           ref: master
 
       - name: Extraction des données de l'Issue
-        id: extract
-        run: |
-          echo "${{ github.event.issue.body }}" > issue_body.txt
+          id: extract
+          run: |
+            echo "${{ github.event.issue.body }}" > issue_body.txt
 
-          TITLE=$(awk '/^### Titre de l'\''Article/{getline; print}' issue_body.txt | xargs)
-          DESCRIPTION=$(awk '/^### Description/{getline; print}' issue_body.txt | xargs)
-          CONTENT=$(awk '/^### Contenu complet/{flag=1; next} /^### Auteur/{flag=0} flag' issue_body.txt | sed 's/\r//')
-          AUTHOR=$(awk '/^### Auteur/{getline; print}' issue_body.txt | xargs)
-          TAGS=$(awk '/^### Tags/{getline; print}' issue_body.txt | xargs)
+            TITLE=$(awk '/^### Titre de l'\''Article/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
+            DESCRIPTION=$(awk '/^### Description/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
+            CONTENT=$(awk '/^### Contenu complet/ {flag=1; next} /^### Auteur/ {flag=0} flag' issue_body.txt | sed 's/\r//' )
+            AUTHOR=$(awk '/^### Auteur/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
+            TAGS=$(awk '/^### Tags/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
 
-          echo "DEBUG: TITLE='$TITLE'"
-          echo "DEBUG: DESCRIPTION='$DESCRIPTION'"
-          echo "DEBUG: AUTHOR='$AUTHOR'"
-          echo "DEBUG: TAGS='$TAGS'"
+            echo "DEBUG: TITLE='$TITLE'"
+            echo "DEBUG: DESCRIPTION='$DESCRIPTION'"
+            echo "DEBUG: AUTHOR='$AUTHOR'"
+            echo "DEBUG: TAGS='$TAGS'"
 
-          # Vérification que chaque champ est bien rempli
-          if [ -z "$TITLE" ]; then
-            echo "❌ ERREUR: Le champ 'Titre' est vide dans l'issue." >&2
-            exit 1
-          fi
+            # Vérification des champs
+            if [ -z "$TITLE" ]; then
+              echo "❌ ERREUR: Le champ 'Titre' est vide dans l'issue." >&2
+              exit 1
+            fi
 
-          if [ -z "$DESCRIPTION" ]; then
-            echo "❌ ERREUR: Le champ 'Description' est vide dans l'issue." >&2
-            exit 1
-          fi
+            if [ -z "$DESCRIPTION" ]; then
+              echo "❌ ERREUR: Le champ 'Description' est vide dans l'issue." >&2
+              exit 1
+            fi
 
-          if [ -z "$CONTENT" ]; then
-            echo "❌ ERREUR: Le champ 'Contenu complet' est vide dans l'issue." >&2
-            exit 1
-          fi
+            if [ -z "$CONTENT" ]; then
+              echo "❌ ERREUR: Le champ 'Contenu complet' est vide dans l'issue." >&2
+              exit 1
+            fi
 
-          if [ -z "$AUTHOR" ]; then
-            echo "❌ ERREUR: Le champ 'Auteur' est vide dans l'issue." >&2
-            exit 1
-          fi
+            if [ -z "$AUTHOR" ]; then
+              echo "❌ ERREUR: Le champ 'Auteur' est vide dans l'issue." >&2
+              exit 1
+            fi
 
-          if [ -z "$TAGS" ]; then
-            echo "❌ ERREUR: Le champ 'Tags' est vide dans l'issue." >&2
-            exit 1
-          fi
+            if [ -z "$TAGS" ]; then
+              echo "❌ ERREUR: Le champ 'Tags' est vide dans l'issue." >&2
+              exit 1
+            fi
 
-          # Si tout est OK, on enregistre les variables
-          echo "TITLE<<EOF" >> $GITHUB_ENV
-          echo "$TITLE" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+            echo "TITLE<<EOF" >> $GITHUB_ENV
+            echo "$TITLE" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+            echo "DESCRIPTION<<EOF" >> $GITHUB_ENV
+            echo "$DESCRIPTION" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+            echo "CONTENT<<EOF" >> $GITHUB_ENV
+            echo "$CONTENT" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+            echo "AUTHOR=$AUTHOR" >> $GITHUB_ENV
+            echo "TAGS=$TAGS" >> $GITHUB_ENV
 
-          echo "DESCRIPTION<<EOF" >> $GITHUB_ENV
-          echo "$DESCRIPTION" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
-          echo "CONTENT<<EOF" >> $GITHUB_ENV
-          echo "$CONTENT" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
-          echo "AUTHOR=$AUTHOR" >> $GITHUB_ENV
-          echo "TAGS=$TAGS" >> $GITHUB_ENV
 
       - name: Générer le slug et créer la branche
         run: |
