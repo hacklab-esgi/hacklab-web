@@ -16,7 +16,7 @@ jobs:
       - name: Checkout 👉🏼 Repo
         uses: actions/checkout@v4
 
-      - name: Extraction des données de l'Issue
+      - name: Extraction des données de l'Issues
         id: extract
         run: |
           # Écrire le body brut dans un fichier texte
