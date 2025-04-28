@@ -13,10 +13,12 @@ jobs:
     if: contains(github.event.issue.labels.*.name, 'article')
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 👉🏼 Repo
+      - name: Checkout 👉🏼 master
         uses: actions/checkout@v4
+        with:
+          ref: master
 
-      - name: Extraction des données de l'Issue
+      - name: Extraction des données
         id: extract
         run: |
           echo "${{ github.event.issue.body }}" > issue_body.txt
@@ -27,26 +29,31 @@ jobs:
           TAGS=$(awk '/^### Tags/{getline; print}' issue_body.txt | xargs)
           CONTENT=$(awk '/^### Contenu complet/{flag=1; next} /^### Auteur/{flag=0} flag' issue_body.txt)
 
-          # --- Ajout important pour générer le SLUG ---
-          SLUG=$(echo "$TITLE" | iconv -f utf8 -t ascii//TRANSLIT | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//;s/-$//')
-          
-          # --- Enregistrement dans l'environnement ---
           echo "TITLE<<EOF" >> $GITHUB_ENV
           echo "$TITLE" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-
           echo "DESCRIPTION<<EOF" >> $GITHUB_ENV
           echo "$DESCRIPTION" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-
           echo "AUTHOR=$AUTHOR" >> $GITHUB_ENV
           echo "TAGS=$TAGS" >> $GITHUB_ENV
-
           echo "CONTENT<<EOF" >> $GITHUB_ENV
           echo "$CONTENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-          echo "SLUG=$SLUG" >> $GITHUB_ENV
+      - name: Générer le slug et créer la branche
+        id: create-branch
+        run: |
+          slug=$(echo "${{ env.TITLE }}" | iconv -f utf8 -t ascii//TRANSLIT \
+            | tr '[:upper:]' '[:lower:]' \
+            | sed 's/[^a-z0-9]/-/g' \
+            | sed 's/-\+/-/g' \
+            | sed 's/^-//;s/-$//')
+          echo "SLUG=$slug" >> $GITHUB_ENV
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b article-$slug
 
       - name: Générer le fichier article
         run: |
@@ -72,18 +79,15 @@ jobs:
       - name: Commit + Push 💪
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "📝 Nouveau post: ${{ env.TITLE }}"
-          branch: "article_${{ env.SLUG }}"
-          create_branch: true
+          commit_message: "📝 Proposer article: ${{ env.TITLE }}"
+          create_branch: false
 
-      - name: Créer une Pull Request 🔀
+      - name: Créer Pull Request 🔀
         uses: peter-evans/create-pull-request@v5
         with:
-          title: "📝 Proposition d'article: ${{ env.TITLE }}"
+          title: "📝 Proposition: ${{ env.TITLE }}"
           body: |
-            Cet article a été proposé automatiquement depuis une Issue.
-
-            Merci de le relire et de valider !
-          labels: article
+            Article proposé automatiquement depuis une Issue.
+            Merci de le relire avant publication.
           base: master
-          branch: "article_${{ env.SLUG }}"
+          branch: article-${{ env.SLUG }}
