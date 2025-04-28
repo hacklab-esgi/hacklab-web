@@ -16,20 +16,21 @@ jobs:
       - name: Checkout 👉🏼 Repo
         uses: actions/checkout@v4
 
-      - name: Extraction des données de l'Issues
+      - name: Extraction des données de l'Issue
         id: extract
         run: |
-          # Écrire le body brut dans un fichier texte
           echo "${{ github.event.issue.body }}" > issue_body.txt
 
-          # Lire correctement depuis ce fichier sans exécuter
           TITLE=$(awk '/^### Titre de l'\''Article/{getline; print}' issue_body.txt | xargs)
           DESCRIPTION=$(awk '/^### Description/{getline; print}' issue_body.txt | xargs)
           AUTHOR=$(awk '/^### Auteur/{getline; print}' issue_body.txt | xargs)
           TAGS=$(awk '/^### Tags/{getline; print}' issue_body.txt | xargs)
-
           CONTENT=$(awk '/^### Contenu complet/{flag=1; next} /^### Auteur/{flag=0} flag' issue_body.txt)
 
+          # --- Ajout important pour générer le SLUG ---
+          SLUG=$(echo "$TITLE" | iconv -f utf8 -t ascii//TRANSLIT | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/-\+/-/g' | sed 's/^-//;s/-$//')
+          
+          # --- Enregistrement dans l'environnement ---
           echo "TITLE<<EOF" >> $GITHUB_ENV
           echo "$TITLE" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
@@ -45,7 +46,7 @@ jobs:
           echo "$CONTENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-
+          echo "SLUG=$SLUG" >> $GITHUB_ENV
 
       - name: Générer le fichier article
         run: |
