@@ -16,16 +16,19 @@ jobs:
       - name: Checkout 👉🏼 Repo
         uses: actions/checkout@v4
 
-      - name: Extraire les données de l'Issue
+      - name: Extraction des données de l'Issue
         id: extract
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
         run: |
-          body="${{ github.event.issue.body }}"
-          
-          TITLE=$(echo "$body" | awk '/^### Titre de l'\''Article/{getline; print}' | xargs)
-          DESCRIPTION=$(echo "$body" | awk '/^### Description/{getline; print}' | xargs)
-          CONTENT=$(echo "$body" | awk '/^### Contenu complet/{flag=1; next} /^### Auteur/{flag=0} flag' | sed 's/\r//' )
-          AUTHOR=$(echo "$body" | awk '/^### Auteur/{getline; print}' | xargs)
-          TAGS=$(echo "$body" | awk '/^### Tags/{getline; print}' | xargs)
+          echo "$ISSUE_BODY" > issue_body.txt
+
+          TITLE=$(awk '/^### Titre de l'\''Article/{getline; print}' issue_body.txt | xargs)
+          DESCRIPTION=$(awk '/^### Description/{getline; print}' issue_body.txt | xargs)
+          AUTHOR=$(awk '/^### Auteur/{getline; print}' issue_body.txt | xargs)
+          TAGS=$(awk '/^### Tags/{getline; print}' issue_body.txt | xargs)
+
+          CONTENT=$(awk '/^### Contenu complet/{flag=1; next} /^### Auteur/{flag=0} flag' issue_body.txt)
 
           echo "TITLE<<EOF" >> $GITHUB_ENV
           echo "$TITLE" >> $GITHUB_ENV
@@ -35,12 +38,13 @@ jobs:
           echo "$DESCRIPTION" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
+          echo "AUTHOR=$AUTHOR" >> $GITHUB_ENV
+          echo "TAGS=$TAGS" >> $GITHUB_ENV
+
           echo "CONTENT<<EOF" >> $GITHUB_ENV
           echo "$CONTENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-          echo "AUTHOR=$AUTHOR" >> $GITHUB_ENV
-          echo "TAGS=$TAGS" >> $GITHUB_ENV
 
       - name: Générer le fichier article
         run: |
