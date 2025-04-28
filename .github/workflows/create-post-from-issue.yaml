@@ -18,10 +18,10 @@ jobs:
         with:
           ref: master
           fetch-depth: 0
+
       - name: Fix remote HEAD 🛠
         run: |
           git remote set-head origin -a
-
 
       - name: Extraction des données de l'Issue
         id: extract
@@ -116,35 +116,14 @@ jobs:
           echo "" >> "$FILE"
           echo "${{ env.CONTENT }}" >> "$FILE"
 
-      - name: Commit files 💬
+      - name: Commit les changements
         run: |
           git add .
           git commit -m "📝 Proposer article: ${{ env.TITLE }}"
 
-      - name: Vérification Git avant Push 🔎
-        run: |
-          git status
-          git log --oneline -n 5
-          ls -l src/content/posts/
-
-      - name: Fix remote HEAD et préparer le push
-        run: |
-          git remote set-head origin -a
-          git fetch origin
-          git branch --set-upstream-to=origin/master master || true
-          git branch --set-upstream-to=origin/article-${{ env.SLUG }} || true
-
-
-
-      - name: Push to remote 🚀
+      - name: Push vers remote
         run: |
           git push --set-upstream origin article-${{ env.SLUG }}
-
-      - name: Vérification Git avant Push 🔎s
-        run: |
-          git status
-          git log --oneline -n 5
-          ls -l src/content/posts/
 
 
       - name: Créer Pull Request 🔀
