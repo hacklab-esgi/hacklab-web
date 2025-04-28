@@ -98,13 +98,19 @@ jobs:
       - name: Nettoyer le fichier temporaire issue_body.txt
         run: rm -f issue_body.txt
 
+      - name: S'assurer que src/content/posts existe
+        run: |
+          mkdir -p src/content/posts
+          touch src/content/posts/.gitkeep
+          git add src/content/posts/.gitkeep
+          git commit -m "chore: prepare posts directory" || echo "Pas de changements"
+          git push origin master || echo "Pas besoin de push"
+
 
       - name: Générer le fichier article
         run: |
           DATE=$(date +"%d-%m-%Y")
           FILE="src/content/posts/${{ env.SLUG }}.mdx"
-
-          mkdir -p src/content/posts
 
           echo "---" > "$FILE"
           echo "title: \"${{ env.TITLE }}\"" >> "$FILE"
