@@ -128,13 +128,29 @@ jobs:
 
       - name: Commit les changements
         run: |
+          ls -al src/content/posts/
           git add src/content/posts/${{ env.SLUG }}.mdx
           git commit -m "📝 Proposer article: ${{ env.TITLE }}"
+
+      - name: Vérification complète avant Push 🔎
+        run: |
+          echo "🧹 Status Git:"
+          git status
+
+          echo "🧾 Derniers commits:"
+          git log --oneline -n 5
+
+          echo "📂 Liste des fichiers trackés par Git:"
+          git ls-files --stage
+
+          echo "📁 Contenu du dossier src/content/posts/:"
+          ls -al src/content/posts/
+
 
 
       - name: Push vers remote
         run: |
-          git push --set-upstream origin article-${{ env.SLUG }}
+          git push --force --set-upstream origin article-${{ env.SLUG }}
 
 
       - name: Créer Pull Request 🔀
