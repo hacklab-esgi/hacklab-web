@@ -127,6 +127,14 @@ jobs:
           git log --oneline -n 5
           ls -l src/content/posts/
 
+      - name: Fix remote HEAD et préparer le push
+        run: |
+          git remote set-head origin -a
+          git fetch origin
+          git branch --set-upstream-to=origin/master master || true
+          git branch --set-upstream-to=origin/article-${{ env.SLUG }} || true
+
+
 
       - name: Push to remote 🚀
         run: |
