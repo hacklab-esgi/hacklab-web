@@ -1,0 +1,19 @@
+### Titre de l'Article
+
+ds
+
+### Description
+
+sd
+
+### Contenu complet (en Markdown)
+
+sd
+
+### Auteur
+
+sd
+
+### Tags (séparés par des virgules)
+
+sd
