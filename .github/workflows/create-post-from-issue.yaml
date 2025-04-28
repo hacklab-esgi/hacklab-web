@@ -92,7 +92,7 @@ jobs:
 
       - name: Générer le fichier article
         run: |
-          DATE=$(date +"%Y-%m-%d")
+          DATE=$(date +"%d-%m-%Y")
           FILE="src/content/posts/${{ env.SLUG }}.md"
 
           mkdir -p src/content/posts
@@ -115,7 +115,9 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "📝 Proposer article: ${{ env.TITLE }}"
-          create_branch: false
+          branch: "article-${{ env.SLUG }}"
+          create_branch: true
+          push_options: --set-upstream origin article-${{ env.SLUG }}
 
       - name: Créer Pull Request 🔀
         uses: peter-evans/create-pull-request@v5
