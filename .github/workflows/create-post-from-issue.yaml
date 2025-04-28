@@ -118,8 +118,9 @@ jobs:
 
       - name: Commit les changements
         run: |
-          git add .
+          git add src/content/posts/${{ env.SLUG }}.md
           git commit -m "📝 Proposer article: ${{ env.TITLE }}"
+
 
       - name: Push vers remote
         run: |
