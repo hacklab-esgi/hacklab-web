@@ -18,6 +18,10 @@ jobs:
         with:
           ref: master
           fetch-depth: 0
+      - name: Fix remote HEAD 🛠
+        run: |
+          git remote set-head origin -a
+
 
       - name: Extraction des données de l'Issue
         id: extract
