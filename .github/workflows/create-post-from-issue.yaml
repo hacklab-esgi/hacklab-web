@@ -42,13 +42,16 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
 
       - name: Générer le slug et créer la branche
-        id: create-branch
         run: |
+          echo "TITLE récupéré: '${{ env.TITLE }}'" # ➔ vérification visuelle
           slug=$(echo "${{ env.TITLE }}" | iconv -f utf8 -t ascii//TRANSLIT \
             | tr '[:upper:]' '[:lower:]' \
             | sed 's/[^a-z0-9]/-/g' \
             | sed 's/-\+/-/g' \
             | sed 's/^-//;s/-$//')
+
+          echo "Slug généré: $slug"
+
           echo "SLUG=$slug" >> $GITHUB_ENV
 
           git config user.name "github-actions[bot]"
