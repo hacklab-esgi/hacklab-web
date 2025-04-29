@@ -30,6 +30,7 @@ jobs:
         run: |
           # Ecriture temporaire uniquement pour awk
           echo "$ISSUE_BODY" > issue_body.txt
+          cat issue_body.txt
 
           TITLE=$(awk '/^### Titre de l'\''Article/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
           DESCRIPTION=$(awk '/^### Description/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
@@ -39,6 +40,7 @@ jobs:
 
           echo "DEBUG: TITLE='$TITLE'"
           echo "DEBUG: DESCRIPTION='$DESCRIPTION'"
+          echo "DEBUG: CONTENT='$CONTENT'"
           echo "DEBUG: AUTHOR='$AUTHOR'"
           echo "DEBUG: TAGS='$TAGS'"
 
@@ -141,3 +143,5 @@ jobs:
           pr_body: |
             Article proposé automatiquement depuis une Issue.
             Merci de le relire avant publication.
+
+          Closes #${{ github.event.issue.number }}
