@@ -3,10 +3,10 @@
     "id": 1,
     "icon": {
       "type": "lucide",
-      "name": "github"
+      "name": "presentation"
     },
-    "text": "GitHub",
-    "link": "https://github.com/hacklab-esgi"
+    "text": "Meetup",
+    "link": "https://www.meetup.com/hacklab_esgi/"
   },
   {
     "id": 2,
@@ -21,19 +21,19 @@
     "id": 3,
     "icon": {
       "type": "lucide",
-      "name": "twitter"
+      "name": "linkedin"
     },
-    "text": "Twitter",
-    "link": "https://twitter.com/hacklabesgi"
+    "text": "Linkedin",
+    "link": "https://www.linkedin.com/company/hacklabesgi/"
   },
   {
     "id": 4,
     "icon": {
       "type": "lucide",
-      "name": "linkedin"
+      "name": "github"
     },
-    "text": "Linkedin",
-    "link": "https://www.linkedin.com/company/hacklabesgi/"
+    "text": "GitHub",
+    "link": "https://github.com/hacklab-esgi"
   },
   {
     "id": 5,
@@ -52,14 +52,5 @@
     },
     "text": "Youtube",
     "link": "https://www.youtube.com/@HackLabESGI"
-  },
-  {
-    "id": 7,
-    "icon": {
-      "type": "lucide",
-      "name": "instagram"
-    },
-    "text": "Instagram",
-    "link": "https://www.instagram.com/hacklab_esgi/"
   }
 ]
