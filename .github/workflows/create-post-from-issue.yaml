@@ -70,8 +70,7 @@ jobs:
           echo "$DESCRIPTION" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           echo "CONTENT<<EOF" >> $GITHUB_ENV
-          echo "DEBUG: CONTENT='$CONTENT'"
-          echo "$CONTENT" >> $GITHUB_ENV
+          cat issue_body.txt | awk '/^### Contenu complet/ {flag=1; next} /^### Auteur/ {flag=0} flag' >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           echo "AUTHOR=$AUTHOR" >> $GITHUB_ENV
           echo "TAGS=$TAGS" >> $GITHUB_ENV
