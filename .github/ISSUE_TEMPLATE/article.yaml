@@ -2,6 +2,11 @@ name: Proposer un article 📝
 description: Proposez ici votre article de blog pour le HackLab !
 labels: ["article"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        ⚠️ **Merci de remplir le _titre de l'issue_ sous la forme suivante :**  
+        `Nouvel article: [Votre pseudo] - [Nom de l'article]`
   - type: input
     id: title
     attributes:
