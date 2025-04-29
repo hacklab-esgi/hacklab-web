@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   create-post-project:
-    if: contains(github.event.issue.labels.*.name, 'project')
+    if: contains(github.event.issue.labels.*.name, 'projet')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 👉🏼 master
