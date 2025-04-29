@@ -1,4 +1,4 @@
-name: 🛠️ Créer un article de projet depuis une Issue
+name: 🛠️ Publication d'un projet depuis une Issue
 
 on:
   issues:
@@ -133,7 +133,7 @@ jobs:
       - name: Créer un Pull Request
         uses: repo-sync/pull-request@v2
         with:
-          source_branch: projet-${{ env.SLUG }}
+          source_branch: project-${{ env.SLUG }}
           destination_branch: master
           pr_title: "📝 Proposition du projet: ${{ env.PR_TITLE }}"
           pr_body: |
