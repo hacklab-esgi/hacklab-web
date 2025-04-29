@@ -63,17 +63,14 @@ jobs:
             exit 1
           fi
 
-          echo "TITLE<<EOF" >> $GITHUB_ENV
-          echo "$TITLE" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-          echo "DESCRIPTION<<EOF" >> $GITHUB_ENV
-          echo "$DESCRIPTION" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-          echo "CONTENT<<EOF" >> $GITHUB_ENV
-          printf "%s\n" "$CONTENT" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-          echo "AUTHOR=$AUTHOR" >> $GITHUB_ENV
-          echo "TAGS=$TAGS" >> $GITHUB_ENV
+          
+          echo "title=$TITLE" >> $GITHUB_OUTPUT
+          echo "description=$DESCRIPTION" >> $GITHUB_OUTPUT
+          echo "author=$AUTHOR" >> $GITHUB_OUTPUT
+          echo "tags=$TAGS" >> $GITHUB_OUTPUT
+
+          # Pour le CONTENT, on encode en base64 pour ne rien casser
+          echo "content=$(echo "$CONTENT" | base64 -w 0)" >> $GITHUB_OUTPUT
 
       - name: Générer le slug et créer la branche
         run: |
@@ -103,20 +100,20 @@ jobs:
           mkdir -p src/content/posts
 
           echo "---" > "$FILE"
-          echo "title: \"${{ env.TITLE }}\"" >> "$FILE"
-          echo "description: \"${{ env.DESCRIPTION }}\"" >> "$FILE"
+          echo "title: \"${{ steps.extract.outputs.title }}\"" >> "$FILE"
+          echo "description: \"${{ steps.extract.outputs.description }}\"" >> "$FILE"
           echo "createdAt: $DATE" >> "$FILE"
-          echo "author: \"${{ env.AUTHOR }}\"" >> "$FILE"
+          echo "author: \"${{ steps.extract.outputs.author }}\"" >> "$FILE"
           echo "draft: true" >> "$FILE"
           echo "tags:" >> "$FILE"
-          for tag in $(echo "${{ env.TAGS }}" | tr ',' '\n'); do
+          for tag in $(echo "${{ steps.extract.outputs.tags }}" | tr ',' '\n'); do
             echo "  - $(echo $tag | xargs)" >> "$FILE"
           done
           echo "---" >> "$FILE"
           echo "" >> "$FILE"
-          
-          echo "DEBUG: CONTENT='${{ env.CONTENT }}'"
-          echo "${{ env.CONTENT }}" >> "$FILE"
+
+          # Décode et écrit proprement ton contenu
+          echo "${{ steps.extract.outputs.content }}" | base64 -d >> "$FILE"
 
 
       - name: Commit les changements
