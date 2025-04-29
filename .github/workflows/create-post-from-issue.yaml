@@ -129,11 +129,8 @@ jobs:
       - name: Commit les changements
         run: |
           ls -al src/content/posts/
-          git checkout
-          git add --force src/content/posts/${{ env.SLUG }}.mdx
-          git checkout
+          git add src/content/posts/${{ env.SLUG }}.mdx
           git commit -m "📝 Proposer article: ${{ env.TITLE }}"
-          git checkout
 
       - name: Vérification complète avant Push 🔎
         run: |
@@ -153,16 +150,16 @@ jobs:
 
       - name: Push vers remote
         run: |
-          git push --force --set-upstream origin article-${{ env.SLUG }}
-          git checkout
+          git push --set-upstream origin article-${{ env.SLUG }}
 
 
-      - name: Créer Pull Request 🔀
-        uses: peter-evans/create-pull-request@v5
+      - name: Créer un Pull Request
+        uses: repo-sync/pull-request@v2
         with:
-          title: "📝 Proposition: ${{ env.TITLE }}"
-          body: |
+          source_branch: article-${{ env.SLUG }}
+          destination_branch: master
+          pr_title: "📝 Proposition d'article: ${{ env.TITLE }}"
+          pr_body: |
             Article proposé automatiquement depuis une Issue.
             Merci de le relire avant publication.
-          base: master
-          branch: article-${{ env.SLUG }}
+
