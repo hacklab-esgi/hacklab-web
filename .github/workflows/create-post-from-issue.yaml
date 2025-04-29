@@ -62,20 +62,17 @@ jobs:
             echo "❌ ERREUR: Le champ 'Tags' est vide dans l'issue." >&2
             exit 1
           fi
-
-          
-          echo "title=$TITLE" >> $GITHUB_OUTPUT
-          echo "description=$DESCRIPTION" >> $GITHUB_OUTPUT
-          echo "author=$AUTHOR" >> $GITHUB_OUTPUT
-          echo "tags=$TAGS" >> $GITHUB_OUTPUT
-
-          # Pour le CONTENT, on encode en base64 pour ne rien casser
+        
+          echo "title=$(echo "$TITLE" | base64 -w 0)" >> $GITHUB_OUTPUT
+          echo "description=$(echo "$DESCRIPTION" | base64 -w 0)" >> $GITHUB_OUTPUT
+          echo "author=$(echo "$AUTHOR" | base64 -w 0)" >> $GITHUB_OUTPUT
+          echo "tags=$(echo "$TAGS" | base64 -w 0)" >> $GITHUB_OUTPUT
           echo "content=$(echo "$CONTENT" | base64 -w 0)" >> $GITHUB_OUTPUT
 
       - name: Générer le slug et créer la branche
         run: |
-          echo "TITLE récupéré: '${{ env.TITLE }}'" # ➔ vérification visuelle
-          slug=$(echo "${{ env.TITLE }}" | iconv -f utf8 -t ascii//TRANSLIT \
+          TITLE=$(echo "${{ steps.extract.outputs.title }}" | base64 -d)
+          slug=$(echo "$TITLE" | iconv -f utf8 -t ascii//TRANSLIT \
             | tr '[:upper:]' '[:lower:]' \
             | sed 's/[^a-z0-9]/-/g' \
             | sed 's/-\+/-/g' \
@@ -100,19 +97,18 @@ jobs:
           mkdir -p src/content/posts
 
           echo "---" > "$FILE"
-          echo "title: \"${{ steps.extract.outputs.title }}\"" >> "$FILE"
-          echo "description: \"${{ steps.extract.outputs.description }}\"" >> "$FILE"
+          echo "title: \"$(echo "${{ steps.extract.outputs.title }}" | base64 -d)\"" >> "$FILE"
+          echo "description: \"$(echo "${{ steps.extract.outputs.description }}" | base64 -d)\"" >> "$FILE"
           echo "createdAt: $DATE" >> "$FILE"
-          echo "author: \"${{ steps.extract.outputs.author }}\"" >> "$FILE"
+          echo "author: \"$(echo "${{ steps.extract.outputs.author }}" | base64 -d)\"" >> "$FILE"
           echo "draft: true" >> "$FILE"
           echo "tags:" >> "$FILE"
-          for tag in $(echo "${{ steps.extract.outputs.tags }}" | tr ',' '\n'); do
-            echo "  - $(echo $tag | xargs)" >> "$FILE"
+          for tag in $(echo "$(echo "${{ steps.extract.outputs.tags }}" | base64 -d)" | tr ',' '\n'); do
+            echo "  - $(echo "$tag" | xargs)" >> "$FILE"
           done
           echo "---" >> "$FILE"
           echo "" >> "$FILE"
 
-          # Décode et écrit proprement ton contenu
           echo "${{ steps.extract.outputs.content }}" | base64 -d >> "$FILE"
 
 
@@ -120,7 +116,7 @@ jobs:
         run: |
           ls -al src/content/posts/
           git add src/content/posts/${{ env.SLUG }}.mdx
-          git commit -m "📝 Proposer article: ${{ env.TITLE }}"
+          git commit -m "📝 Proposer article: $(echo "${{ steps.extract.outputs.title }}" | base64 -d)"
 
       - name: Push vers remote
         run: |
@@ -131,7 +127,7 @@ jobs:
         with:
           source_branch: article-${{ env.SLUG }}
           destination_branch: master
-          pr_title: "📝 Proposition d'article: ${{ env.TITLE }}"
+          pr_title: "📝 Proposition d'article: $(echo '${{ steps.extract.outputs.title }}' | base64 -d)"
           pr_body: |
             Article proposé automatiquement depuis une Issue.
             Merci de le relire avant publication.
