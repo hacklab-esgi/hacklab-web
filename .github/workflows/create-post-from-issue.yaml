@@ -122,12 +122,18 @@ jobs:
         run: |
           git push --set-upstream origin article-${{ env.SLUG }}
 
+      - name: Préparer les variables PR 🛠
+        run: |
+          TITLE=$(echo "${{ steps.extract.outputs.title }}" | base64 -d)
+          echo "PR_TITLE=$TITLE" >> $GITHUB_ENV
+
+
       - name: Créer un Pull Request
         uses: repo-sync/pull-request@v2
         with:
           source_branch: article-${{ env.SLUG }}
           destination_branch: master
-          pr_title: "📝 Proposition d'article: $(echo '${{ steps.extract.outputs.title }}' | base64 -d)"
+          pr_title: "📝 Proposition d'article: ${{ env.PR_TITLE }}"
           pr_body: |
             Article proposé automatiquement depuis une Issue.
             Merci de le relire avant publication.
