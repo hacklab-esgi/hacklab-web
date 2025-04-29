@@ -144,4 +144,4 @@ jobs:
             Article proposé automatiquement depuis une Issue.
             Merci de le relire avant publication.
 
-          Closes #${{ github.event.issue.number }}
+            Closes #${{ github.event.issue.number }}
