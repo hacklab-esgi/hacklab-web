@@ -100,12 +100,12 @@ jobs:
           echo "title: \"$(echo "${{ steps.extract.outputs.title }}" | base64 -d)\"" >> "$FILE"
           echo "description: \"$(echo "${{ steps.extract.outputs.description }}" | base64 -d)\"" >> "$FILE"
           echo "createdAt: $DATE" >> "$FILE"
-          echo "author: \"$(echo "${{ steps.extract.outputs.author }}" | base64 -d)\"" >> "$FILE"
           echo "draft: true" >> "$FILE"
           echo "tags:" >> "$FILE"
           for tag in $(echo "$(echo "${{ steps.extract.outputs.tags }}" | base64 -d)" | tr ',' '\n'); do
             echo "  - $(echo "$tag" | xargs)" >> "$FILE"
           done
+          echo "author: \"$(echo "${{ steps.extract.outputs.author }}" | base64 -d)\"" >> "$FILE"
           echo "---" >> "$FILE"
           echo "" >> "$FILE"
 

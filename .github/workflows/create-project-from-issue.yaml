@@ -98,9 +98,8 @@ jobs:
 
           echo "---" > "$FILE"
           echo "title: \"$(echo "${{ steps.extract.outputs.title }}" | base64 -d)\"" >> "$FILE"
+          echo "date: $DATE" >> "$FILE"
           echo "description: \"$(echo "${{ steps.extract.outputs.description }}" | base64 -d)\"" >> "$FILE"
-          echo "createdAt: $DATE" >> "$FILE"
-          echo "author: \"$(echo "${{ steps.extract.outputs.author }}" | base64 -d)\"" >> "$FILE"
           echo "draft: true" >> "$FILE"
           echo "info:" >> "$FILE"
           echo "  - text: GitHub" >> "$FILE"
@@ -108,6 +107,7 @@ jobs:
           echo "    icon:" >> "$FILE"
           echo "      type: lucide" >> "$FILE"
           echo "      name: github" >> "$FILE"
+          echo "author: \"$(echo "${{ steps.extract.outputs.author }}" | base64 -d)\"" >> "$FILE"
           echo "---" >> "$FILE"
           echo "" >> "$FILE"
 
