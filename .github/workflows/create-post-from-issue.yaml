@@ -30,7 +30,7 @@ jobs:
 
           TITLE=$(awk '/^### Titre de l'\''Article/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
           DESCRIPTION=$(awk '/^### Description/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
-          CONTENT=$(awk '/^### Contenu complet/ {flag=1; next} /^### Auteur/ {flag=0} flag' issue_body.txt | sed 's/\r//' )
+          CONTENT=$(awk '/^### Contenu complet/ {found=1; next} found' issue_body.txt)
           AUTHOR=$(awk '/^### Auteur/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
           TAGS=$(awk '/^### Tags/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
 
@@ -77,7 +77,6 @@ jobs:
           echo "AUTHOR=$AUTHOR" >> $GITHUB_ENV
           echo "TAGS=$TAGS" >> $GITHUB_ENV
 
-
       - name: Générer le slug et créer la branche
         run: |
           echo "TITLE récupéré: '${{ env.TITLE }}'" # ➔ vérification visuelle
@@ -98,19 +97,12 @@ jobs:
       - name: Nettoyer le fichier temporaire issue_body.txt
         run: rm -f issue_body.txt
 
-      - name: S'assurer que src/content/posts existe
-        run: |
-          mkdir -p src/content/posts
-          touch src/content/posts/.gitkeep
-          git add src/content/posts/.gitkeep
-          git commit -m "chore: prepare posts directory" || echo "Pas de changements"
-          git push origin master || echo "Pas besoin de push"
-
-
       - name: Générer le fichier article
         run: |
-          DATE=$(date +"%d-%m-%Y")
+          DATE=$(date +"%m-%d-%Y")
           FILE="src/content/posts/${{ env.SLUG }}.mdx"
+
+          mkdir -p src/content/posts
 
           echo "---" > "$FILE"
           echo "title: \"${{ env.TITLE }}\"" >> "$FILE"
@@ -132,26 +124,9 @@ jobs:
           git add src/content/posts/${{ env.SLUG }}.mdx
           git commit -m "📝 Proposer article: ${{ env.TITLE }}"
 
-      - name: Vérification complète avant Push 🔎
-        run: |
-          echo "🧹 Status Git:"
-          git status
-
-          echo "🧾 Derniers commits:"
-          git log --oneline -n 5
-
-          echo "📂 Liste des fichiers trackés par Git:"
-          git ls-files --stage
-
-          echo "📁 Contenu du dossier src/content/posts/:"
-          ls -al src/content/posts/
-
-
-
       - name: Push vers remote
         run: |
           git push --set-upstream origin article-${{ env.SLUG }}
-
 
       - name: Créer un Pull Request
         uses: repo-sync/pull-request@v2
@@ -162,4 +137,3 @@ jobs:
           pr_body: |
             Article proposé automatiquement depuis une Issue.
             Merci de le relire avant publication.
-
