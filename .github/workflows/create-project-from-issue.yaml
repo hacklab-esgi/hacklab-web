@@ -84,12 +84,12 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b article-$slug
+          git checkout -b project-$slug
 
       - name: Nettoyer le fichier temporaire issue_body.txt
         run: rm -f issue_body.txt
 
-      - name: Générer le fichier article
+      - name: Générer le fichier projet
         run: |
           DATE=$(date +"%m-%d-%Y")
           FILE="src/content/projects/${{ env.SLUG }}.mdx"
@@ -122,7 +122,7 @@ jobs:
 
       - name: Push vers remote
         run: |
-          git push --set-upstream origin article-${{ env.SLUG }}
+          git push --set-upstream origin project-${{ env.SLUG }}
 
       - name: Préparer les variables PR 🛠
         run: |
