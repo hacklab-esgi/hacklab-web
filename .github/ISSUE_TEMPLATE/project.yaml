@@ -1,17 +1,17 @@
-name: Proposer un article 📝
-description: Proposez ici votre article de blog pour le HackLab !
-labels: ["article", "review-needed"]
+name: Publication d'un projet 📝
+description: Proposez ici votre article d'un projet pour le HackLab !
+labels: ["projet", "review-needed"]
 body:
   - type: markdown
     attributes:
       value: |
         ⚠️ **Merci de remplir le _titre de l'issue_ sous la forme suivante :**  
-        `Nouvel article: [Votre pseudo] - [Nom de l'article]`
+        `Nouveau projet: [Votre pseudo] - [Nom du projet]`
   - type: input
     id: title
     attributes:
-      label: Titre de l'Article
-      placeholder: "Ex: Analyse d'une faille CVE-2025-0001"
+      label: Titre du projet
+      placeholder: "Ex: LNKat"
     validations:
       required: true
 
@@ -19,8 +19,8 @@ body:
     id: description
     attributes:
       label: Description
-      description: Courte description de l'article (1 ou 2 phrases)
-      placeholder: "Cet article explique comment exploiter..."
+      description: Courte description du projet (1 ou 2 phrases)
+      placeholder: "Ce projet consiste à..."
     validations:
       required: true
 
@@ -30,9 +30,6 @@ body:
       label: Contenu complet (en Markdown)
       placeholder: |
         ## Introduction
-        Voici comment exploiter une vulnérabilité...
-        
-        ## Méthodologie
         ...
     validations:
       required: true
@@ -46,9 +43,9 @@ body:
       required: true
 
   - type: input
-    id: tags
+    id: link
     attributes:
-      label: Tags (séparés par des virgules)
-      placeholder: "web, sécurité, reverse"
+      label: Lien github du projet
+      placeholder: "https://github.com/hacklab-esgi/LNKat"
     validations:
       required: true

@@ -1,0 +1,144 @@
+name: 🛠️ Créer un article de projet depuis une Issue
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-post-project:
+    if: contains(github.event.issue.labels.*.name, 'project')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 👉🏼 master
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Fix remote HEAD 🛠
+        run: |
+          git remote set-head origin -a
+
+      - name: Extraction des données de l'Issue
+        id: extract
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          # Ecriture temporaire uniquement pour awk
+          echo "$ISSUE_BODY" > issue_body.txt
+
+          TITLE=$(awk '/^### Titre de l'\''Article/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
+          DESCRIPTION=$(awk '/^### Description/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
+          CONTENT=$(awk '/^### Contenu complet/ {flag=1; next} /^### Auteur/ {flag=0} flag' issue_body.txt)
+          AUTHOR=$(awk '/^### Auteur/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
+          LINK=$(awk '/^### Lien github/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
+
+          # Vérification des champs
+          if [ -z "$TITLE" ]; then
+            echo "❌ ERREUR: Le champ 'Titre' est vide dans l'issue." >&2
+            exit 1
+          fi
+
+          if [ -z "$DESCRIPTION" ]; then
+            echo "❌ ERREUR: Le champ 'Description' est vide dans l'issue." >&2
+            exit 1
+          fi
+
+          if [ -z "$CONTENT" ]; then
+            echo "❌ ERREUR: Le champ 'Contenu complet' est vide dans l'issue." >&2
+            exit 1
+          fi
+
+          if [ -z "$AUTHOR" ]; then
+            echo "❌ ERREUR: Le champ 'Auteur' est vide dans l'issue." >&2
+            exit 1
+          fi
+
+          if [ -z "$LINK" ]; then
+            echo "❌ ERREUR: Le champ 'Link' est vide dans l'issue." >&2
+            exit 1
+          fi
+        
+          echo "title=$(echo "$TITLE" | base64 -w 0)" >> $GITHUB_OUTPUT
+          echo "description=$(echo "$DESCRIPTION" | base64 -w 0)" >> $GITHUB_OUTPUT
+          echo "author=$(echo "$AUTHOR" | base64 -w 0)" >> $GITHUB_OUTPUT
+          echo "link=$(echo "$LINK" | base64 -w 0)" >> $GITHUB_OUTPUT
+          echo "content=$(echo "$CONTENT" | base64 -w 0)" >> $GITHUB_OUTPUT
+
+      - name: Générer le slug et créer la branche
+        run: |
+          TITLE=$(echo "${{ steps.extract.outputs.title }}" | base64 -d)
+          slug=$(echo "$TITLE" | iconv -f utf8 -t ascii//TRANSLIT \
+            | tr '[:upper:]' '[:lower:]' \
+            | sed 's/[^a-z0-9]/-/g' \
+            | sed 's/-\+/-/g' \
+            | sed 's/^-//;s/-$//')
+
+          echo "Slug généré: $slug"
+
+          echo "SLUG=$slug" >> $GITHUB_ENV
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b article-$slug
+
+      - name: Nettoyer le fichier temporaire issue_body.txt
+        run: rm -f issue_body.txt
+
+      - name: Générer le fichier article
+        run: |
+          DATE=$(date +"%m-%d-%Y")
+          FILE="src/content/projects/${{ env.SLUG }}.mdx"
+
+          mkdir -p src/content/projects
+
+          echo "---" > "$FILE"
+          echo "title: \"$(echo "${{ steps.extract.outputs.title }}" | base64 -d)\"" >> "$FILE"
+          echo "description: \"$(echo "${{ steps.extract.outputs.description }}" | base64 -d)\"" >> "$FILE"
+          echo "createdAt: $DATE" >> "$FILE"
+          echo "author: \"$(echo "${{ steps.extract.outputs.author }}" | base64 -d)\"" >> "$FILE"
+          echo "draft: true" >> "$FILE"
+          echo "info:" >> "$FILE"
+          echo "  - text: GitHub" >> "$FILE"
+          echo "    link: $(echo "${{ steps.extract.outputs.link }}" | base64 -d | xargs)" >> "$FILE"
+          echo "    icon:" >> "$FILE"
+          echo "      type: lucide" >> "$FILE"
+          echo "      name: github" >> "$FILE"
+          done
+          echo "---" >> "$FILE"
+          echo "" >> "$FILE"
+
+          echo "${{ steps.extract.outputs.content }}" | base64 -d >> "$FILE"
+
+
+      - name: Commit les changements
+        run: |
+          ls -al src/content/projects/
+          git add src/content/projects/${{ env.SLUG }}.mdx
+          git commit -m "📝 Publication du projet: $(echo "${{ steps.extract.outputs.title }}" | base64 -d)"
+
+      - name: Push vers remote
+        run: |
+          git push --set-upstream origin article-${{ env.SLUG }}
+
+      - name: Préparer les variables PR 🛠
+        run: |
+          TITLE=$(echo "${{ steps.extract.outputs.title }}" | base64 -d)
+          echo "PR_TITLE=$TITLE" >> $GITHUB_ENV
+
+
+      - name: Créer un Pull Request
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: projet-${{ env.SLUG }}
+          destination_branch: master
+          pr_title: "📝 Proposition du projet: ${{ env.PR_TITLE }}"
+          pr_body: |
+            Projet proposé automatiquement depuis une Issue.
+            Merci de le relire avant publication.
+
+            Closes #${{ github.event.issue.number }}
