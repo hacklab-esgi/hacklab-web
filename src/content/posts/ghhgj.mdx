@@ -1,0 +1,57 @@
+---
+title: "ghhgj"
+description: "ghjghj"
+createdAt: 04-29-2025
+author: "ghjghj"
+draft: true
+tags:
+  - ghjjgh
+---
+
+
+## 
+Nous utiliserons la DPAPI pour déchiffrer les secrets des navigateurs basés sur Chromium sur les systèmes Windows. Vous pourrez retrouver un script un peu plus peaufiné et écrit en Rust [ici](https://github.com/Fastiraz/chromium-based-browsers-secrets-dump).
+
+## Qu'est-ce que la DPAPI ?
+La DPAPI (Data Protection API) est un mécanisme de sécurité utilisé dans les systèmes
+Windows pour la gestion des secrets. Elle permet la gestion et la protection des informations sensibles telles que les identifiants d'utilisateur, les mots de passe ou les clés de chiffrement.
+
+## Fonctionnement de la DPAPI
+Les deux fonctions principalement utilisées sont :
+
+- :
+	Permet aux applications de Windows de sécuriser des informations comme des mots de passe, des clés de chiffrement, ou d'autres données privées.
+- :
+	Permet de déchiffrer des données précédemment protégées par .
+
+## Un blob, c'est quoi ?
+Les deux fonctions précédentes prennent en paramètre des data blob. Un Data Blob sous Windows est un type de champ de données qui permet de stocker des quantités massives de données non structurées de façon optimisée.
+
+## Pourquoi la DPAPI ?
+La DPAPI permet de chiffrer les secrets des navigateurs basés sur Chromium et sur les systèmes Windows. Aujourd'hui, la plupart des navigateurs sont basés sur Chromium. Google Chrome, Opera, Brave (le GOAT), Microsoft Edge, Vivaldi et plein d'autres... Les navigateurs Chromium et les systèmes Windows étant les plus répandus, développer un stealer les ciblant permettrait de voler les secrets d'un grand nombre de personnes, ce qui serait particulièrement efficace pour les missions Red Team.
+
+## Le Stealer
+Pour démontrer l'utilisation de la DPAPI pour les secrets des navigateurs Chromium, nous allons développer ensemble un stealer en python.
+Voici les quatre principales étapes du script :
+
+1. **Récupérer la clé** : Extraire la clé de chiffrement à partir du fichier  du navigateur au format JSON. Cette clé est utilisée pour déchiffrer les mots de passe stockés. C'est à ce moment que nous utiliserons la DPAPI, pour déchiffrer la clé et l'utiliser.
+2. **Accéder à la base de données SQLite** : Localiser et copier la base de données  qui contient les secrets chiffrés.
+3. **Extraire le texte chiffré** : Pour chaque entrée dans la base de données, extraire la chaîne de caractères chiffrée qui contient le mot de passe.
+4. **Déchiffrer le mot de passe** : Utiliser la clé déchiffrée et l'algorithme AES pour déchiffrer le mot de passe.
+
+### La clé
+Les clés étant chiffrées en utilisant un algorithme de chiffrement symétrique, AES, nous allons développer une fonction qui permet de récupérer cette clé pour déchiffrer les secrets. La clé est stockée en base64 dans l'objet  et sous la clé . La clé, une fois décodée, possède un suffixe () qu'il faut retirer.
+
+
+
+### Extraction des secrets de la base de données SQLite
+La prochaine étape est de se connecter à la base de données SQLite et de récupérer les informations souhaitées. La base de données est le fichier  que nous copierons dans le fichier .
+Pour récupérer les secrets souhaités nous utiliserons la requête suivante:
+
+
+
+
+### Déchiffrer les secrets
+Une fois le mot de passe chiffré récupéré, nous allons le déchiffrer en utilisant l'algorithme AES. Pour ça, nous utiliserons la fonction  prenant en paramètre le mot de passe chiffré () et la clé () nécessaire pour le déchiffrement. On commence par extraire le vecteur d'initialisation () et le mot de passe chiffré () à partir du texte chiffré. Le vecteur d'initialisation est obligatoire pour le mode GCM. La fonction  avec la clé et le vecteur d'initialisation en paramètre, permet de créer un nouvel objet de chiffrement AES configuré en mode GCM. Cet objet est utilisé par la fonction  pour déchiffrer le mot de passe.
+
+
