@@ -30,7 +30,7 @@ jobs:
 
           TITLE=$(awk '/^### Titre de l'\''Article/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
           DESCRIPTION=$(awk '/^### Description/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
-          CONTENT=$(awk '/^### Contenu complet/ {found=1; next} found' issue_body.txt)
+          CONTENT=$(awk '/^### Contenu complet/ {flag=1; next} /^### Auteur/ {flag=0} flag' issue_body.txt)
           AUTHOR=$(awk '/^### Auteur/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
           TAGS=$(awk '/^### Tags/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
 
@@ -116,7 +116,8 @@ jobs:
           done
           echo "---" >> "$FILE"
           echo "" >> "$FILE"
-          echo "${{ env.CONTENT }}" >> "$FILE"
+          printf "%s\n" "${{ env.CONTENT }}" >> "$FILE"
+
 
       - name: Commit les changements
         run: |
