@@ -129,8 +129,11 @@ jobs:
       - name: Commit les changements
         run: |
           ls -al src/content/posts/
-          git add src/content/posts/${{ env.SLUG }}.mdx
+          git checkout
+          git add --force src/content/posts/${{ env.SLUG }}.mdx
+          git checkout
           git commit -m "📝 Proposer article: ${{ env.TITLE }}"
+          git checkout
 
       - name: Vérification complète avant Push 🔎
         run: |
@@ -151,6 +154,7 @@ jobs:
       - name: Push vers remote
         run: |
           git push --force --set-upstream origin article-${{ env.SLUG }}
+          git checkout
 
 
       - name: Créer Pull Request 🔀
