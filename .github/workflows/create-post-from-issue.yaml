@@ -30,19 +30,12 @@ jobs:
         run: |
           # Ecriture temporaire uniquement pour awk
           echo "$ISSUE_BODY" > issue_body.txt
-          cat issue_body.txt
 
           TITLE=$(awk '/^### Titre de l'\''Article/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
           DESCRIPTION=$(awk '/^### Description/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
           CONTENT=$(awk '/^### Contenu complet/ {flag=1; next} /^### Auteur/ {flag=0} flag' issue_body.txt)
           AUTHOR=$(awk '/^### Auteur/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
           TAGS=$(awk '/^### Tags/ {while (getline && $0 == ""); print}' issue_body.txt | xargs)
-
-          echo "DEBUG: TITLE='$TITLE'"
-          echo "DEBUG: DESCRIPTION='$DESCRIPTION'"
-          echo "DEBUG: CONTENT='$CONTENT'"
-          echo "DEBUG: AUTHOR='$AUTHOR'"
-          echo "DEBUG: TAGS='$TAGS'"
 
           # Vérification des champs
           if [ -z "$TITLE" ]; then
@@ -77,6 +70,7 @@ jobs:
           echo "$DESCRIPTION" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           echo "CONTENT<<EOF" >> $GITHUB_ENV
+          echo "DEBUG: CONTENT='$CONTENT'"
           echo "$CONTENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           echo "AUTHOR=$AUTHOR" >> $GITHUB_ENV
@@ -121,6 +115,8 @@ jobs:
           done
           echo "---" >> "$FILE"
           echo "" >> "$FILE"
+          
+          echo "DEBUG: CONTENT='${{ env.CONTENT }}'"
           echo "${{ env.CONTENT }}" >> "$FILE"
 
 
