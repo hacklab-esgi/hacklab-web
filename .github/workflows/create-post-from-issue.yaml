@@ -70,11 +70,7 @@ jobs:
           echo "$DESCRIPTION" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           echo "CONTENT<<EOF" >> $GITHUB_ENV
-          {
-            echo "CONTENT<<EOF"
-            echo "$CONTENT"
-            echo "EOF"
-          } >> $GITHUB_ENV
+          printf "%s\n" "$CONTENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           echo "AUTHOR=$AUTHOR" >> $GITHUB_ENV
           echo "TAGS=$TAGS" >> $GITHUB_ENV
