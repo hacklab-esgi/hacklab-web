@@ -5,32 +5,171 @@ PRODID:adamgibbons/ics
 METHOD:PUBLISH
 X-PUBLISHED-TTL:PT1H
 BEGIN:VEVENT
-UID:m0OjmKZnFbup8R4VPjIUN
-SUMMARY:Session Exploitation binaire
-DTSTAMP:20250416T135258Z
-DTSTART:20250421T170000Z
-DTEND:20250421T190000Z
-DESCRIPTION:Présentation d’une vulnérabilité binaire simple.
-URL:https://meetup.com/exploitation-binaire
+UID:2024-10-24-l-enumeration-sur-un-systeme-linux-pour-l-attaque-defense@ha
+	cklab_esgi
+SUMMARY:L'énumération sur un système Linux pour l'Attaque / Défense
+DTSTAMP:20250506T101607Z
+DTSTART:20241024T140000Z
+DTEND:20241024T150000Z
+DESCRIPTION:Trouver et exploiter des éléments pour une évélation de privilè
+	gesLimiter les vecteurs d'attaque de notre système\n\nIntervenant(s) : Adm
+	in 3e année
 LOCATION:ESGI Paris
+ORGANIZER;CN="HackLab ESGI":MAILTO:hacklab.esgi@gmail.com
 END:VEVENT
 BEGIN:VEVENT
-UID:gR34_wPYBG1h8gf_Le9Yi
-SUMMARY:CTF interne
-DTSTAMP:20250416T135258Z
-DTSTART:20250505T170000Z
-DTEND:20250505T190000Z
-DESCRIPTION:CTF interne pour les membres réguliers du HackLab.
-LOCATION:Salle 204
+UID:2024-12-19-presentation-basic-exploitation-ad@hacklab_esgi
+SUMMARY:Présentation Basic exploitation AD
+DTSTAMP:20250506T101607Z
+DTSTART:20241219T150000Z
+DTEND:20241219T160000Z
+DESCRIPTION:Au programme:- Présentation des concepts principaux- Exemple d'
+	exploitation kerberos  - Kerberoasting  - AS rep roasting  - Golden ticket
+	- Exemple de privesc AD  - Unquoted service Path  - Insecure service Permi
+	ssionsAccesssible pour tous les niveaux.\n\nIntervenant(s) : Bonziski\, Sp
+	oon\, Azox\, lululufr
+LOCATION:ESGI Paris\, A07
+ORGANIZER;CN="HackLab ESGI":MAILTO:hacklab.esgi@gmail.com
 END:VEVENT
 BEGIN:VEVENT
-UID:LPE38k9B61BYlOxwHn_vD
-SUMMARY:Présentation OSINT
-DTSTAMP:20250416T135258Z
-DTSTART:20250515T170000Z
-DTEND:20250515T190000Z
-DESCRIPTION:Initiation aux techniques OSINT.
-URL:https://meetup.com/osint-session
+UID:2025-01-23-l-aleatoire-au-c-ur-de-la-securite-informatique@hacklab_esgi
+SUMMARY:L'aléatoire au cœur de la sécurité informatique
+DTSTAMP:20250506T101607Z
+DTSTART:20250123T144500Z
+DTEND:20250123T154500Z
+DESCRIPTION:Nous avons le plaisir de vous inviter à une conférence passionn
+	ante sur le thème : 'L'aléatoire au cœur de la sécurité informatique'\, qu
+	i se tiendra ce jeudi 23 Janvier 2025.Un mauvais aléatoire peut compromett
+	re vos systèmes les plus sécurisés. Venez découvrir pourquoi l'entropie es
+	t essentielle en cryptographie\, les erreurs à éviter et les meilleures pr
+	atiques pour renforcer la sécurité de vos données.Au programme :- Différen
+	ce entre hasard 'vrai' et pseudo-aléatoire.- Rôle et utilisation de l'entr
+	opie dans nos systèmes modernes.- Bonnes pratiques et outils pour auditer 
+	et améliorer l'aléatoire de vos systèmes.\n\nIntervenant(s) : balkouille\,
+	 SKIP\, Hiruko
 LOCATION:ESGI Paris
+ORGANIZER;CN="HackLab ESGI":MAILTO:hacklab.esgi@gmail.com
+END:VEVENT
+BEGIN:VEVENT
+UID:2025-02-13-retex-post-etudes@hacklab_esgi
+SUMMARY:RETEX post-études
+DTSTAMP:20250506T101607Z
+DTSTART:20250213T180000Z
+DTEND:20250213T200000Z
+DESCRIPTION:💡 Au programme :- Leur retour d’expérience sur la recherche d’e
+	mploi 💼- Leur parcours professionnel 🚀- Leurs projets futurs 🔮- Une sessio
+	n de questions/réponses 🎤\n\nIntervenant(s) : Baptiste Demarche\, Antoine 
+	Fevre\, Joakim Pettersen\, Léo Pérochon
+LOCATION:ESGI Paris\, A07
+ORGANIZER;CN="HackLab ESGI":MAILTO:hacklab.esgi@gmail.com
+END:VEVENT
+BEGIN:VEVENT
+UID:2025-02-24-presentation-de-exegol@hacklab_esgi
+SUMMARY:Présentation de Exegol
+DTSTAMP:20250506T101607Z
+DTSTART:20250224T180000Z
+DTEND:20250224T200000Z
+DESCRIPTION:💡 Au programme :- Présentation du projet Exegol- Prise en main 
+	et pratique- AMA (Ask Me Anything)\n\nIntervenant(s) : Charlie Bromberg ak
+	a Shutdown
+LOCATION:ESGI Paris
+ORGANIZER;CN="HackLab ESGI":MAILTO:hacklab.esgi@gmail.com
+END:VEVENT
+BEGIN:VEVENT
+UID:2025-03-19-la-presentation-d-un-tiering-model-adaptatif@hacklab_esgi
+SUMMARY:La présentation d’un tiering model adaptatif
+DTSTAMP:20250506T101607Z
+DTSTART:20250319T180000Z
+DTEND:20250319T190000Z
+DESCRIPTION:Vous avez de bonnes bases en systèmes et réseaux ? Vous avez su
+	ivi la conférence précédente ou vous avez de bonnes connaissances en Activ
+	e Directory ? Alors cette conférence est faite pour vous !\n\nIntervenant(
+	s) : NZR\, Bageto
+LOCATION:ESGI Paris\, A07
+ORGANIZER;CN="HackLab ESGI":MAILTO:hacklab.esgi@gmail.com
+END:VEVENT
+BEGIN:VEVENT
+UID:2025-03-27-hacking-iot-du-reverse-de-firmware-jusqu-aux-attaques-sans-f
+	ils@hacklab_esgi
+SUMMARY:Hacking IoT: Du reverse de firmware jusqu'aux attaques sans fils
+DTSTAMP:20250506T101607Z
+DTSTART:20250327T193000Z
+DTEND:20250327T203000Z
+DESCRIPTION:Ils sont tout autour de nous\, ils ont une importance cruciale 
+	dans notre vie et pourtant… Sont-ils réellement sécurisés ? Comment les ob
+	jets connectés que vous jetez peuvent trahir vos secrets ? Pourquoi l'alar
+	me de votre domicile ne vous protège (peut-être) pas ?Pendant 1h\, découvr
+	ez les secrets de la sécurité des loT !\n\nIntervenant(s) : HSbF6
+LOCATION:Discord HackLab ESGI
+ORGANIZER;CN="HackLab ESGI":MAILTO:hacklab.esgi@gmail.com
+END:VEVENT
+BEGIN:VEVENT
+UID:2025-04-07-rootkit-noyau-en-langage-rust@hacklab_esgi
+SUMMARY:Rootkit noyau en langage Rust
+DTSTAMP:20250506T101607Z
+DTSTART:20250407T170000Z
+DTEND:20250407T180000Z
+DESCRIPTION:À travers cette présentation\, vous apprendrez ce qu'est un roo
+	tkit et saurez reconnaître ses différents types se promenant sur le darkwe
+	b. Nous vous détaillerons des techniques et autres fourberies permettant à
+	 un rootkit d'être indétectable par le système. Nous verrons également les
+	 nombreuses contre-mesures plus ou moins efficaces et dresserons un portra
+	it de célèbres rootkit. Par-dessus tout\, nous vous proposons une approche
+	 programmatique pour créer son propre rootkit en langage Rust. Sortez votr
+	e costume de ninja\, car nous allons nous camoufler dans les méandres du s
+	ystème Windows \; préparez-vous à en tromper ses gardiens.\n\nIntervenant(
+	s) : Rafik Frarma\, Jules Leveillard\, Antoine C.\, Mathis L.
+LOCATION:ESGI Paris\, A07
+ORGANIZER;CN="HackLab ESGI":MAILTO:hacklab.esgi@gmail.com
+END:VEVENT
+BEGIN:VEVENT
+UID:2025-04-11-explication-des-ctf@hacklab_esgi
+SUMMARY:Explication des CTF
+DTSTAMP:20250506T101608Z
+DTSTART:20250411T190000Z
+DTEND:20250411T200000Z
+DESCRIPTION:🧠 C’est quoi un CTF (Capture The Flag) ?🔍 Comment fonctionne un
+	e team CTF ?💻 Pourquoi s’y investir quand on fait de la cybersécurité ?Nou
+	s vous expliquerons tout ce vendredi lors d’une session ouverte à toutes e
+	t tous.Un bon moyen de découvrir un univers aussi formateur que stimulant 
+	👾\n\nIntervenant(s) : lululufr\, Gelven
+LOCATION:Discord HackLab ESGI
+ORGANIZER;CN="HackLab ESGI":MAILTO:hacklab.esgi@gmail.com
+END:VEVENT
+BEGIN:VEVENT
+UID:2025-04-28-detecter-les-images-manipulees-par-ia-objectif-realiste-ou-m
+	ission-impossible@hacklab_esgi
+SUMMARY:Détecter les images manipulées par IA : objectif réaliste ou missio
+	n impossible ? 
+DTSTAMP:20250506T101608Z
+DTSTART:20250428T170000Z
+DTEND:20250428T180000Z
+DESCRIPTION:👀 Aujourd’hui\, n’importe qui peut générer une fausse image blu
+	ffante avec une IA.Sur les réseaux\, dans la pub\, voire dans des contexte
+	s sensibles... les dérives sont déjà là.Mais est-ce qu’on peut encore les 
+	repérer ?Les outils actuels sont-ils vraiment efficaces… ou à côté de la p
+	laque ? 🤖🔍👉 Rony Abecidan viendra nous expliquer les vraies limites des dé
+	tecteurs actuels\, pourquoi c’est un enjeu critique en cybersécurité\, et 
+	ce qu’il reste à inventer pour ne pas se faire berner.\n\nIntervenant(s) :
+	 Rony Abecidan
+LOCATION:ESGI Paris\, A07
+ORGANIZER;CN="HackLab ESGI":MAILTO:hacklab.esgi@gmail.com
+END:VEVENT
+BEGIN:VEVENT
+UID:2025-05-15-geoint-analyse-d-une-frappe-en-ukraine@hacklab_esgi
+SUMMARY:GEOINT - Analyse d'une frappe en ukraine
+DTSTAMP:20250506T101608Z
+DTSTART:20250515T134500Z
+DTEND:20250515T144500Z
+DESCRIPTION:Cette présentation retrace l’analyse géospatiale et information
+	nelle d'une attaque sur la ville de Soumy. En croisant des images satellit
+	es\, des vidéos open source\, elle identifie les points d’impact\, la zone
+	 de lancement probable et les cibles visées.Disclaimer : cette présentatio
+	n n’est pas à but politique\, de plus certaines vidéos et photo de guerre 
+	pourraient être diffusées\, si cela vous perturbe merci de ne pas venir.\n
+	\nIntervenant(s) : Mehdy Abadi
+URL:https://www.meetup.com/hacklab_esgi/events/307657655/
+LOCATION:ESGI Paris
+ORGANIZER;CN="HackLab ESGI":MAILTO:hacklab.esgi@gmail.com
 END:VEVENT
 END:VCALENDAR

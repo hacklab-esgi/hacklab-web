@@ -5,7 +5,7 @@
   "packageManager": "pnpm@9.15.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node generate-ics.cjs && astro build",
     "start": "node dist/server/entry.mjs",
     "preview": "astro preview",
     "astro": "astro",

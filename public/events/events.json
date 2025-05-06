@@ -64,7 +64,7 @@
   },
   {
     "title": "Rootkit noyau en langage Rust",
-    "start": "2025-04-7T19:00:00",
+    "start": "2025-04-07T19:00:00",
     "duration": 1,
     "location": "ESGI Paris, A07",
     "speaker": "Rafik Frarma, Jules Leveillard, Antoine C., Mathis L.",
@@ -94,8 +94,8 @@
     "start": "2025-05-15T15:45:00",
     "duration": 1,
     "location": "ESGI Paris",
-    "speaker": "CuiCui",
-    "description": "Cette présentation retrace l’analyse géospatiale et informationnelle de l’attaque russe sur la ville de Sumy. En croisant des images satellites, des vidéos open source, elle identifie les points d’impact, la zone de lancement probable et les cibles visées.</br></br>Disclaimer : cette présentation n’est pas à but politique, de plus certaines vidéos et photo de guerre pourraient être diffusées (pas de cadavres bien sûr ), si cela vous perturbe merci de ne pas venir.",
-    "url": "https://meetup.com/exploitation-binaire"
+    "speaker": "Mehdy Abadi",
+    "description": "Cette présentation retrace l’analyse géospatiale et informationnelle d'une attaque sur la ville de Soumy. En croisant des images satellites, des vidéos open source, elle identifie les points d’impact, la zone de lancement probable et les cibles visées.</br></br>Disclaimer : cette présentation n’est pas à but politique, de plus certaines vidéos et photo de guerre pourraient être diffusées, si cela vous perturbe merci de ne pas venir.",
+    "url": "https://www.meetup.com/hacklab_esgi/events/307657655/"
   }
 ]

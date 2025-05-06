@@ -22,16 +22,23 @@ export default function CalendarClient() {
           headerToolbar: {
             left: 'prev,dynamicTitle,next',
             center: '',
-            right: 'today timeGridWeek,dayGridMonth,listYear subscribeButton',
+            right: 'today timeGridWeek,dayGridMonth,listYear subscribeButton google',
           },
           customButtons: {
             dynamicTitle: { text: '' },
             subscribeButton: {
-              text: '📅',
+              text: 'Calendar',
               click: () => {
                 window.location.href = 'webcal://hacklabesgi.netlify.app/calendar.ics';
               },
               hint: 'S’abonner au calendrier',
+            },
+            google: {
+              text: 'Google',
+              click: () => {
+                window.location.href = 'https://calendar.google.com/calendar/r?cid=webcal://hacklabesgi.netlify.app/calendar.ics';
+              },
+              hint: 'S’abonner au calendrier google',
             },
           },
           buttonText: {
@@ -118,6 +125,16 @@ export default function CalendarClient() {
             info.el.addEventListener('mouseleave', () => {
               tooltip.style.display = 'none';
             });
+
+            
+            const googleBtn = document.querySelector('.fc-google-button');
+            if (googleBtn) {
+              googleBtn.innerHTML = `<img src="/img/google.png" alt="Google Calendar" style="height: 1em; vertical-align: middle;">`;
+            }
+            const subscribeBtn = document.querySelector('.fc-subscribeButton-button');
+            if (subscribeBtn) {
+              subscribeBtn.innerHTML = `<img src="/img/calendar.png" alt="Calendar" style="height: 1em; vertical-align: middle;">`;
+            }
           },
         });
 
