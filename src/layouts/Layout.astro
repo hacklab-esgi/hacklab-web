@@ -6,6 +6,7 @@ import '../styles/reset.css';
 import Background from '../components/Background.astro';
 import Navbar from '../components/Navbar.astro';
 import LayoutGrid from '../components/LayoutGrid.astro';
+import Announcement from '../components/Announcement.astro';
 import { name, themeColor, twitterHandle } from 'spectre:globals';
 
 interface Props {
@@ -63,6 +64,7 @@ const { title, description, image, pagefindIgnore, article } = Astro.props;
 		{description && <meta name="twitter:description" content={description} />}
 	</head>
 	<body>
+		<Announcement />
 		<Navbar />
 		<main data-pagefind-ignore={pagefindIgnore}>
 			<LayoutGrid>
