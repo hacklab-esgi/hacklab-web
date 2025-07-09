@@ -1,0 +1,300 @@
+---
+title: "Android Forensic Analysis: Judicial Duty, Acquisition, and Digital Artifacts"
+description: "Explain judicial duty, acquisition, and digital artifacts on an Android forensic analysis"
+createdAt: 07-09-2025
+draft: true
+tags:
+  - forensic
+  - android
+author: "Bageto"
+---
+
+
+# Android Forensic Analysis: Judicial Duty, Acquisition, and Digital Artifacts
+
+
+*Bageto (Tom B.) - 08/07/2025*
+
+---
+## 1. Mobile Forensic Analysis Process
+
+Mobile forensic analysis is an integral part of a criminal investigation, where every action must meet strict legal requirements and respect the integrity of the evidence. This process consists of four main phases: **Preservation**, **Acquisition**, **Review/Analysis**, and **Final Report Preparation**. Each of these steps plays a vital role in the traceability and forensic exploitation of the collected digital artifacts.
+### 1.1 Preservation Phase
+
+The first step in any digital investigation, the **preservation phase**, consists of **protecting the investigation scene**, **securitizing evidence**, and **guaranteeing its integrity** by ensuring rigorous documentation and complete traceability. Any intervention must avoid modifying the data while ensuring its preservation in a state that is conclusive in court.
+
+Before any intervention, the investigator must **obtain legal authorization** (search warrant or judicial requisition), in accordance with applicable legislation. This legal framework varies by country: in France, a warrant is required except in cases of flagrante delicto, while in the United States, certain specific circumstances may allow seizure without a prior warrant (e.g., emergencies, consent, evidence at risk).
+
+Once the intervention has been authorized, the preservation phase can begin, with the following steps:
+- **Securing and assessing the scene**,
+- **Initial scene documentation**,
+- **Physical seizure of evidence**,
+- **Isolation of devices**,
+- **Labeling and bagging of seized items**.
+
+##### Security and Assessment
+
+The first task is to **secure the physical environment** (location of seizure) to prevent any alteration or destruction of evidence. Improper handling at this stage can result in irretrievable data loss or contamination, compromising the forensic value of the evidence.
+##### Initial Documentation
+
+Each item present at the scene must be **photographed, described, and positioned** (condition, location, connections). For mobile devices, the following information must be recorded immediately:
+- Power status (on or off),
+- Lock active or not (code, biometrics),
+- Date and time displayed,
+- Battery level,
+- Active applications or processes.
+
+##### Seizure of Items
+
+The next step is to **seize all associated equipment and accessories**, including:
+- Mobile devices (phones, tablets),
+- Data cables and power adapters,
+- SIM cards and their cases,
+- Memory cards and other removable media,
+- Connected computers or terminals.
+
+##### Network Isolation
+
+Once seized, the devices must be **isolated from any network** to prevent any remote modification (wiping, encryption, intrusion). Several methods can be used:
+
+- **Airplane mode**, although this method leaves GPS or NFC active. (This mode can allow bypassing a remote wipe command if the phone is enrolled in an MDM).
+- **Faraday bag**, blocking all incoming/outgoing communications,
+- **Jamming device**, used only in a legal and controlled environment.
+
+The preservation phase is the first of the process. It involves securing the crime scene and seizing evidence in a secure, documented, and formal manner, without altering its contents, while preserving the chain of custody.
+Before beginning this phase, the investigator must obtain a search warrant, in accordance with applicable laws and regulations, particularly criminal ones. Note that this varies by country; in the United States, warrantless searches are permitted under certain circumstances.
+
+##### Labeling and Secure Storage
+
+Finally, each item is labeled, bagged, and placed in a sealed container that is resistant to physical agents (humidity, heat, shock). A traceability (chain of custody) log is updated, specifying the time, location, person responsible for the seizure, and the nature of the items. At the end of this phase, the device is ready to be transferred to a laboratory for forensic acquisition.
+
+### 1.2 Acquisition Phase
+
+The acquisition phase consists of **copying/retrieving data from the seized device**, without altering it, for subsequent analysis. This step is crucial because it determines the quality and reliability of the analysis.
+
+Data can be extracted from several sources:
+- Internal storage (RAM/Disk)
+- SIM card
+- Telephone operator
+- Cloud services
+
+*Access to data held by operators or cloud providers requires a judicial requisition and is highly dependent on local privacy and data retention laws.*
+
+The first step in acquisition consists of precisely identifying the seized device. The investigator can rely on the physical characteristics of the phone, the label generally located under the battery, as well as identifiers such as the **IMEI** (for GSM devices), the **MEID/ESN** (for CDMA devices), or the **ICCID** code of the SIM card. Specialized tools, such as Cellebrite UFED Phone Detective, can automate this identification.
+
+Once the model has been identified, the most appropriate acquisition method must be chosen. Logical acquisition extracts data accessible via the system interface. Physical acquisition provides a bit-by-bit copy of the memory, which is often more comprehensive. Finally, some situations require advanced acquisition, combining several techniques or targeting specific areas of the system.
+
+Acquisition can be performed directly in the field, in emergency situations, such as during airport security checks or at a checkpoint. This is referred to as Live Triage. In most common cases, acquisition is performed in a laboratory, in a secure environment, ensuring better conditions for data preservation and analysis.
+
+The acquisition process depends on the device's state at the time of capture. If it is powered on, an image of the internal storage must first be taken without removing the SIM card or memory card. These will be extracted and acquired separately in a second step. On the other hand, if the phone is switched off, we start by removing the SIM card and the memory card to acquire them separately, then we proceed to extract the internal data.
+
+### 1.3 Review and Analysis Phase
+
+Review involves searching for digital evidence to note the **condition of each artifact** (deleted, hidden, encrypted, etc.), their **exact location**, their **content**, and their **usefulness** for the current case. Analysis, on the other hand, aims to interpret the results of the review to extract meaning. This involves understanding the scope of each item discovered, linking them together, and assessing their **relevance** in the context of the investigation.
+
+Before beginning this phase, it is essential that a clear context be provided to those in charge of the review and analysis to better interpret the value of each piece of data and avoid missing a key element.
+The tools used play a crucial role in this phase. It is recommended to always validate the results obtained with one tool by reproducing them with another to strengthen the reliability of the evidence.
+
+At the end of this phase, the investigation should allow for scientifically based conclusions to be drawn based on the evidence gathered, which could contribute to **establishing the guilt or innocence** of a suspect.
+
+### 1.4 Final Report Writing Phase
+
+The final step in the mobile forensic process is writing the report. Although final, this phase is as important as the previous ones, as it allows for the formalization of the investigation's results and the presentation of the findings in a **clear and usable manner**.
+
+The report must summarize all the work carried out: the initial hypotheses, the data preservation and acquisition methods, the tools used for examination and analysis, and the evidence uncovered. Depending on the context, the report **may take different forms**. In legal proceedings (criminal or civil), a formal written report is generally required. In other cases, such as an incident response or an administrative investigation, a more informal written or oral report may suffice.
+
+Regardless of its format, the report must be understandable by **non-technical** people, such as a judge or a juror. Overly complex technical details should be placed in an appendix. The document must be well-structured, logical, self-contained, and written without errors or inaccuracies.
+
+## 2. The Android Logging System: How Does It Work?
+
+### 2.1 Temporary Storage in RAM
+
+On an Android device, the logging system is a set of circular buffers structured and managed by the `logd` system process (the buffers are of fixed size; once full, the pointer starts over and overwrites the oldest messages, hence the name _circular buffer_).
+
+The logs contained in these buffers are consulted by `logcat`, which is the main tool for viewing logs.
+
+To summarize the technical operation of logging: Android components (apps, services, kernel) send logs to `logd` -> `logd` stores them in circular buffers -> `logcat` allows you to read these buffers in real time or retrospectively via ADB.
+
+Here are the 'official' *buffers* of `logcat` via `logd`:
+
+|**Buffer Name**|**Function**|**Presence**|
+|---|---|---|
+|`main`|User application logs|Always|
+|`system`|System component logs|Always|
+|`radio`|Telephony, modem|Often (sometimes restricted)|
+|`events`|System events (binary)|Always|
+|`crash`|Application crash logs|Android 10+|
+|`kernel`|Linux kernel (`dmesg`)|Indirectly (not via `logcat`, but sometimes integrated into rooted forensic tools)|
+
+In-memory logs, managed by `logd` circular buffers, have inherent volatility, which is a key issue in forensics. These buffers are stored in RAM, meaning they are automatically erased when the device is rebooted or powered off. Furthermore, the buffers are limited in size, and when they are full, new logs overwrite old ones in a circular fashion, resulting in the loss of important information if extraction is not performed quickly. This log rotation makes access to these logs crucial but ephemeral, requiring rapid response when acquiring data in the event of an incident. 
+### 2.2 Persistent Disk Storage
+
+In addition to `logcat` buffers, Android also generates **persistent logs stored on disk**, which **do not depend on RAM** and are therefore preserved even after reboots. These files, although outside the `logd` loop, can contain critical forensic information. These include:
+
+- **internal application logs** in `/data/data/<package>/` (often in `.log`, `.db`, ​​or `.xml` format),
+- **system crash reports** in `/data/system/dropbox/`,
+- **recover logs** in `/cache/recovery/log`
+- **network statistics** via `/proc/net/` or `dumpsys netstats` commands,
+- and sometimes custom log files created by apps or system processes.
+
+Because these artifacts are written to storage memory (eMMC/UFS), they are **less susceptible to volatility** than `logcat` buffers. They therefore represent a **more durable source of evidence**, but their extraction generally requires root access or a specialized forensic tool.
+
+|**Log Type**|**Access without root**|**Access with root**|**Comments**|
+|---|---|---|---|
+|**Application logs** (`/data/data/<package>/`)|Accessible if the device is unlocked and developer mode is enabled|Full access to all applications, including system apps|User apps can be accessed without root, but system apps require root|
+|**System crash reports** (`/data/system/dropbox/`)|Accessible if the device is unlocked|Full access to system and preinstalled app crashes|Crash reports may be accessible without root, but some sensitive logs might be protected|
+|**Recovery logs** (`/cache/recovery/log`)|Accessible in recovery mode without root|Full access from the normal operating system|Accessible without root in recovery mode, but requires root to access from Android normally|
+|**Network logs** (`/proc/net/`, `dumpsys netstats`)|Accessible via `adb shell dumpsys netstats`|Full access to detailed network connection data|Viewable via ADB without root, but advanced details require root|
+|**System logs** (`logcat`)|Access to `main`, `system`, `crash`, `events` buffers|Full access to `radio`, `kernel`, etc. buffers|`logcat` can read certain buffers without root, but access to `radio` or `kernel` requires root|
+|**Kernel logs** (`dmesg`, `kernel logs`)|Not accessible without root|Full access via `dmesg` or `logcat -b kernel`|Kernel logs are generally accessible only with root|
+|**Custom application logs**|Access to logs stored in custom files under `/data/data/`|Full access, including system apps|Custom logs may be accessible without root for user apps|
+
+Recent versions of Android, such as Android 10 and later, have introduced stricter restrictions on access to logs and system memory for security and privacy reasons. And yes, in some older versions of Android, each app had read permissions to other apps' logs.
+Later, Android 7 began imposing full storage encryption, and newer versions restrict access to certain system resources, such as radio and kernel logs. Recent versions also favor fast storage technologies, such as UFS, to improve system responsiveness.
+
+## 3. Acquisition Methods
+
+The acquisition process involves creating forensic images and collecting all necessary data from the searched device. We frequently encounter eight types of acquisition: **Manual, Logical, Physical, File-System, Triage, JTAG, Chip-Off, and Micro Read.**
+
+**Micro Read** is an acquisition method that involves physically reading the cells of a memory chip using an electron microscope. Very expensive and rarely used, it is reserved for the most sensitive cases, generally when all other techniques have failed.
+
+**Triage Acquisition**, on the other hand, is commonly used to quickly extract targeted data, either in the field (Live Triage) or in the laboratory (Post-Mortem Triage), in order to prioritize the devices for examination.
+
+*Due to their specific characteristics, these two methods will not be discussed further in this article.*
+
+**Manual Acquisition** is the simplest and least technical method. It involves exploring the device directly via its interface, **without using any specialized tools**. It is sometimes used in minor administrative investigations or during border controls, when access to forensic tools is limited.
+This method does not recover deleted or hidden data.
+
+**Logical acquisition** consists of extracting, in a forensic-compliant manner, user-accessible files and folders from the device's logical partitions.
+This method relies on the use of the operating system interfaces via a wired or wireless connection. It allows the recovery of user-visible data, such as call logs, messages, contacts, calendars, multimedia files, etc. However, it **does not provide access to protected system files, free space, or permanently deleted data.** 
+Logical acquisition is widely supported by mobile analysis tools and can be performed on most unlocked devices. It is fast, reliable, and can sometimes recover files marked for deletion but still present on the system.
+
+**Physical acquisition** involves creating a complete bit-for-bit copy of an Android device's internal storage. Unlike logical acquisition, it extracts not only visible files, but also deleted, hidden, and system-protected data, as well as unallocated space. This type of acquisition also extracts elements of random access memory (RAM), although this is often limited depending on the model, the method used, and the state of the device at the time of acquisition.
+This method is **particularly useful when anti-forensic techniques are suspected, or when recovering deleted or hidden files is crucial.**
+By obtaining a raw memory image, the analyst can search for residual artifacts, analyze fragments of partially erased data, and detect inconsistencies indicative of attempted scrambling or digital sabotage.
+
+**File-system** acquisition is an intermediate method between logical and physical acquisition. It allows the extraction of not only user data, but also the file system structure, system configurations, application settings, and certain system files. This method can, for example, **recover deleted data from partially existing SQLite databases**. The Android phone generally needs to be unlocked and USB debugging enabled for this acquisition to work.
+
+**JTAG acquisition** allows direct access to the internal memory via the JTAG ports on the motherboard. Requires disassembly of the phone and physical connection to the test pins. It can be used even if the device is locked or USB debugging is disabled. The extracted data is in raw format, often encrypted.
+
+Finally, **Chip-off acquisition** involves **physically removing** the phone's memory chip to extract a bit-by-bit image. Used on severely damaged devices. Requires advanced technical skills and specialized equipment.
+
+### 3.1 Common Forensic Acquisition Tools
+
+Here is a non-exhaustive list of tools that can be used during acquisition phases:
+
+- **Cellebrite UFED**
+Industry standard, enables logical, physical, file system, and cloud acquisitions; supports a wide range of Android models.
+
+- **Magnet AXIOM**
+Widely used for in-depth post-acquisition analysis, but also capable of logical and file system acquisition via Axiom Mobile.
+
+- **MSAB XRY**
+Comprehensive solution for mobile acquisition, including in the field (XRY Express); good support for locked Android devices.
+
+- **Oxygen Forensic Detective**
+Offers logical, physical, and cloud acquisitions, with good support for application data (WhatsApp, Signal, etc.).
+
+- **MOBILedit Forensic Express**
+A more accessible tool, supporting many Android brands for logical, filesystem, and physical acquisitions (if rooted).
+
+- **Autopsy + Android Modules (with ADB)**
+Less intuitive, but usable with scripts or modules for logical acquisition via ADB on unlocked devices.
+
+- **ADB (Android Debug Bridge)**
+Command-line utility for performing logical (and partially filesystem) extractions if developer mode is enabled.
+
+- **JTAG Box / RIFF Box / Z3X JTAG Tool**
+Used for JTAG acquisitions, require specific hardware and microsoldering skills.
+
+- **Chip-off Tools (fume hood + eMMC/eUFS readers)**
+Specialized readers for reading extracted memory chips; examples: **UP828 Programmer**, **Z3X Easy JTAG Plus**, etc.
+
+> *Non-exhaustive list*
+
+### 3.2 Technical Constraints
+
+Acquisition capabilities are heavily influenced by the **Android version** and the **enabled encryption mechanisms**. Starting with Android 7, **full storage encryption (FBE/FDE)** is enabled by default, restricting access to data if the device is locked. Recent versions (Android 10+) also impose **access restrictions to system partitions** and logs, even for forensic tools. These protections enhance security but complicate extractions, sometimes making physical or file-system acquisition impossible without root access or an exploitable vulnerability.
+
+## 4. Forensic Analysis
+
+### 4.1 Locating and Exploiting Common Artifacts
+
+On Android, the actual location of artifacts (SQLite contact databases, call logs, SMS/MMS files, etc.) is never fixed: it depends on the firmware installed for the region or carrier, called **CSC** *(Country/Carrier-Specific Code)*, which boils down to the regional customization of the firmware. 
+Each CSC includes its own system applications and settings; it can therefore introduce or relocate providers (for example, `com.sec.android.provider.logsprovider` on Samsung) and automatically enable **File-Based Encryption**, which switches certain databases to the device-protected directory (`/data/user_de/0/...`). Additionally, local legal constraints (GDPR, ban on call recording, absence of Google services in China, etc.) force manufacturers to modify or disable certain functions, generating other paths or empty databases. For the forensic analyst, the first step is therefore to identify the active CSC (via `getprop ro.boot.hwc` or the code _#1234#_ on Samsung), then systematically map the `/data/data/*/databases/` and `/data/user_de/*/databases/` folders to identify the correct files before any extraction or analysis. 
+
+*1234 Samsung: **AP** (main firmware), **CP** (modem) (which allows the phone to communicate with cellular antennas, internal radio part) and **CSC** (Active Country/Carrier-Specific Code)*
+
+#### Contacts and Phone Call Artifacts
+
+Contacts and call logs do not have a single location:
+- **Depending on the model, settings, and installed apps**, they can reside in the Google account, the phone's internal memory, or the SIM card.
+- **Before any manual acquisition**, always check the source indicated by the device to avoid missing data stored elsewhere.
+- On **Android**, contacts and call logs are often grouped in **the same SQLite database**, but this organization varies from one manufacturer (and sometimes from one region) to another.
+
+On the Android file system, the location of the SQLite databases that group contacts and call history varies mainly with the OS version and the manufacturer's overlay:
+
+| **Generation / Manufacturer** | **Main Path**                                                 | **Observed Files**                       |
+| ----------------------------- | ------------------------------------------------------------- | ---------------------------------------- |
+| **“Classic” Android ≤ v5/6**  | `/data/data/*.providers.contacts/databases/`                  | `contacts.db`, `contacts2.db`, `logs.db` |
+| **Recent Android (AOSP)**     | `/data/data/com.android.providers.contacts/databases/`        | `contacts2.db` (contacts)                |
+| **Samsung & derivatives**     | `/data/data/com.sec.android.provider.logsprovider/databases/` | `logs.db` (call logs)                    |
+
+- **“Classic”** = historical convention from early generations (≤ 2015 or so): more “flexible” paths and sometimes contact-log merging.
+- **“AOSP (recent)”** = modern convention from Google's reference code (≥ Android 7): explicit package names, more stable schemas. (.com ...)
+
+#### SMS/MMS Artifacts
+
+On Android, SMS/MMS messages are generally stored in `mmssms.db`, ​​a SQLite database located under the "telephony" provider. The exact location and schema may vary depending on the brand, region, or encryption applied.
+
+- **Standard Location**
+`/data/data/com.android.providers.telephony/databases/mmssms.db`
+SQLite 3 database containing SMS, MMS, drafts, and metadata (number, timestamp, status, attachments).
+- **Manufacturer/Overlay Variants**
+Folder or filename may be modified (e.g., `/databases/msgstore.db` for some Chinese OEMs*).
+Overlays can separate MMS and SMS into two databases or encrypt the database when the system is locked.
+
+*OEM = Original Equipment Manufacturer*
+
+#### Network and Location Artifacts
+
+Cellular network information on Android devices can be found in the `/data/data/com.google.android.location/files/` folder.
+- `cache.cell` → last **50 cell towers** visited (antenna ID, timestamp).
+- `cache.wifi` → last **200 Wi-Fi access points** (MAC + latitude/longitude).
+
+This is a proprietary binary format; it must be decoded with a tool like **android-locdump** or the built-in parsers of forensic suites (Cellebrite, Magnet, Oxygen).
+
+It is also possible to retrieve Google Maps history from the `/data/data/com.google.android.apps.maps/databases/` folder. - `da_destination_history.db` → **departure/destination** coordinates for navigation.
+- `search_history.db` → **searches and suggestions** for locations.
+
+**Note:** These files require full file system access (root or agent); once extracted, they reveal a rich history (cells, Wi-Fi, routes, queries) useful for reconstructing an Android user's movements.
+
+#### System artefacts
+
+On Android, the **`/data/system/`** directory (root access required) contains key system artefacts:
+
+|**File / Subfolder**|**Forensically exploitable content**|
+|---|---|
+|`packages.xml`|Inventory of installed applications: package name, APK path, install date, granted permissions.|
+|`usagestats/usage-history.xml`|App usage history: last execution, activity duration, launch counter.|
+|`users/0/accounts.db`|Configured accounts (Google, Facebook, Dropbox…): identifier, token/MD5 of password, provider.|
+|`password.key`|PBKDF2 hash of the screen lock code or password.|
+|`gesture.key`|SHA-1 hash of the screen lock pattern.|
+
+By combining these files, the analyst can: list all installed apps, reconstruct usage chronology, identify existing cloud accounts, and attempt to crack the screen lock (via offline attack on `password.key`/`gesture.key`). All these traces are located in the same place; a “full file system” dump is therefore sufficient to extract and correlate them.
+
+#### Multimedia Files Artifacts
+
+On Android, multimedia files are distributed between shared storage (visible without root access) and the private space of apps; locating them correctly is therefore essential. Photos/videos taken by the camera initially reside in **`/storage/emulated/0/DCIM/`** (and, if applicable, on the SD card), accompanied by **EXIF** metadata that reveals the date, model, and sometimes GPS. Apps then manage their own media: since Android 11, they generally write them under **`/Android/media/<package>/…`** (e.g., **WhatsApp/Media/** where each image, video, or voice note remains unencrypted), while some, more protective ones, like Signal, encapsulate the content as **BLOB** in their internal SQLite databases (**`/data/data/<package>/databases/`**), accessible only with root access. Finally, consider system thumbnails and caches: often surviving the deletion of the originals, they confirm that a file existed.
+
+*BLOB (Binary Large Object) = field type designed to store binary data. No interpretation by the SQL engine because the database simply stores and retrieves the binary stream.*
+
+Cross-referencing these sources allows us to reconstruct the chronology of activities (installation, launch, sharing, movements) and identify possible deletions via thumbnails or persistent BLOBs. Thus, the probative value of Android relies on exhaustive collection and precise correlation between system artifacts and application data.
+
+### 4.2 Importance of Documentation and Timestamping
+
+Beyond the technical aspects, rigorous documentation of each extraction step is essential to ensure the forensic value of digital evidence. Recording the exact time, the tool, the software version, the acquisition method (logical, full-file system, JTAG, etc.), and the settings applied constitutes the first building block of the **chain of custody**: anyone who takes over the file will be able to verify that the artifacts actually came from the seized device, that no intrusive manipulation has altered their content, and that the fingerprints (SHA-256 hashes) calculated at the time of seizure still match those of subsequent analyses. Detailed documentation, checklists of paths explored, screenshots, ADB command logs, reports generated by forensic suites, also facilitates **reproducibility**: if the defense or another expert repeats the extraction, they must end up with the same files and timestamps. Finally, in a legal context, it is this traceability that allows the magistrate to assess the reliability of the conclusions and rule out any disputes related to unclear or undocumented methodology. 
+
+## 5. Conclusion
+
+The success of an Android forensic acquisition relies on a subtle balance: the most effective techniques must be leveraged while scrupulously respecting the legal framework that **guarantees the admissibility of evidence**. Each step, from preservation to report writing, must be time-stamped, logged with the tools and versions used, and supported by SHA-256 fingerprints to maintain an indisputable chain of custody. Speed ​​of intervention is essential to capture volatile data (logcat buffers, caches) before it disappears, while understanding recent Android protections (FBE encryption, SELinux policies, access restrictions) determines the depth of extraction. Analysis gains relevance when it **meticulously correlates system artifacts and application data** (EXIF, SQLite databases, BLOBs, thumbnails), allowing the reconstruction of robust timelines. Without a rigorous methodology, the investigation is exposed to major risks: inadmissibility of evidence, loss of integrity, violation of the fundamental rights of the suspect and calling into question the **credibility of the entire case**.
