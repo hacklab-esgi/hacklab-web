@@ -244,3 +244,19 @@
   word-break: break-word;
   max-width: 100%;
 }
+
+body {
+  color: #E0E0E0;
+}
+
+h1, h2, h3 {
+  color: #FFFFFF;
+}
+
+strong, b {
+  color: #BB86FC;
+}
+
+em {
+  color: #90CAF9;
+}
