@@ -211,3 +211,19 @@ table tbody tr {
 table tbody tr td {
   padding: .5rem 1.5rem .5rem 0;
 }
+
+body {
+  color: #E0E0E0;
+}
+
+h1, h2, h3 {
+  color: #FFFFFF;
+}
+
+strong {
+  color: #BB86FC;
+}
+
+em {
+  color: #90CAF9;
+}
