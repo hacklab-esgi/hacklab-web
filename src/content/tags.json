@@ -1,1 +1,1 @@
-[{ "id": "web" }, { "id": "maldev" }, { "id": "browser" }, { "id": "chromium" }, { "id": "dpapi" }, { "id": "aes" }]
+[{ "id": "web" }, { "id": "maldev" }, { "id": "browser" }, { "id": "chromium" }, { "id": "dpapi" }, { "id": "aes" }, { "id": "forensic" }, { "id": "android" }]
