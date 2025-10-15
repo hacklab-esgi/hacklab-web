@@ -97,5 +97,23 @@
     "speaker": "Mehdy Abadi",
     "description": "Cette présentation retrace l’analyse géospatiale et informationnelle d'une attaque sur la ville de Soumy. En croisant des images satellites, des vidéos open source, elle identifie les points d’impact, la zone de lancement probable et les cibles visées.</br></br>Disclaimer : cette présentation n’est pas à but politique, de plus certaines vidéos et photo de guerre pourraient être diffusées, si cela vous perturbe merci de ne pas venir.",
     "url": "https://www.meetup.com/hacklab_esgi/events/307657655/"
+  },
+  {
+    "title": "Hackadémie - Analyse forensique Windows ",
+    "start": "2025-10-09T16:00:00",
+    "duration": 3,
+    "location": "ESGI Paris, A06",
+    "speaker": "Tom Baty",
+    "description": "Dans cette première session de Hackadémie, nous vous présenterons l’analyse forensique sur un système Windows, avant de passer à une mise en pratique sur un Sherlock HTB.</br>Séance ouverte à tous, sans prérequis de niveau.</br>⚠️ Une installation Windows (VM ou boot) sera toutefois nécessaire pour participer.",
+    "url": ""
+  },
+  {
+    "title": "Hackadémie - Session libre cybersécurité",
+    "start": "2025-10-16T16:00:00",
+    "duration": 2,
+    "location": "ESGI Paris, B12",
+    "speaker": "Yanis Bouseksou",
+    "description": "Venez comme vous êtes !</br>Cette session est ouverte à tous les niveaux, et vous pourrez y travailler sur le sujet de votre choix, en solo ou en groupe.</br>Des membres du HackLab seront présents pour vous accompagner et répondre à vos questions.",
+    "url": ""
   }
 ]
