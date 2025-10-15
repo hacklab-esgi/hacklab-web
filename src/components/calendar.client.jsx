@@ -27,14 +27,12 @@ export default function CalendarClient() {
           customButtons: {
             dynamicTitle: { text: '' },
             subscribeButton: {
-              text: 'Calendar',
               click: () => {
                 window.location.href = 'webcal://hacklabesgi.netlify.app/calendar.ics';
               },
               hint: 'S’abonner au calendrier',
             },
             google: {
-              text: 'Google',
               click: () => {
                 window.location.href = 'https://calendar.google.com/calendar/r?cid=webcal://hacklabesgi.netlify.app/calendar.ics';
               },
