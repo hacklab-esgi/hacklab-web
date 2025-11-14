@@ -124,5 +124,14 @@
     "speaker": "TBD",
     "description": "Test",
     "url": ""
+  },
+  {
+    "title": "Test",
+    "start": "2025-11-14T19:40:00.000Z",
+    "duration": 1,
+    "location": "ESGI",
+    "speaker": "@r3mbo_fw",
+    "description": "Test",
+    "url": ""
   }
 ]
