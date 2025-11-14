@@ -116,22 +116,4 @@
     "description": "Venez comme vous êtes !</br>Cette session est ouverte à tous les niveaux, et vous pourrez y travailler sur le sujet de votre choix, en solo ou en groupe.</br>Des membres du HackLab seront présents pour vous accompagner et répondre à vos questions.",
     "url": ""
   },
-  {
-    "title": "Test",
-    "start": "2025-11-14T19:30:00.000Z",
-    "duration": 1,
-    "location": "ESGI",
-    "speaker": "TBD",
-    "description": "Test",
-    "url": ""
-  },
-  {
-    "title": "Test",
-    "start": "2025-11-14T19:40:00.000Z",
-    "duration": 1,
-    "location": "ESGI",
-    "speaker": "@r3mbo_fw",
-    "description": "Test",
-    "url": ""
-  }
 ]
