@@ -115,5 +115,32 @@
     "speaker": "Yanis Bouseksou",
     "description": "Venez comme vous êtes !</br>Cette session est ouverte à tous les niveaux, et vous pourrez y travailler sur le sujet de votre choix, en solo ou en groupe.</br>Des membres du HackLab seront présents pour vous accompagner et répondre à vos questions.",
     "url": ""
+  },
+  {
+    "title": "Hackadémie - Session libre cybersécurité",
+    "start": "2025-10-23T15:45:00",
+    "duration": 2,
+    "location": "ESGI Paris, B01",
+    "speaker": "Damien Vaurette",
+    "description": "Venez échanger et discuter des sujets qui vous passionnent !",
+    "url": ""
+  },
+  {
+    "title": "Hackadémie - Analyse forensique à travers la Win32 API",
+    "start": "2025-11-06T16:00:00",
+    "duration": 2,
+    "location": "ESGI Paris, A06",
+    "speaker": "Tom Baty",
+    "description": "Au programme ~20 min de près ainsi qu’une mise en pratique sur un Sherlock HTB !</br></br>PRÉ-REQUIS</br>🛠️  IDA (free) et API Monitor</br>‼️Session ouverte à tous, pas de niveau pré requis. Le but étant de s’amuser et de travailler ensemble en mêlant les manières de faire et de réfléchir de chacun !",
+    "url": ""
+  },
+  {
+    "title": "Hackadémie - Les concepts clés d'Active Directory !",
+    "start": "2025-11-12T18:00:00",
+    "duration": 2,
+    "location": "Discord du HackLab ESGI",
+    "speaker": "Enzo Breillou",
+    "description": "Cette session vise à reprendre toutes les bases qui seront nécessaires pour une future session animée par @Azox sur du pentest Active Directory.",
+    "url": ""
   }
 ]
