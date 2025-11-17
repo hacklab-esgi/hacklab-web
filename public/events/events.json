@@ -142,5 +142,14 @@
     "speaker": "Enzo Breillou",
     "description": "Cette session vise à reprendre toutes les bases qui seront nécessaires pour une future session animée par @Azox sur du pentest Active Directory.",
     "url": ""
+  },
+  {
+    "title": "Session libre HTB",
+    "start": "2025-11-20T14:45:00.000Z",
+    "duration": 1,
+    "location": "Nation 1 (coming soon)",
+    "speaker": "@srv_yagoo",
+    "description": "Session libre autour de HackTheBox, venez testez des challenges et progresser tous ensemble !",
+    "url": ""
   }
 ]
