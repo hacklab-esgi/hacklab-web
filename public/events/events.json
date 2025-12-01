@@ -160,5 +160,14 @@
     "speaker": "@54ph1r, @dvm_khpte",
     "description": "Présentation du domaine, ses usages, méthodes & outils puis possibilité de pratiquer soit avec un challenge HTB soit un sherlock (retired)",
     "url": ""
+  },
+  {
+    "title": "Construire, automatiser et comprendre : Les nouvelles mécaniques de la Cyber Threat Intelligence",
+    "start": "2025-12-11T18:00:00.000Z",
+    "duration": 1,
+    "location": "Nation 1 (coming soon) + <#1407718623509872732>",
+    "speaker": "@adrien6459",
+    "description": "Cette conférence présente les fondamentaux de la Cyber Threat Intelligence, à travers ses notions clés et un cas pratique. De quoi comprendre le fonctionnement et les enjeux de ce domaine. Vous pourrez également poser toutes vos questions, sur le secteur ou vos projets de parcours professionnels !</br></br>After au phenix pour les plus téméraires 🔥",
+    "url": ""
   }
 ]
