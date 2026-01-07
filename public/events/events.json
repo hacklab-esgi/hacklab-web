@@ -178,5 +178,14 @@
     "speaker": "@adrien6459",
     "description": "Cette conférence présente les fondamentaux de la Cyber Threat Intelligence, à travers ses notions clés et un cas pratique. De quoi comprendre le fonctionnement et les enjeux de ce domaine. Vous pourrez également poser toutes vos questions, sur le secteur ou vos projets de parcours professionnels !</br></br>After au phenix pour les plus téméraires 🔥",
     "url": ""
+  },
+  {
+    "title": "Session libre",
+    "start": "2026-01-08T14:45:00.000Z",
+    "duration": 1,
+    "location": "A06",
+    "speaker": "@baget1620",
+    "description": "Session libre pour travaillez sur vos projets et tout ce que vous souhaitez",
+    "url": ""
   }
 ]
