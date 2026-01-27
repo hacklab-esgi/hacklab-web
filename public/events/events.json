@@ -189,6 +189,15 @@
     "url": ""
   },
   {
+    "title": "Introduction au reverse et aux crackmes",
+    "start": "2026-01-29T14:45:00.000Z",
+    "duration": 1,
+    "location": "A07, Nation 1",
+    "speaker": "@54ph1r, @dvm_khpte",
+    "description": "En complément du nouveau cours de reverse pour les 4A, petite session pratique sur le reverse et les crackme destinés aux débutants ou ceux qui auraient des questions sur le crackme contest",
+    "url": ""
+  },
+  {
     "title": "Understanding Win32 API [DISTANCIEL]",
     "start": "2026-01-29T20:00:00.000Z",
     "duration": 1,
