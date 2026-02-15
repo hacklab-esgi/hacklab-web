@@ -205,5 +205,14 @@
     "speaker": "@baget1620",
     "description": "Le titre parle de lui même :p venez ça va être cool",
     "url": ""
+  },
+  {
+    "title": "MultiVolatility : Automatiser et accélérer l’analyse forensic mémoire [DISTANCIEL]",
+    "start": "2026-02-19T20:00:00.000Z",
+    "duration": 1,
+    "location": "<a href=\"https://discord.com/channels/1407699026769477702/1407718623509872732\" target=\"_blank\">Discord HackLab ESGI</a>",
+    "speaker": "@bobnewz, @.max.0",
+    "description": "MultiVolatility est un outil open-source conçu pour optimiser et accélérer l’analyse de dumps mémoire en orchestrant l’exécution de moteurs Volatility 2 & 3, via des conteneurs Docker. Il combine une interface en ligne de commande avec une interface web moderne pour faciliter l’automatisation, la visualisation et l’exploration des résultats d’investigation. Grâce au multiprocessing et à la conteneurisation, l’outil réduit drastiquement le temps d’analyse.",
+    "url": ""
   }
 ]
