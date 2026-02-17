@@ -207,6 +207,15 @@
     "url": ""
   },
   {
+    "title": "Séance intro CTF",
+    "start": "2026-02-19T14:45:00.000Z",
+    "duration": 1,
+    "location": "coming soon",
+    "speaker": "@yanis6314",
+    "description": "Découverte du monde du CTF puis box htb au choix des étudiants qu’on fera ensemble",
+    "url": ""
+  },
+  {
     "title": "MultiVolatility : Automatiser et accélérer l’analyse forensic mémoire [DISTANCIEL]",
     "start": "2026-02-19T20:00:00.000Z",
     "duration": 1,
