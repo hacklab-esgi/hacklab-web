@@ -232,5 +232,14 @@
     "speaker": "@srv_yagoo",
     "description": "Training aux ctfs, en travaillant sur des challenges de Hackropole",
     "url": ""
+  },
+  {
+    "title": "Training libre",
+    "start": "2026-03-19T14:45:00.000Z",
+    "duration": 1,
+    "location": "A06",
+    "speaker": "@yanis6314",
+    "description": "Ctf, training, discussion cyber, venez 🔥",
+    "url": ""
   }
 ]
