@@ -250,5 +250,14 @@
     "speaker": "Clément Ruault",
     "description": "Venez pour discuter, travailler sur vos projets, posez des questions, faire du ctf, tout est possible",
     "url": ""
+  },
+  {
+    "title": "Linux CLI from nightmare into cozy dream",
+    "start": "2026-04-16T13:45:00.000Z",
+    "duration": 1,
+    "location": "Coming soon",
+    "speaker": "@cithors",
+    "description": "Beta de conf workflow sous linux cli (bash, vim, tmux)",
+    "url": ""
   }
 ]
