@@ -259,5 +259,14 @@
     "speaker": "@cithors",
     "description": "Beta de conf workflow sous linux cli (bash, vim, tmux)",
     "url": ""
+  },
+  {
+    "title": "Cobalt Strike & Red Teaming",
+    "start": "2026-06-10T19:00:00.000Z",
+    "duration": 1,
+    "location": "<a href=\"https://discord.com/channels/1407699026769477702/1407718623509872732\" target=\"_blank\">Discord HackLab ESGI</a>",
+    "speaker": "@baget1620",
+    "description": "Explore and understand Cobalt Strike capabilities",
+    "url": ""
   }
 ]
