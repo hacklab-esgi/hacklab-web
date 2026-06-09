@@ -268,5 +268,14 @@
     "speaker": "@baget1620",
     "description": "Explore and understand Cobalt Strike capabilities",
     "url": ""
+  },
+  {
+    "title": "Tracking IoT, Intrusion physique, Ces objets connectés qui nous trahissent…",
+    "start": "2026-06-18T17:00:00.000Z",
+    "duration": 1,
+    "location": "ESGI - Salle à définir",
+    "speaker": "@hsbf6_1",
+    "description": "Vous avez installé une serrure connectée, une alarme et une caméra pour protéger votre domicile.Êtes-vous certain d'être en sécurité ?</br>De plus, savez-vous que le smartphone dans votre poche leak en permanence des informations utiles à une personne voulant s'introduire chez vous ?</br>À travers plusieurs démonstrations, nous verrons comment un attaquant peut franchir le pas de votre porte connectée puis ressortir sans déclencher d'alertes…",
+    "url": ""
   }
 ]
