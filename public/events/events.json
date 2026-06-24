@@ -282,7 +282,7 @@
     "title": "Séance libre",
     "start": "2026-06-25T13:30:00.000Z",
     "duration": 1,
-    "location": "ESGI Nation 1",
+    "location": "B11",
     "speaker": "@srv_yagoo, @yanis6314",
     "description": "Venez faire du hackthebox ou autre CTF avec nous",
     "url": ""
