@@ -277,5 +277,14 @@
     "speaker": "@hsbf6_1",
     "description": "Vous avez installé une serrure connectée, une alarme et une caméra pour protéger votre domicile.Êtes-vous certain d'être en sécurité ?</br>De plus, savez-vous que le smartphone dans votre poche leak en permanence des informations utiles à une personne voulant s'introduire chez vous ?</br>À travers plusieurs démonstrations, nous verrons comment un attaquant peut franchir le pas de votre porte connectée puis ressortir sans déclencher d'alertes…",
     "url": ""
+  },
+  {
+    "title": "Séance libre",
+    "start": "2026-06-25T13:30:00.000Z",
+    "duration": 1,
+    "location": "ESGI Nation 1",
+    "speaker": "@srv_yagoo, @yanis6314",
+    "description": "Venez faire du hackthebox ou autre CTF avec nous",
+    "url": ""
   }
 ]
