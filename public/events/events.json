@@ -286,5 +286,14 @@
     "speaker": "@srv_yagoo, @yanis6314",
     "description": "Venez faire du hackthebox ou autre CTF avec nous",
     "url": ""
+  },
+  {
+    "title": "Session rentrée 2026",
+    "start": "2026-09-24T12:00:00.000Z",
+    "duration": 1,
+    "location": "S04",
+    "speaker": "@yanis6314",
+    "description": "Open, ouvert tout niveau !!",
+    "url": ""
   }
 ]
