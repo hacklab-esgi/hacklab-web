@@ -107,7 +107,7 @@ const { Content, headings } = await render(post);
             <span>🏷️&nbsp;Tags:&nbsp;{post.data.tags.map((tag) => tag.id).join(", ")}</span>
             {post.data.author && (
               <>
-                <span>✍️&nbsp;By&nbsp;@{post.data.author}</span>
+                <span>✍️&nbsp;Par&nbsp;@{post.data.author}</span>
               </>
             )}
           </div>
@@ -115,7 +115,7 @@ const { Content, headings } = await render(post);
       </div>
       <Content />
       <hr class="end-of-article" />
-      <a href="/blog" class="block-link" data-pagefind-ignore>← Back to blog</a>
+      <a href="/blog" class="block-link" data-pagefind-ignore>← Retour aux articles</a>
     </Card>
   </article>
 </Layout>

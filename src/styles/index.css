@@ -260,3 +260,14 @@ strong, b {
 em {
   color: #90CAF9;
 }
+
+/* Ancres des pages about/join : décalage sous la navbar sticky */
+[id] {
+  scroll-margin-top: 152px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}

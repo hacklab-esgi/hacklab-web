@@ -20,31 +20,6 @@ import { name, openGraph } from "spectre:globals";
   });
 </script>
 
-<script is:inline>
-  document.addEventListener("DOMContentLoaded", () => {
-    const OFFSET = 152;
-
-    document.querySelectorAll('a[href^="#"]').forEach((link) => {
-      link.addEventListener("click", (e) => {
-        const href = link.getAttribute("href");
-        const target = href && document.querySelector(href);
-
-        if (target) {
-          e.preventDefault();
-
-          const top =
-            target.getBoundingClientRect().top + window.scrollY - OFFSET;
-
-          window.scrollTo({
-            top,
-            behavior: "smooth",
-          });
-        }
-      });
-    });
-  });
-</script>
-
 <Layout
   title={openGraph.about.title || name}
   description={openGraph.about.description}
@@ -171,7 +146,7 @@ import { name, openGraph } from "spectre:globals";
           Notre objectif est de proposer des sessions techniques accessibles à
           toutes et tous, sur des thématiques variées en cybersécurité.
           <br />
-          L’idée est simple&nbsp&nbsp: permettre à chacun de monter en compétences
+          L’idée est simple&nbsp;: permettre à chacun de monter en compétences
           sur un sujet spécifique, quel que soit son niveau.
           <br />
           Aucun format n’est imposé&nbsp;: ça peut être une présentation, une démo,
@@ -180,7 +155,7 @@ import { name, openGraph } from "spectre:globals";
         </p>
         <h3>📚 Ce qu’on fait concrètement</h3>
         <p class="text-default">
-          - De <b>l'entraide</b> au quotidient via <b>Hackadémie</b>
+          - De <b>l'entraide</b> au quotidien via <b>Hackadémie</b>
           <br />
           - Des <b>conférences</b> régulières sur des sujets techniques
           <br />

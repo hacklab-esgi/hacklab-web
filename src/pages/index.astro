@@ -44,7 +44,7 @@ const [posts, projects, socials] = await Promise.all([
         <li>
           <Icon
             type="lucide"
-            name="earth"
+            name="shield"
             width={24}
             height={24}
             class="glow-icon"
@@ -109,7 +109,7 @@ const [posts, projects, socials] = await Promise.all([
       <div class="header-container">
         <Icon
           type="lucide"
-          name="rss"
+          name="calendar"
           width={24}
           height={24}
           class="glow-icon"
@@ -149,7 +149,7 @@ const [posts, projects, socials] = await Promise.all([
                 <div class="post-info">
                   <span class="post-description">{post.data.description}</span>
                   {post.data.author && 
-                    <span class="post-author">By @{post.data.author}</span>
+                    <span class="post-author">Par @{post.data.author}</span>
                   }
                 </div>
               </a>
@@ -184,7 +184,7 @@ const [posts, projects, socials] = await Promise.all([
                 <div class="post-info">
                   <span class="post-description">{project.data.description}</span>
                   {project.data.author && 
-                    <span class="post-author">By @{project.data.author}</span>
+                    <span class="post-author">Par @{project.data.author}</span>
                   }
                 </div>
               </a>

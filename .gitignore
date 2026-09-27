@@ -22,6 +22,10 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+.codegraph/
+
+.claude/
 
 # generated at build
 public/calendar.ics
+.netlify/
