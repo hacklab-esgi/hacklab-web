@@ -72,10 +72,6 @@
 }
 
 
-.layout-grid-left > .card, .layout-grid-left-sticky > .card, .card-grid > .card {
-   transform: none !important;
-}
-
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -206,7 +202,6 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition: all 0.2s ease;
 }
 
 .team-member:hover {

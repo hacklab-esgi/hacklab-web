@@ -268,7 +268,7 @@ const path = Astro.url.pathname;
     nav {
       padding: 2rem 1rem;
       padding-top: 2rem;
-      transition: all 0.25s ease;
+      transition: background-color 200ms ease;
     }
 
     .mobile-nav-toggle {
@@ -290,7 +290,7 @@ const path = Astro.url.pathname;
       z-index: 1;
       opacity: 0;
       pointer-events: none;
-      transition: all 0.25s ease;
+      transition: opacity 150ms var(--ease-out); /* fermeture : plus rapide que l'ouverture */
       user-select: none;
       height: calc(100dvh - 1rem - 40px);
       align-items: start;
@@ -308,8 +308,8 @@ const path = Astro.url.pathname;
 
     nav ul li {
       position: relative;
-      transition: all 0.25s ease-out;
-      top: -1.5rem;
+      transition: transform 150ms var(--ease-out);
+      transform: translateY(-8px);
       border-bottom: 1px solid #353535;
       width: 100%;
       max-width: none;
@@ -328,8 +328,25 @@ const path = Astro.url.pathname;
       border-top: 1px solid #353535;
     }
 
+    nav.active ul,
     nav.active ul li {
-      top: 0;
+      transition-duration: 200ms;
+    }
+
+    nav.active ul li {
+      transform: none;
+    }
+
+    /* Décalage à l'ouverture uniquement (les séparateurs cachés occupent les rangs pairs) */
+    nav.active ul li:nth-child(3) { transition-delay: 30ms; }
+    nav.active ul li:nth-child(5) { transition-delay: 60ms; }
+    nav.active ul li:nth-child(7) { transition-delay: 90ms; }
+    nav.active ul li:nth-child(9) { transition-delay: 120ms; }
+
+    @media (prefers-reduced-motion: reduce) {
+      nav ul li {
+        transform: none;
+      }
     }
 
     #search {

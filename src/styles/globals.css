@@ -14,6 +14,8 @@
   --primary-rgb: 9, 84, 150;
   --primary-light: #045b83;
   --primary-lightest: #0ac9e0;
+  /* Courbes d'animation (Emil Kowalski) */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 html {
@@ -26,9 +28,21 @@ button {
   touch-action: manipulation; /* pas de délai de 300ms au tap */
 }
 
+/* Retour visuel à l'appui sur tout ce qui est cliquable comme un bouton */
 button {
+  transition: transform 160ms var(--ease-out);
   user-select: none;
   -webkit-user-select: none;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button:active {
+    transform: none;
+  }
 }
 
 body {

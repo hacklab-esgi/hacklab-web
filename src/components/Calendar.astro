@@ -29,6 +29,15 @@
     tooltip.classList.remove('is-touch');
   };
 
+  // Souris : délai au premier survol (évite les clignotements en traversant la grille),
+  // puis ouverture immédiate tant qu'on passe d'un événement à l'autre
+  const HOVER_DELAY = 300;
+  let warm = false;
+  let showTimer: ReturnType<typeof setTimeout> | undefined;
+  let coolTimer: ReturnType<typeof setTimeout> | undefined;
+  let pointerX = 0;
+  let pointerY = 0;
+
   // Au tactile, pas de survol : un tap ouvre les détails, un tap ailleurs les ferme
   document.addEventListener('click', (e) => {
     if (!tooltip.contains(e.target as Node)) hideTooltip();
@@ -118,15 +127,29 @@
 
         info.el.addEventListener('pointerenter', (e) => {
           if (e.pointerType !== 'mouse') return;
-          tooltip.innerHTML = details;
-          tooltip.hidden = false;
-          placeTooltip(e.pageX, e.pageY);
+          pointerX = e.pageX;
+          pointerY = e.pageY;
+          clearTimeout(coolTimer);
+          const show = () => {
+            tooltip.innerHTML = details;
+            tooltip.hidden = false;
+            placeTooltip(pointerX, pointerY);
+            warm = true;
+          };
+          if (warm) show();
+          else showTimer = setTimeout(show, HOVER_DELAY);
         });
         info.el.addEventListener('pointermove', (e) => {
-          if (e.pointerType === 'mouse') placeTooltip(e.pageX, e.pageY);
+          if (e.pointerType !== 'mouse') return;
+          pointerX = e.pageX;
+          pointerY = e.pageY;
+          if (!tooltip.hidden) placeTooltip(pointerX, pointerY);
         });
         info.el.addEventListener('pointerleave', (e) => {
-          if (e.pointerType === 'mouse') hideTooltip();
+          if (e.pointerType !== 'mouse') return;
+          clearTimeout(showTimer);
+          hideTooltip();
+          coolTimer = setTimeout(() => { warm = false; }, HOVER_DELAY);
         });
       },
       datesSet() {
@@ -405,6 +428,23 @@
 
 .fc-event-tooltip.is-touch {
   pointer-events: auto;
+  transform-origin: top left; /* sort de l'événement touché, placé au-dessus à gauche */
+  transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out);
+}
+
+@starting-style {
+  .fc-event-tooltip.is-touch {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @starting-style {
+    .fc-event-tooltip.is-touch {
+      transform: none; /* fondu seul, sans mouvement */
+    }
+  }
 }
 
 /* === DIVERS === */

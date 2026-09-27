@@ -63,7 +63,10 @@ class PageBackground {
 
     this.initBackground();
   
-    requestAnimationFrame(this.redrawBackground);
+    // Mouvement décoratif continu : désactivé si l'utilisateur demande moins d'animations
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      requestAnimationFrame(this.redrawBackground);
+    }
   }
 
   /**

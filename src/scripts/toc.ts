@@ -28,7 +28,7 @@ for (const link of tocLinks) {
 
     window.scrollTo({
       top,
-      behavior: 'smooth',
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
     });
   });
 }
