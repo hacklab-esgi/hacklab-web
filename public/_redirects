@@ -1,1 +1,2 @@
-/*    /index.html   200
+# Le sous-domaine Netlify renvoie vers le vrai domaine (les deploy previews ne sont pas concernées)
+https://hacklabesgi.netlify.app/*  https://hacklab.esgi.fr/:splat  301!

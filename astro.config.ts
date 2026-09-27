@@ -19,7 +19,7 @@ const sanitizeUntrusted = () => {
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://hacklabesgi.netlify.app/',
+  site: 'https://hacklab.esgi.fr',
   output: 'static',
   markdown: {
     rehypePlugins: [sanitizeUntrusted],

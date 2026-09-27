@@ -1,14 +1,14 @@
+import type { APIContext } from 'astro';
 import { getCollection } from 'astro:content';
 import rss from '@astrojs/rss';
 
-export async function GET() {
+export async function GET(context: APIContext) {
 	const projects = await getCollection('projects');
-	const site = 'https://hacklabesgi.netlify.app/';
 
 	return rss({
 		title: 'Projets - HackLab',
 		description: 'Nos projets en cours ou passés.',
-		site,
+		site: context.site!,
 		items: projects.map((project) => ({
 			title: project.data.title,
 			pubDate: project.data.date,

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hacklab.esgi.fr/sitemap-index.xml
