@@ -32,11 +32,11 @@ const path = Astro.url.pathname;
       </li>
       <li class="nav-separator">/</li>
       <li>
-        <input id="search" type="text" placeholder="Rechercher" />
+        <input id="search" type="text" placeholder="Rechercher" aria-label="Rechercher" enterkeyhint="search" autocapitalize="none" autocomplete="off" />
         <div id="search-results"></div>
       </li>
     </ul>
-    <button class="mobile-nav-toggle">
+    <button class="mobile-nav-toggle" aria-label="Menu" aria-expanded="false">
       <Icon
         type="lucide"
         name="menu"
@@ -148,8 +148,9 @@ const path = Astro.url.pathname;
   });
 
   navToggle?.addEventListener("click", () => {
-    navToggle.classList.toggle("active");
-    document.querySelector("nav").classList.toggle("active");
+    const open = document.querySelector("nav").classList.toggle("active");
+    navToggle.classList.toggle("active", open);
+    navToggle.setAttribute("aria-expanded", String(open));
   });
 </script>
 <style>
@@ -291,7 +292,7 @@ const path = Astro.url.pathname;
       pointer-events: none;
       transition: all 0.25s ease;
       user-select: none;
-      height: calc(100vh - 1rem - 40px);
+      height: calc(100dvh - 1rem - 40px);
       align-items: start;
     }
 

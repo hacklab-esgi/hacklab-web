@@ -25,6 +25,7 @@ export default defineConfig({
     themes: [spectreDark],
   }), mdx(), sitemap(), spectre({
     name: 'HackLab ESGI',
+    themeColor: '#121212', // couleur de la navbar : barre d'état mobile assortie
     openGraph: {
       home: {
         title: 'HackLab ESGI'

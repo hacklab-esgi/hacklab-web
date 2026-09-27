@@ -23,13 +23,9 @@ class PageBackground {
   private baseCtx: CanvasRenderingContext2D;
   private overlayCtx: CanvasRenderingContext2D;
   
-  private width: number = document.body.clientWidth;
-  private height: number = Math.max(
-    document.body.scrollHeight, 
-    document.body.offsetHeight, 
-    document.documentElement.clientHeight,
-    document.documentElement.offsetHeight 
-  );
+  // Canvas fixe à la taille de l'écran (avant : toute la hauteur de la page, des dizaines de Mo sur les longs articles)
+  private width: number = document.getElementById('overlay-canvas')!.clientWidth;
+  private height: number = document.getElementById('overlay-canvas')!.clientHeight;
 
   private letterPositions: LetterPosition[] = [];
   private letterInstances: LetterInstance[] = [];
@@ -219,13 +215,12 @@ class PageBackground {
    * Resizes the background canvases.
    */
   public resizeBackground = () => {
-    this.width = document.body.clientWidth;
-    this.height = Math.max(
-      document.body.scrollHeight,
-      document.body.offsetHeight,
-      document.documentElement.clientHeight,
-      document.documentElement.offsetHeight
-    );
+    // Sur mobile, la barre d'URL déclenche des resize pendant le scroll : 100lvh ne bouge pas, on ignore
+    const { clientWidth, clientHeight } = this.overlayCanvas;
+    if (clientWidth === this.width && clientHeight === this.height) return;
+
+    this.width = clientWidth;
+    this.height = clientHeight;
 
     this.baseCanvas.width = this.width;
     this.baseCanvas.height = this.height;
@@ -256,13 +251,6 @@ async function initializeBackground() {
   window.addEventListener('resize', () => {
     background.resizeBackground();
   });
-
-  // Add a listener for when the body of the page grows
-  const observer = new ResizeObserver(() => {
-    background.resizeBackground();
-  });
-
-  observer.observe(document.body);
 }
 
 initializeBackground();

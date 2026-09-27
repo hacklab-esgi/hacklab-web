@@ -18,10 +18,21 @@
   tooltip.hidden = true;
   document.body.appendChild(tooltip);
 
-  const moveTooltip = (e: MouseEvent) => {
-    tooltip.style.left = e.pageX + 10 + 'px';
-    tooltip.style.top = e.pageY + 10 + 'px';
+  // Positionne l'infobulle en la gardant dans l'écran (sinon elle déborde à droite sur mobile)
+  const placeTooltip = (x: number, y: number) => {
+    const maxLeft = window.scrollX + document.documentElement.clientWidth - tooltip.offsetWidth - 8;
+    tooltip.style.left = Math.max(window.scrollX + 8, Math.min(x + 10, maxLeft)) + 'px';
+    tooltip.style.top = y + 10 + 'px';
   };
+  const hideTooltip = () => {
+    tooltip.hidden = true;
+    tooltip.classList.remove('is-touch');
+  };
+
+  // Au tactile, pas de survol : un tap ouvre les détails, un tap ailleurs les ferme
+  document.addEventListener('click', (e) => {
+    if (!tooltip.contains(e.target as Node)) hideTooltip();
+  });
 
   if (el) fetch('/events/events.json').then((res) => res.json()).then((events) => {
     const calendar = new Calendar(el, {
@@ -80,24 +91,43 @@
           content.style.whiteSpace = 'normal';
         }
 
-        if (url) {
-          info.el.style.cursor = 'pointer';
-          info.el.addEventListener('click', () => window.open(url, '_blank'));
-        }
+        const details = `
+          <strong>${info.event.title}</strong><br/>
+          🕒 ${heure}<br/>
+          📍 ${location}<br/>
+          📝 ${description || 'Aucune description'}<br/>
+          ${speaker?.trim() ? `👤 ${speaker}<br/>` : ''}
+        `;
+        info.el.style.cursor = 'pointer';
 
-        info.el.addEventListener('mouseenter', (e) => {
-          tooltip.innerHTML = `
-            <strong>${info.event.title}</strong><br/>
-            🕒 ${heure}<br/>
-            📍 ${location}<br/>
-            📝 ${description || 'Aucune description'}<br/>
-            ${speaker?.trim() ? `👤 ${speaker}<br/>` : ''}
-          `;
+        let pointerType = 'mouse';
+        info.el.addEventListener('pointerdown', (e) => { pointerType = e.pointerType; });
+
+        info.el.addEventListener('click', (e) => {
+          if (pointerType === 'mouse') {
+            if (url) window.open(url, '_blank');
+            return;
+          }
+          e.stopPropagation();
+          tooltip.innerHTML = details + (url ? `<a href="${url}" target="_blank" rel="noopener">Plus d’infos →</a>` : '');
+          tooltip.classList.add('is-touch');
           tooltip.hidden = false;
-          moveTooltip(e);
+          const r = info.el.getBoundingClientRect();
+          placeTooltip(r.left + window.scrollX, r.bottom + window.scrollY);
         });
-        info.el.addEventListener('mousemove', moveTooltip);
-        info.el.addEventListener('mouseleave', () => { tooltip.hidden = true; });
+
+        info.el.addEventListener('pointerenter', (e) => {
+          if (e.pointerType !== 'mouse') return;
+          tooltip.innerHTML = details;
+          tooltip.hidden = false;
+          placeTooltip(e.pageX, e.pageY);
+        });
+        info.el.addEventListener('pointermove', (e) => {
+          if (e.pointerType === 'mouse') placeTooltip(e.pageX, e.pageY);
+        });
+        info.el.addEventListener('pointerleave', (e) => {
+          if (e.pointerType === 'mouse') hideTooltip();
+        });
       },
       datesSet() {
         const currentDate = calendar.getDate();
@@ -366,11 +396,15 @@
   padding: 0.75rem;
   border-radius: 6px;
   font-size: 0.85rem;
-  max-width: auto;
+  max-width: min(22rem, calc(100vw - 16px));
   pointer-events: none;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   line-height: 1.4;
   border: 1px solid var(--primary);
+}
+
+.fc-event-tooltip.is-touch {
+  pointer-events: auto;
 }
 
 /* === DIVERS === */

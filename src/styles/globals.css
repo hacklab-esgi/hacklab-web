@@ -16,6 +16,21 @@
   --primary-lightest: #0ac9e0;
 }
 
+html {
+  -webkit-tap-highlight-color: transparent; /* pas de flash gris au tap, :active donne le retour */
+  -webkit-text-size-adjust: 100%;
+}
+
+a,
+button {
+  touch-action: manipulation; /* pas de délai de 300ms au tap */
+}
+
+button {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 body {
   -webkit-font-smoothing: antialiased;
   font-family: var(--font-sans);
