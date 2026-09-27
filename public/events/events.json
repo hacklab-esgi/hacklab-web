@@ -1,7 +1,7 @@
 [
   {
     "title": "L'énumération sur un système Linux pour l'Attaque / Défense",
-    "start": "2024-10-24T16:00:00",
+    "start": "2024-10-24T14:00:00.000Z",
     "duration": 1,
     "location": "ESGI Paris",
     "speaker": "Admin 3e année",
@@ -10,7 +10,7 @@
   },
   {
     "title": "Présentation Basic exploitation AD",
-    "start": "2024-12-19T16:00:00",
+    "start": "2024-12-19T15:00:00.000Z",
     "duration": 1,
     "location": "ESGI Paris, A07",
     "speaker": "Bonziski, Spoon, Azox, lululufr",
@@ -19,7 +19,7 @@
   },
   {
     "title": "L'aléatoire au cœur de la sécurité informatique",
-    "start": "2025-01-23T15:45:00",
+    "start": "2025-01-23T14:45:00.000Z",
     "duration": 1,
     "location": "ESGI Paris",
     "speaker": "balkouille, SKIP, Hiruko",
@@ -28,7 +28,7 @@
   },
   {
     "title": "RETEX post-études",
-    "start": "2025-02-13T19:00:00",
+    "start": "2025-02-13T18:00:00.000Z",
     "duration": 2,
     "location": "ESGI Paris, A07",
     "speaker": "Baptiste Demarche, Antoine Fevre, Joakim Pettersen, Léo Pérochon",
@@ -37,7 +37,7 @@
   },
   {
     "title": "Présentation de Exegol",
-    "start": "2025-02-24T19:00:00",
+    "start": "2025-02-24T18:00:00.000Z",
     "duration": 2,
     "location": "ESGI Paris",
     "speaker": "Charlie Bromberg aka Shutdown",
@@ -46,7 +46,7 @@
   },
   {
     "title": "La présentation d’un tiering model adaptatif",
-    "start": "2025-03-19T19:00:00",
+    "start": "2025-03-19T18:00:00.000Z",
     "duration": 1,
     "location": "ESGI Paris, A07",
     "speaker": "NZR, Bageto",
@@ -55,7 +55,7 @@
   },
   {
     "title": "Hacking IoT: Du reverse de firmware jusqu'aux attaques sans fils",
-    "start": "2025-03-27T20:30:00",
+    "start": "2025-03-27T19:30:00.000Z",
     "duration": 1,
     "location": "Discord HackLab ESGI",
     "speaker": "HSbF6",
@@ -64,7 +64,7 @@
   },
   {
     "title": "Rootkit noyau en langage Rust",
-    "start": "2025-04-07T19:00:00",
+    "start": "2025-04-07T17:00:00.000Z",
     "duration": 1,
     "location": "ESGI Paris, A07",
     "speaker": "Rafik Frarma, Jules Leveillard, Antoine C., Mathis L.",
@@ -73,7 +73,7 @@
   },
   {
     "title": "Explication des CTF",
-    "start": "2025-04-11T21:00:00",
+    "start": "2025-04-11T19:00:00.000Z",
     "duration": 1,
     "location": "Discord HackLab ESGI",
     "speaker": "lululufr, Gelven",
@@ -82,7 +82,7 @@
   },
   {
     "title": "Détecter les images manipulées par IA : objectif réaliste ou mission impossible ? ",
-    "start": "2025-04-28T19:00:00",
+    "start": "2025-04-28T17:00:00.000Z",
     "duration": 1,
     "location": "ESGI Paris, A07",
     "speaker": "Rony Abecidan",
@@ -91,7 +91,7 @@
   },
   {
     "title": "GEOINT - Analyse d'une frappe en ukraine",
-    "start": "2025-05-15T15:45:00",
+    "start": "2025-05-15T13:45:00.000Z",
     "duration": 1,
     "location": "ESGI Paris",
     "speaker": "Mehdy Abadi",
@@ -100,7 +100,7 @@
   },
   {
     "title": "Hackadémie - Analyse forensique Windows ",
-    "start": "2025-10-09T16:00:00",
+    "start": "2025-10-09T14:00:00.000Z",
     "duration": 3,
     "location": "ESGI Paris, A06",
     "speaker": "Tom Baty",
@@ -109,7 +109,7 @@
   },
   {
     "title": "Hackadémie - Session libre cybersécurité",
-    "start": "2025-10-16T16:00:00",
+    "start": "2025-10-16T14:00:00.000Z",
     "duration": 2,
     "location": "ESGI Paris, B12",
     "speaker": "Yanis Bouseksou",
@@ -118,7 +118,7 @@
   },
   {
     "title": "Hackadémie - Session libre cybersécurité",
-    "start": "2025-10-23T15:45:00",
+    "start": "2025-10-23T13:45:00.000Z",
     "duration": 2,
     "location": "ESGI Paris, B01",
     "speaker": "Damien Vaurette",
@@ -127,7 +127,7 @@
   },
   {
     "title": "Hackadémie - Analyse forensique à travers la Win32 API",
-    "start": "2025-11-06T16:00:00",
+    "start": "2025-11-06T15:00:00.000Z",
     "duration": 2,
     "location": "ESGI Paris, A06",
     "speaker": "Tom Baty",
@@ -136,7 +136,7 @@
   },
   {
     "title": "Hackadémie - Les concepts clés d'Active Directory !",
-    "start": "2025-11-12T18:00:00",
+    "start": "2025-11-12T17:00:00.000Z",
     "duration": 2,
     "location": "Discord du HackLab ESGI",
     "speaker": "Enzo Breillou",

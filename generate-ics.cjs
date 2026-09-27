@@ -6,7 +6,7 @@ const { createEvents } = require('ics');
 function sanitizeHtmlDescription(str) {
   if (!str) return '';
   return str
-    .replace(/<br\s*\/?>/gi, '\n')   // Convertit <br>, </br>, etc. → \n
+    .replace(/<\/?br\s*\/?>/gi, '\n') // Convertit <br>, </br>, <br/> → \n
     .replace(/<\/?[^>]+>/g, '')      // Supprime toutes les balises HTML restantes
     .trim();
 }
@@ -28,6 +28,10 @@ const eventsData = JSON.parse(fs.readFileSync(eventsPath, 'utf-8'));
 
 // 🔁 Transformation
 const events = eventsData.map(ev => {
+  // Sans fuseau, la date serait lue dans le fuseau de la machine de build (UTC sur Netlify)
+  if (!/(Z|[+-]\d\d:?\d\d)$/.test(ev.start)) {
+    throw new Error(`Date sans fuseau horaire dans events.json : ${ev.start} (attendu : ISO UTC, ex. 2026-09-24T12:00:00.000Z)`);
+  }
   const startDate = new Date(ev.start);
   if (isNaN(startDate)) {
     console.warn(`⚠️ Date invalide ignorée : ${ev.start}`);
@@ -46,20 +50,8 @@ const events = eventsData.map(ev => {
     title: ev.title,
     description: description + speakerInfo,
     location: ev.location,
-    start: [
-      startDate.getFullYear(),
-      startDate.getMonth() + 1,
-      startDate.getDate(),
-      startDate.getHours(),
-      startDate.getMinutes()
-    ],
-    end: [
-      endDate.getFullYear(),
-      endDate.getMonth() + 1,
-      endDate.getDate(),
-      endDate.getHours(),
-      endDate.getMinutes()
-    ],
+    start: startDate.getTime(),
+    end: endDate.getTime(),
     organizer: {
       name: 'HackLab ESGI',
       email: 'hacklab.esgi@gmail.com'
@@ -77,7 +69,7 @@ const events = eventsData.map(ev => {
 createEvents(events, (error, value) => {
   if (error) {
     console.error('❌ Erreur ICS :', error);
-    return;
+    process.exit(1);
   }
 
   fs.writeFileSync(icsPath, value);
