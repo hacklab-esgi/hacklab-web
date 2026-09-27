@@ -1,12 +1,133 @@
----
-import CalendarClient from './calendar.client.jsx';
----
-
 <div id="calendar-wrapper">
   <div id="calendar"></div>
 </div>
 
-<CalendarClient client:load />
+<script>
+  import { Calendar } from '@fullcalendar/core';
+  import frLocale from '@fullcalendar/core/locales/fr';
+  import dayGridPlugin from '@fullcalendar/daygrid';
+  import timeGridPlugin from '@fullcalendar/timegrid';
+  import listPlugin from '@fullcalendar/list';
+
+  const ICS_URL = 'webcal://hacklab.esgi.fr/calendar.ics';
+  const el = document.getElementById('calendar');
+
+  // Une seule infobulle partagée (avant : une nouvelle div par rendu d'événement, jamais supprimée)
+  const tooltip = document.createElement('div');
+  tooltip.className = 'fc-event-tooltip';
+  tooltip.hidden = true;
+  document.body.appendChild(tooltip);
+
+  const moveTooltip = (e: MouseEvent) => {
+    tooltip.style.left = e.pageX + 10 + 'px';
+    tooltip.style.top = e.pageY + 10 + 'px';
+  };
+
+  if (el) fetch('/events/events.json').then((res) => res.json()).then((events) => {
+    const calendar = new Calendar(el, {
+      plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
+      initialView: window.matchMedia('(max-width: 768px)').matches ? 'listYear' : 'dayGridMonth',
+      locale: frLocale,
+      hiddenDays: [0],
+      headerToolbar: {
+        left: 'prev,dynamicTitle,next',
+        center: '',
+        right: 'today timeGridWeek,dayGridMonth,listYear subscribeButton google',
+      },
+      customButtons: {
+        dynamicTitle: { text: '' },
+        // Icônes en CSS : elles s'affichent dès le premier rendu
+        subscribeButton: {
+          text: '\u00a0',
+          hint: 'S’abonner au calendrier',
+          click: () => { window.location.href = ICS_URL; },
+        },
+        google: {
+          text: '\u00a0',
+          hint: 'S’abonner au calendrier Google',
+          click: () => {
+            window.location.href = 'https://calendar.google.com/calendar/r?cid=' + encodeURIComponent(ICS_URL);
+          },
+        },
+      },
+      views: {
+        listYear: {
+          type: 'list',
+          duration: { years: 1 },
+          buttonText: 'Année',
+        },
+      },
+      events: events.map((ev: Record<string, any>) => ({
+        title: ev.title,
+        start: ev.start,
+        extendedProps: {
+          location: ev.location,
+          description: ev.description,
+          speaker: ev.speaker,
+          url: ev.url?.trim() || undefined,
+        },
+      })),
+      eventDidMount(info) {
+        const { location, description, url, speaker } = info.event.extendedProps;
+        const heure = info.event.start!.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+
+        info.el.querySelector('.fc-event-time')?.remove();
+        info.el.querySelector('.fc-daygrid-event-dot')?.remove();
+
+        const content = info.el.querySelector<HTMLElement>('.fc-event-title');
+        if (content) {
+          content.innerHTML = `📌 ${heure}<br/>${info.event.title}`;
+          content.style.whiteSpace = 'normal';
+        }
+
+        if (url) {
+          info.el.style.cursor = 'pointer';
+          info.el.addEventListener('click', () => window.open(url, '_blank'));
+        }
+
+        info.el.addEventListener('mouseenter', (e) => {
+          tooltip.innerHTML = `
+            <strong>${info.event.title}</strong><br/>
+            🕒 ${heure}<br/>
+            📍 ${location}<br/>
+            📝 ${description || 'Aucune description'}<br/>
+            ${speaker?.trim() ? `👤 ${speaker}<br/>` : ''}
+          `;
+          tooltip.hidden = false;
+          moveTooltip(e);
+        });
+        info.el.addEventListener('mousemove', moveTooltip);
+        info.el.addEventListener('mouseleave', () => { tooltip.hidden = true; });
+      },
+      datesSet() {
+        const currentDate = calendar.getDate();
+        const viewType = calendar.view.type;
+        const year = currentDate.getFullYear();
+        const month = currentDate.toLocaleString('fr-FR', { month: 'long' });
+
+        let title = '';
+        if (viewType === 'dayGridMonth') {
+          title = `${month.charAt(0).toUpperCase() + month.slice(1)} ${year}`;
+        } else if (viewType === 'timeGridWeek') {
+          const tmp = new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()));
+          const dayNum = tmp.getUTCDay() || 7;
+          tmp.setUTCDate(tmp.getUTCDate() + 4 - dayNum);
+          const yearStart = new Date(Date.UTC(tmp.getUTCFullYear(), 0, 1));
+          const weekNumber = Math.ceil(((tmp.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+          title = `Semaine ${weekNumber} – ${year}`;
+        } else if (viewType === 'listYear') {
+          title = `${year}`;
+        }
+
+        const button = document.querySelector('.fc-dynamicTitle-button');
+        if (button) button.textContent = title;
+      },
+    });
+
+    calendar.render();
+  });
+</script>
+
 <style is:global>
   /* === CALENDAR WRAPPER === */
 #calendar-wrapper {
@@ -90,6 +211,22 @@ import CalendarClient from './calendar.client.jsx';
   font-weight: bold;
   padding: 0 0.75rem;
   cursor: pointer;
+}
+
+.fc-subscribeButton-button,
+.fc-google-button {
+  min-width: 2.5em;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: 1em !important;
+}
+
+.fc-subscribeButton-button {
+  background-image: url('/img/calendar.png') !important;
+}
+
+.fc-google-button {
+  background-image: url('/img/google.png') !important;
 }
 
 .fc-button-subscribeButton:hover {
