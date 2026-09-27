@@ -6,13 +6,24 @@ import sitemap from '@astrojs/sitemap';
 import spectre from './package/src';
 import netlify from '@astrojs/netlify';
 import { spectreDark } from './src/ec-theme';
+import rehypeSanitize from 'rehype-sanitize';
 
 import react from '@astrojs/react';
+
+// Les .md viennent des issues GitHub (contenu public) : on retire le HTML dangereux
+// (<script>, onerror=, liens javascript:…). Les .mdx de l'équipe ne sont pas concernés.
+const sanitizeUntrusted = () => {
+  const sanitize = rehypeSanitize();
+  return (tree: any, file: any) => (file.path?.endsWith('.md') ? sanitize(tree) : tree);
+};
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://hacklabesgi.netlify.app/',
   output: 'static',
+  markdown: {
+    rehypePlugins: [sanitizeUntrusted],
+  },
   integrations: [expressiveCode({
     themes: [spectreDark],
   }), mdx(), sitemap(), spectre({

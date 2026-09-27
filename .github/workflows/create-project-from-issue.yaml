@@ -91,33 +91,35 @@ jobs:
 
       - name: Générer le fichier projet
         run: |
-          DATE=$(date +"%m-%d-%Y")
-          FILE="src/content/projects/${{ env.SLUG }}.mdx"
-
+          # .md et non .mdx : le MDX exécute du JS au build (import/export), le Markdown non.
+          # Les blocs de code restent affichés et colorés normalement.
+          d() { echo "$1" | base64 -d; }
+          # Chaîne JSON = chaîne YAML valide : empêche l'injection dans le frontmatter
+          q() { d "$1" | jq -Rs 'rtrimstr("\n")'; }
+          FILE="src/content/projects/${{ env.SLUG }}.md"
           mkdir -p src/content/projects
-
-          echo "---" > "$FILE"
-          echo "title: \"$(echo "${{ steps.extract.outputs.title }}" | base64 -d)\"" >> "$FILE"
-          echo "date: $DATE" >> "$FILE"
-          echo "description: \"$(echo "${{ steps.extract.outputs.description }}" | base64 -d)\"" >> "$FILE"
-          echo "draft: true" >> "$FILE"
-          echo "info:" >> "$FILE"
-          echo "  - text: GitHub" >> "$FILE"
-          echo "    link: $(echo "${{ steps.extract.outputs.link }}" | base64 -d | xargs)" >> "$FILE"
-          echo "    icon:" >> "$FILE"
-          echo "      type: lucide" >> "$FILE"
-          echo "      name: github" >> "$FILE"
-          echo "author: \"$(echo "${{ steps.extract.outputs.author }}" | base64 -d)\"" >> "$FILE"
-          echo "---" >> "$FILE"
-          echo "" >> "$FILE"
-
-          echo "${{ steps.extract.outputs.content }}" | base64 -d >> "$FILE"
-
+          {
+            echo "---"
+            echo "title: $(q "${{ steps.extract.outputs.title }}")"
+            echo "date: $(date +"%m-%d-%Y")"
+            echo "description: $(q "${{ steps.extract.outputs.description }}")"
+            echo "draft: true"
+            echo "info:"
+            echo "  - text: GitHub"
+            echo "    link: $(d "${{ steps.extract.outputs.link }}" | xargs | jq -Rj tojson)"
+            echo "    icon:"
+            echo "      type: lucide"
+            echo "      name: github"
+            echo "author: $(q "${{ steps.extract.outputs.author }}")"
+            echo "---"
+            echo ""
+            d "${{ steps.extract.outputs.content }}"
+          } > "$FILE"
 
       - name: Commit les changements
         run: |
           ls -al src/content/projects/
-          git add src/content/projects/${{ env.SLUG }}.mdx
+          git add src/content/projects/${{ env.SLUG }}.md
           git commit -m "📝 Publication du projet: $(echo "${{ steps.extract.outputs.title }}" | base64 -d)"
 
       - name: Push vers remote
