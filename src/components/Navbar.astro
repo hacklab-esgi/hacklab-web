@@ -30,11 +30,6 @@ const path = Astro.url.pathname;
           >Projets</a
         >
       </li>
-      <li class="nav-separator">/</li>
-      <li>
-        <input id="search" type="text" placeholder="Rechercher" aria-label="Rechercher" enterkeyhint="search" autocapitalize="none" autocomplete="off" />
-        <div id="search-results"></div>
-      </li>
     </ul>
     <button class="mobile-nav-toggle" aria-label="Menu" aria-expanded="false">
       <Icon
@@ -49,103 +44,7 @@ const path = Astro.url.pathname;
   </div>
 </nav>
 <script is:inline>
-  const searchElement = document.querySelector("#search");
-  const results = document.querySelector("#search-results");
   const navToggle = document.querySelector(".mobile-nav-toggle");
-
-  let focusIndex = -1;
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      searchElement.blur();
-      results.classList.remove("active");
-      focusIndex = -1;
-    }
-
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-
-      focusIndex++;
-      const results = document.querySelectorAll("#search-results a");
-
-      if (focusIndex >= results.length) {
-        focusIndex = 0;
-      }
-
-      results[focusIndex]?.focus();
-    }
-
-    if (e.key === "ArrowUp") {
-      e.preventDefault();
-
-      focusIndex--;
-      const results = document.querySelectorAll("#search-results a");
-
-      if (focusIndex < 0) {
-        focusIndex = results.length - 1;
-      }
-
-      results[focusIndex]?.focus();
-    }
-  });
-
-  searchElement?.addEventListener("focus", () => {
-    searchElement.placeholder = "";
-    results.classList.add("active");
-  });
-
-  searchElement?.addEventListener("blur", () => {
-    searchElement.placeholder = "Rechercher";
-  });
-
-  searchElement?.addEventListener("blur", () => {
-    setTimeout(() => {
-      if (!document.activeElement?.closest("#search-results")) {
-        results.classList.remove("active");
-        focusIndex = -1;
-      }
-    }, 1);
-  });
-
-  results?.addEventListener("focusout", (e) => {
-    if (!e.relatedTarget?.closest("#search-results")) {
-      results.classList.remove("active");
-      focusIndex = -1;
-    }
-  });
-
-  searchElement?.addEventListener("input", async (e) => {
-    if (e.target.dataset.loaded !== "true") {
-      e.target.dataset.loaded = "true";
-
-      window.pagefind = await import("/pagefind/pagefind.js");
-    }
-
-    results.innerHTML = "";
-
-    const search = await window.pagefind.search(e.target.value);
-
-    let i = 0;
-    for (const result of search.results) {
-      i++;
-
-      const data = await result.data();
-
-      results.innerHTML += `
-        <a href="${data.url}">
-          <h3 class="no-mt">${data.meta.title}</h3>
-          <p>${data.excerpt}</p>
-        </a>
-        ${i < search.results.length ? '<hr class="separator">' : ""}
-      `;
-    }
-
-    if (search.results.length === 0 && e.target.value.length > 0) {
-      results.innerHTML = '<p style="margin-top: 0;">Aucun résultat</p>';
-    }
-
-    results.classList.add("active");
-  });
 
   navToggle?.addEventListener("click", () => {
     const open = document.querySelector("nav").classList.toggle("active");
@@ -162,7 +61,7 @@ const path = Astro.url.pathname;
     border-bottom: 1px solid #353535;
     padding-top: 2rem;
     padding-bottom: 2rem;
-    padding-left: 1rem;
+    padding-inline: 1rem;
   }
 
   nav .nav-container {
@@ -206,38 +105,6 @@ const path = Astro.url.pathname;
   nav a.active {
     background-color: var(--primary);
     outline: none;
-  }
-
-  #search {
-    background: none;
-    border: none;
-    outline: none;
-    padding: 0.25rem 0.5rem;
-    width: 100px;
-  }
-
-  #search::placeholder {
-    color: white;
-  }
-
-  #search:focus {
-    background-color: var(--primary);
-  }
-
-  #search-results {
-    position: absolute;
-    top: calc(100% + 0.5rem);
-    right: 0;
-    background-color: #252525;
-    border: 1px solid var(--primary);
-    display: none;
-    width: 200%;
-    z-index: 10;
-    padding: 0.5rem;
-  }
-
-  #search-results.active:has(*) {
-    display: block;
   }
 
   .mobile-nav-toggle {
@@ -341,67 +208,11 @@ const path = Astro.url.pathname;
     nav.active ul li:nth-child(3) { transition-delay: 30ms; }
     nav.active ul li:nth-child(5) { transition-delay: 60ms; }
     nav.active ul li:nth-child(7) { transition-delay: 90ms; }
-    nav.active ul li:nth-child(9) { transition-delay: 120ms; }
 
     @media (prefers-reduced-motion: reduce) {
       nav ul li {
         transform: none;
       }
     }
-
-    #search {
-      width: 100%;
-      max-width: none;
-      padding: 0.75rem 1rem;
-    }
-
-    #search-results {
-      width: 100%;
-      top: 100%;
-      font-size: 0.875em;
-    }
-  }
-</style>
-<style is:global>
-  #search-results a {
-    display: block;
-    text-decoration: none;
-    color: white !important;
-    padding: 0.5rem;
-  }
-
-  #search-results a:hover,
-  #search-results a:focus-visible {
-    background-color: var(--primary);
-    outline: none;
-  }
-
-  #search-results a:hover mark,
-  #search-results a:focus-visible mark {
-    background-color: #ffffff;
-    color: #000000;
-  }
-
-  #search-results a h3 {
-    margin-bottom: 0.5rem;
-  }
-
-  #search-results a p {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  #search-results mark {
-    background-color: var(--primary);
-    color: white;
-  }
-
-  .separator {
-    margin: 0.5rem 0.5rem;
-    border: none;
-    height: 1px;
-    background-color: #353535;
   }
 </style>

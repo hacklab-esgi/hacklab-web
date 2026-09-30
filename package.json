@@ -8,7 +8,6 @@
     "build": "node generate-ics.cjs && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "postbuild": "pagefind --site dist",
     "generate-ics": "node generate-ics.cjs"
   },
   "dependencies": {
@@ -34,7 +33,6 @@
   "devDependencies": {
     "@astrojs/ts-plugin": "^1.10.12",
     "@biomejs/biome": "1.9.4",
-    "pagefind": "^1.5.2",
     "shiki": "^4.4.3"
   }
 }

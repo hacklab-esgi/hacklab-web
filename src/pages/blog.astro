@@ -15,7 +15,6 @@ const tags = posts.flatMap((post) => post.data.tags.map((tag) => tag.id));
 <Layout
   title={openGraph.blog.title || "Blog"}
   description={openGraph.blog.description}
-  pagefindIgnore
 >
   <div class="layout-grid-left-sticky" slot="left">
     <Card class="flex-col-card">

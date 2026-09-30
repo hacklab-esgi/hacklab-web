@@ -14,7 +14,6 @@ const projects = await getCollection("projects", (project) => !project.data.draf
 <Layout
   title={openGraph.projects.title || "Projects"}
   description={openGraph.projects.description}
-  pagefindIgnore
 >
   <div class="layout-grid-left-sticky" slot="left">
     <Card class="flex-col-card">

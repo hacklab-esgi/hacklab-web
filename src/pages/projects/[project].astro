@@ -69,9 +69,9 @@ const { Content } = await render(project);
       </ul>
     </Card>
   </div>
-  <article slot="right" data-pagefind-body>
+  <article slot="right">
     <Card>
-      <div class={`article-header ${!project.data.image ? 'no-image' : ''}`} id="_top" data-pagefind-ignore>
+      <div class={`article-header ${!project.data.image ? 'no-image' : ''}`} id="_top">
         {
           project.data.image && (
             <Image
@@ -98,7 +98,7 @@ const { Content } = await render(project);
       </div>
       <Content />
       <hr class="end-of-article" />
-      <a href="/projects" class="block-link" data-pagefind-ignore
+      <a href="/projects" class="block-link"
         >← Retour aux projets</a
       >
     </Card>

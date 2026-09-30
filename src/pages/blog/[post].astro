@@ -83,9 +83,9 @@ const { Content, headings } = await render(post);
       </ol>
     </Card>
   </div>
-  <article slot="right" data-pagefind-body>
+  <article slot="right">
     <Card>
-      <div class={`article-header ${!post.data.image ? 'no-image' : ''}`} id="_top" data-pagefind-ignore>
+      <div class={`article-header ${!post.data.image ? 'no-image' : ''}`} id="_top">
         {
           post.data.image && (
             <Image
@@ -116,7 +116,7 @@ const { Content, headings } = await render(post);
       </div>
       <Content />
       <hr class="end-of-article" />
-      <a href="/blog" class="block-link" data-pagefind-ignore>← Retour aux articles</a>
+      <a href="/blog" class="block-link">← Retour aux articles</a>
     </Card>
   </article>
 </Layout>
