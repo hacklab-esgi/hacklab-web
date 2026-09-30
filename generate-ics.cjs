@@ -26,13 +26,36 @@ const eventsPath = path.join(__dirname, 'public', 'events', 'events.json');
 const icsPath = path.join(__dirname, 'public', 'calendar.ics');
 const eventsData = JSON.parse(fs.readFileSync(eventsPath, 'utf-8'));
 
+// 🕒 Date sans fuseau (ex. 2026-10-08T18:30:00) → heure de Paris, été/hiver gérés.
+// Sinon elle serait lue dans le fuseau de la machine de build (UTC sur Netlify).
+function parisToUtc(naive) {
+  const offset = (date) => {
+    const p = Object.fromEntries(
+      new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Europe/Paris', hourCycle: 'h23',
+        year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit',
+      }).formatToParts(date).map(({ type, value }) => [type, value])
+    );
+    return Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second) - date.getTime();
+  };
+  const asUtc = new Date(naive + 'Z');
+  // Deux passes : le décalage est recalculé à l'heure estimée (juste autour du changement d'heure)
+  const guess = new Date(asUtc.getTime() - offset(asUtc));
+  return new Date(asUtc.getTime() - offset(guess));
+}
+// Vérification à chaque build (heure d'été puis d'hiver)
+console.assert(parisToUtc('2026-07-01T18:00:00').toISOString() === '2026-07-01T16:00:00.000Z', 'parisToUtc été');
+console.assert(parisToUtc('2026-12-01T18:00:00').toISOString() === '2026-12-01T17:00:00.000Z', 'parisToUtc hiver');
+
 // 🔁 Transformation
 const events = eventsData.map(ev => {
-  // Sans fuseau, la date serait lue dans le fuseau de la machine de build (UTC sur Netlify)
-  if (!/(Z|[+-]\d\d:?\d\d)$/.test(ev.start)) {
-    throw new Error(`Date sans fuseau horaire dans events.json : ${ev.start} (attendu : ISO UTC, ex. 2026-09-24T12:00:00.000Z)`);
+  const missing = ['title', 'start', 'duration'].filter(k => ev[k] === undefined || ev[k] === '');
+  if (missing.length) {
+    throw new Error(`Événement incomplet dans events.json (${missing.join(', ')} manquant) : ${JSON.stringify(ev).slice(0, 120)}`);
   }
-  const startDate = new Date(ev.start);
+  const hasTimezone = /(Z|[+-]\d\d:?\d\d)$/.test(ev.start);
+  if (!hasTimezone) console.warn(`⚠️ Date sans fuseau lue comme heure de Paris : ${ev.start} (${ev.title})`);
+  const startDate = hasTimezone ? new Date(ev.start) : parisToUtc(ev.start);
   if (isNaN(startDate)) {
     console.warn(`⚠️ Date invalide ignorée : ${ev.start}`);
     return null;
