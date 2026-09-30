@@ -6,6 +6,7 @@ import sitemap from '@astrojs/sitemap';
 import spectre from './package/src';
 import { spectreDark } from './src/ec-theme';
 import rehypeSanitize from 'rehype-sanitize';
+import { unified } from '@astrojs/markdown-remark';
 
 // Les .md viennent des issues GitHub (contenu public) : on retire le HTML dangereux
 // (<script>, onerror=, liens javascript:…). Les .mdx de l'équipe ne sont pas concernés.
@@ -19,7 +20,9 @@ export default defineConfig({
   site: 'https://hacklab.esgi.fr',
   output: 'static',
   markdown: {
-    rehypePlugins: [sanitizeUntrusted],
+    processor: unified({
+      rehypePlugins: [sanitizeUntrusted],
+    }),
   },
   integrations: [expressiveCode({
     themes: [spectreDark],
