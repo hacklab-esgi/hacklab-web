@@ -1,0 +1,33 @@
+---
+// Carte « Réseaux sociaux » de l'accueil (affichée à gauche sur desktop, en bas sur mobile)
+import type { HTMLAttributes } from 'astro/types';
+import { getCollection } from 'astro:content';
+import Card from './Card.astro';
+import Icon from './Icon.astro';
+
+type Props = HTMLAttributes<'div'>;
+
+const socials = await getCollection('socials');
+---
+
+<Card {...Astro.props}>
+  <h3 class="no-mt">Réseaux sociaux</h3>
+  <ul class="overview-list-media">
+    {
+      socials.map((item) => (
+        <li>
+          <a href={item.data.link} class="socials-link" target="_blank" rel="noopener">
+            <Icon
+              type={item.data.icon.type}
+              name={item.data.icon.name as any}
+              width={24}
+              height={24}
+              class="glow-icon"
+            />
+            <span>{item.data.text}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Card>
