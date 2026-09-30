@@ -100,14 +100,14 @@ const { Content, headings } = await render(post);
             <h1 class="no-mt article-h1">{post.data.title}</h1>
           </div>
           <div class="article-info">
-            <span>📅&nbsp;{post.data.createdAt.toLocaleDateString('fr-FR')}</span>
+            <span><span aria-hidden="true">📅</span>&nbsp;{post.data.createdAt.toLocaleDateString('fr-FR')}</span>
             <span
-              >⏱️&nbsp;{timeToRead(post)}&nbsp;minute{timeToRead(post) === 1 ? "" : "s"}&nbsp;à&nbsp;lire</span
+              ><span aria-hidden="true">⏱️</span>&nbsp;{timeToRead(post)}&nbsp;minute{timeToRead(post) === 1 ? "" : "s"}&nbsp;à&nbsp;lire</span
             >
-            <span>🏷️&nbsp;Tags:&nbsp;{post.data.tags.map((tag) => tag.id).join(", ")}</span>
+            <span><span aria-hidden="true">🏷️</span>&nbsp;Tags:&nbsp;{post.data.tags.map((tag) => tag.id).join(", ")}</span>
             {post.data.author && (
               <>
-                <span>✍️&nbsp;Par&nbsp;@{post.data.author}</span>
+                <span><span aria-hidden="true">✍️</span>&nbsp;Par&nbsp;@{post.data.author}</span>
               </>
             )}
           </div>

@@ -96,16 +96,16 @@
 
         const content = info.el.querySelector<HTMLElement>('.fc-event-title');
         if (content) {
-          content.innerHTML = `📌 ${heure}<br/>${info.event.title}`;
+          content.innerHTML = `<span aria-hidden="true">📌</span> ${heure}<br/>${info.event.title}`;
           content.style.whiteSpace = 'normal';
         }
 
         const details = `
           <strong>${info.event.title}</strong><br/>
-          🕒 ${heure}<br/>
-          📍 ${location}<br/>
-          📝 ${description || 'Aucune description'}<br/>
-          ${speaker?.trim() ? `👤 ${speaker}<br/>` : ''}
+          <span aria-hidden="true">🕒</span> ${heure}<br/>
+          <span aria-hidden="true">📍</span> ${location}<br/>
+          <span aria-hidden="true">📝</span> ${description || 'Aucune description'}<br/>
+          ${speaker?.trim() ? `<span aria-hidden="true">👤</span> ${speaker}<br/>` : ''}
         `;
         info.el.style.cursor = 'pointer';
 

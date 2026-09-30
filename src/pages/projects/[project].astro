@@ -86,10 +86,10 @@ const { Content } = await render(project);
             <h1 class="no-mt article-h1">{project.data.title}</h1>
           </div>
           <div class="article-info">
-            <span>📅&nbsp;{project.data.date.toLocaleDateString('fr-FR')}</span>
+            <span><span aria-hidden="true">📅</span>&nbsp;{project.data.date.toLocaleDateString('fr-FR')}</span>
             {project.data.author && (
               <>
-                <span>✍️&nbsp;Par&nbsp;@{project.data.author}</span>
+                <span><span aria-hidden="true">✍️</span>&nbsp;Par&nbsp;@{project.data.author}</span>
               </>
             )}
           </div>
