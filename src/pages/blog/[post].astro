@@ -60,6 +60,7 @@ const { Content, headings } = await render(post);
   title={post.data.title}
   description={post.data.description}
   image={post.data.image}
+  ogImage={`/og/blog/${post.id}.png`}
   article={{
     createdAt: post.data.createdAt,
     updatedAt: post.data.updatedAt,
