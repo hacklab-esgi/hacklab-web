@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import rss from '@astrojs/rss';
 
 export async function GET(context: APIContext) {
-	const projects = await getCollection('projects');
+	const projects = await getCollection('projects', (project) => !project.data.draft);
 
 	return rss({
 		title: 'Projets - HackLab',

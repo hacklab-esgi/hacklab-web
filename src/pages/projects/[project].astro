@@ -19,7 +19,7 @@ interface Props {
 const { project } = Astro.props;
 
 export const getStaticPaths = (async () => {
-  const projects = await getCollection("projects");
+  const projects = await getCollection("projects", (project) => !project.data.draft);
 
   return projects.map((project) => ({
     params: { project: project.id },

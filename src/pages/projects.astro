@@ -8,7 +8,7 @@ import Icon from "../components/Icon.astro";
 import Layout from "../layouts/Layout.astro";
 import { openGraph } from "spectre:globals";
 
-const projects = await getCollection("projects");
+const projects = await getCollection("projects", (project) => !project.data.draft);
 ---
 
 <Layout

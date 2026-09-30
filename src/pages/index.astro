@@ -10,7 +10,7 @@ import Calendar from "../components/Calendar.astro";
 
 const [posts, projects, socials] = await Promise.all([
   getCollection("posts", (post) => post.data.draft !== true),
-  getCollection("projects"),
+  getCollection("projects", (project) => !project.data.draft),
   getCollection("socials"),
 ]);
 ---
