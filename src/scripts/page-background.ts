@@ -1,5 +1,7 @@
 import { AstroError } from "astro/errors";
 
+const FONT = '"Cascadia HackLab", Consolas, monospace';
+
 interface LetterPosition {
   x: number;
   y: number;
@@ -99,7 +101,7 @@ class PageBackground {
   
     // Draw the letters on the overlay canvas
     for(const letter of randomLetters) {
-      this.overlayCtx.font = `bold ${fontSize}px Consolas, monospace`;
+      this.overlayCtx.font = `bold ${fontSize}px ${FONT}`;
       this.overlayCtx.textAlign = 'start';
       this.overlayCtx.textBaseline = 'top';
       this.overlayCtx.fillStyle = `rgba(${this.primaryRgb}, 0)`;
@@ -202,7 +204,7 @@ class PageBackground {
         });
       }
       
-      this.overlayCtx.font = `bold ${fontSize}px Consolas, monospace`;
+      this.overlayCtx.font = `bold ${fontSize}px ${FONT}`;
       this.overlayCtx.textAlign = 'start';
       this.overlayCtx.textBaseline = 'top';
       this.overlayCtx.fillStyle = `rgba(${this.primaryRgb}, ${alpha})`;
@@ -242,9 +244,10 @@ class PageBackground {
 }
 
 /**
- * First loads the Geist Mono font, then initializes the background.
+ * Attend la police du site (sinon le canvas dessine avec la police de secours), puis initialise le fond.
  */
 async function initializeBackground() {
+  await document.fonts.load(`bold 16px ${FONT}`).catch(() => {});
 
   const canvas = document.getElementById('bg-canvas') as HTMLCanvasElement;
   const overlayCanvas = document.getElementById('overlay-canvas') as HTMLCanvasElement;

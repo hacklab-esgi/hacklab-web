@@ -1,15 +1,10 @@
-@font-face {
-  font-family: "ConsolasWeb";
-  src: url("/fonts/Consolas.woff2") format("woff2"),
-    url("/fonts/Consolas.ttf") format("truetype");
-  font-display: swap;
-  font-weight: normal;
-  font-style: normal;
-}
-
 :root {
-  --font-sans: "ConsolasWeb", Consolas, sans-serif;
-  --font-heading: "ConsolasWeb", Consolas, monospace;
+  /* Cascadia Code : successeure libre (OFL) de Consolas, déclarée dans Layout.astro */
+  --font-sans: "Cascadia HackLab", Consolas, monospace;
+  --font-heading: "Cascadia HackLab", Consolas, monospace;
+  /* Graisses calées sur la densité de l'ancienne Consolas (Cascadia est plus épaisse) */
+  --fw-normal: 340;
+  --fw-bold: 650;
   --primary: #095496;
   --primary-rgb: 9, 84, 150;
   --primary-light: #045b83;
@@ -48,6 +43,19 @@ button:active {
 body {
   -webkit-font-smoothing: antialiased;
   font-family: var(--font-sans);
+  font-weight: var(--fw-normal);
+}
+
+b,
+strong,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+th {
+  font-weight: var(--fw-bold);
 }
 
 h1,
@@ -88,7 +96,7 @@ html {
 .announcement-badge {
   background: #2563eb;
   color: #fff;
-  font-weight: bold;
+  font-weight: var(--fw-bold);
   padding: 0.15em 0.6em;
   border-radius: 0.25em;
   font-size: 0.8em;
@@ -98,7 +106,7 @@ html {
 .announcement-link {
   color: #222;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: var(--fw-normal);
   transition: color 0.2s;
 }
 

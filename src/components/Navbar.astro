@@ -174,7 +174,7 @@ const path = Astro.url.pathname;
   }
 
   .site-title {
-    font-weight: 700;
+    font-weight: var(--fw-bold);
     text-decoration: none;
     font-size: 1.25em;
     z-index: 2;
@@ -182,7 +182,7 @@ const path = Astro.url.pathname;
 
   nav ul {
     display: flex;
-    font-weight: 500;
+    font-weight: var(--fw-normal);
     font-size: 1.05em;
     gap: 0.5rem;
     margin: 0;

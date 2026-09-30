@@ -20,11 +20,8 @@ importers:
       '@astrojs/sitemap':
         specifier: ^3.7.4
         version: 3.7.4
-      '@fontsource/geist':
-        specifier: ^5.2.5
-        version: 5.3.0
-      '@fontsource/geist-mono':
-        specifier: ^5.2.5
+      '@fontsource-variable/cascadia-code':
+        specifier: ^5.3.0
         version: 5.3.0
       '@fullcalendar/core':
         specifier: ^6.1.21
@@ -511,11 +508,8 @@ packages:
   '@expressive-code/plugin-text-markers@0.44.2':
     resolution: {integrity: sha512-SNI7EgUSiADqbqUzzMbj1ZeC/r2pa5eg3KyFOGAd3a7EsIA4qzjXQLp+ODWQtHVDKFCdGs4J3ovSJUqvKIK96g==}
 
-  '@fontsource/geist-mono@5.3.0':
-    resolution: {integrity: sha512-UtJ1BBBCVpMYdIcW7nEB45UAoAw5M53ZXs2t0ciPW+IokuAAIc56M8+kW5tXbRJCTpDw4XTtU7proT6NdQAHTg==}
-
-  '@fontsource/geist@5.3.0':
-    resolution: {integrity: sha512-u03ftlfVwb05uijq2jGDJ03/HKGqMKaNFk7KOhkpBUex8+BhrAOfMs/XciJ2UUNUX9fEsZbZQld/RWMA2oFU7g==}
+  '@fontsource-variable/cascadia-code@5.3.0':
+    resolution: {integrity: sha512-6I6M029Lum62MGmP0o+rXRrIBiIiptNDC4slPKLPUJiSB7NHZTLb+Ihk9G7jLvUfWziGXHJLjJPJLBzlEPjS1g==}
 
   '@fullcalendar/core@6.1.21':
     resolution: {integrity: sha512-t3u/+sqh3Iq7TWtUnVLcGDUE6OWZh0UD3c04bI/l7lSLAgAKr3kngBmhHiQD1QXpwC8ZN5iNqG7a7gOVixhSKQ==}
@@ -2515,9 +2509,7 @@ snapshots:
     dependencies:
       '@expressive-code/core': 0.44.2
 
-  '@fontsource/geist-mono@5.3.0': {}
-
-  '@fontsource/geist@5.3.0': {}
+  '@fontsource-variable/cascadia-code@5.3.0': {}
 
   '@fullcalendar/core@6.1.21':
     dependencies:
