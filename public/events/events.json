@@ -295,5 +295,14 @@
     "speaker": "@yanis6314",
     "description": "Open, ouvert tout niveau !!",
     "url": ""
+  },
+  {
+    "title": "Session du samedi 10/10",
+    "start": "2026-10-10T11:30:00.000Z",
+    "duration": 1,
+    "location": "Salle A11 (probablement) campus Nation 1",
+    "speaker": "@srv_yagoo, @yanis6314",
+    "description": "On se retrouve comme d’habitude en salle A11 aux alentours de 13h30 !",
+    "url": ""
   }
 ]
