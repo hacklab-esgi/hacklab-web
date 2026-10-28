@@ -313,5 +313,14 @@
     "speaker": "@srv_yagoo, @yanis6314",
     "description": "On fais une session comme d'habitude ce samedi 24 en salle A11 Campus Nation 1, il y aura une JPO le même jour",
     "url": ""
+  },
+  {
+    "title": "Session hardware jeudi 28",
+    "start": "2026-10-28T14:30:00.000Z",
+    "duration": 2,
+    "location": "Salle 3 Campus Voltaire",
+    "speaker": "@srv_yagoo",
+    "description": "on va essayer de faire une introduction a l’electronique et au NFC",
+    "url": ""
   }
 ]
