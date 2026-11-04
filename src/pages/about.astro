@@ -1,232 +1,266 @@
 ---
 import "../styles/index.css";
+import "../styles/page.css";
 
-import Card from "../components/Card.astro";
-import Icon from "../components/Icon.astro";
 import Layout from "../layouts/Layout.astro";
+import PageIntro from "../components/PageIntro.astro";
 import { name, openGraph } from "spectre:globals";
+
+const team = [
+  { role: "Responsable", people: [{ handle: "548e", photo: "/img/team/548e.jpg" }] },
+  {
+    role: "Co-responsable",
+    people: [
+      { handle: "Yagoo", photo: "/img/team/yagoo.jpg", link: "https://www.linkedin.com/in/lucas-miller-a62444214/" },
+      { handle: "khpte", photo: "/img/team/khpte-mascotte.jpg", link: "https://www.linkedin.com/in/enzo-partel/" },
+      { handle: "bald123", photo: "/img/team/bald123.jpg"},
+    ],
+  },
+];
 ---
 
-<script is:inline>
-  document.addEventListener("DOMContentLoaded", () => {
-    const links = document.querySelectorAll(".layout-grid-left-sticky a");
-
-    links.forEach((link) => {
-      link.addEventListener("click", () => {
-        links.forEach((l) => l.classList.remove("active"));
-        link.classList.add("active");
-      });
-    });
-  });
-</script>
-
 <Layout
+  ogImage="/og/pages/laboratoire.png"
   title={openGraph.about.title || name}
   description={openGraph.about.description}
 >
-  <div class="layout-grid-left-sticky" slot="left">
-    <Card class="flex-col-card">
-      <h2 class="no-mt">
-        <a href="#team">1. L'équipe</a><br />
-        <a href="#about">2. Le HackLab</a><br />
-        <a href="#activities">3. Le projet</a><br />
-        <a href="#partners">4. Les partenaires</a>
-      </h2>
-    </Card>
-  </div>
-  <div class="layout-grid-right" slot="right">
-    <Card>
-      <div class="header-container">
-        <Icon
-          type="lucide"
-          name="users"
-          width={24}
-          height={24}
-          class="glow-icon"
-        />
-        <h2 id="team">L'équipe</h2>
-      </div>
-      <div class="content-container">
-        <p class="text-default">
-          Le HackLab est animé par une équipe de bénévoles aux profils
-          variés&nbsp;: étudiants en cybersécurité, alumni de l’ESGI,
-          professionnels en activité…
-          <br />
-          Chacun apporte sa spécialité&nbsp;—&nbsp;pentest, reverse, infra, développement,
-          recherche&nbsp;—&nbsp;et son envie de partager.
-          <br />
-          Ce sont ces contributions individuelles qui font la richesse et la diversité
-          du labo 💡
-        </p>
-      </div>
+  <PageIntro
+    slot="left"
+    title="Le laboratoire"
+    lead="Un laboratoire étudiant libre, dédié à la cybersécurité et animé par des bénévoles."
+  >
+    <nav class="page-toc" aria-label="Sommaire">
+      <ol>
+        <li><a href="#team">L’équipe</a></li>
+        <li><a href="#about">Le HackLab</a></li>
+        <li><a href="#activities">Le projet</a></li>
+        <li><a href="#partners">Les partenaires</a></li>
+      </ol>
+    </nav>
+  </PageIntro>
 
-      <section class="card-grid">
-        <Card>
-          <div class="team-pyramid">
-            <h3 class="pyramid-title" style="margin-top: 0">Responsable</h3>
-            <div class="pyramid-level">
-              <div class="team-member">
-                <img src="/img/team/spoon.jpg" alt="" />
-                <div class="member-info">
-                  <span class="member-handle">@Spoon</span>
-                </div>
-              </div>
+  <div class="layout-grid-right page-main" slot="right">
+    <section class="page-section" aria-labelledby="team">
+      <h2 id="team">L’équipe</h2>
+      <p>
+        Le HackLab est animé par une équipe de bénévoles aux profils variés : étudiants en cybersécurité, alumni
+        de l’ESGI, professionnels en activité… Chacun apporte sa spécialité (pentest, reverse, infra,
+        développement, recherche) et son envie de partager. Ce sont ces contributions individuelles qui font la
+        richesse et la diversité du labo.
+      </p>
+
+      <div class="org" role="list" aria-label="Organigramme">
+        {
+          team.map((level, i) => (
+            <div class:list={["org-level", { "org-children": i > 0 }]}>
+              {level.people.map((person) => {
+                const Tag = person.link ? "a" : "div";
+                return (
+                  <Tag class="org-node" role="listitem" href={person.link} target={person.link && "_blank"} rel={person.link && "noopener"}>
+                    <img src={person.photo} alt="" width="72" height="72" loading="lazy" />
+                    <span class="org-handle">@{person.handle}</span>
+                    <span class="org-role">{level.role}</span>
+                  </Tag>
+                );
+              })}
             </div>
+          ))
+        }
+      </div>
+    </section>
 
-            <h3 class="pyramid-title">Co-responsable</h3>
-            <div class="pyramid-level">
-              <a
-                class="team-member"
-                href="https://www.linkedin.com/in/lucas-miller-a62444214/"
-                target="_blank"
-              >
-                <img src="/img/team/lulu.jpg" alt="" />
-                <div class="member-info">
-                  <span class="member-handle">@lululufr</span>
-                </div>
-                </a>
-              
-              <a
-                class="team-member"
-                href="https://www.linkedin.com/in/tom-baty-913825203/"
-                target="_blank"
-              >
-                <img src="/img/team/bageto.jpg" alt="" />
-                <div class="member-info">
-                  <span class="member-handle">@Bageto</span>
-                </div>
-              </a>
-            </div>
-          </div>
-        </Card>
-      </section>
-    </Card>
-    <Card>
-      <div class="header-container">
-        <Icon
-          type="lucide"
-          name="flask-conical"
-          width={24}
-          height={24}
-          class="glow-icon"
-        />
-        <h2 id="about">Le HackLab</h2>
-      </div>
-      <div class="content-container">
-        <p class="text-default">
-          Le HackLab est un laboratoire étudiant libre dédié à la cybersécurité.<br
-          />Créé à l’initiative d’étudiants et d’alumni de l’ESGI, il vise à
-          expérimenter, apprendre et construire ensemble autour de la sécurité
-          offensive et défensive.
-        </p>
-        <p class="text-default">
-          Tout est fait maison, en dehors des cours et du travail, avec les
-          moyens du bord, mais beaucoup de motivation.
-        </p>
-        <p class="text-default">
-          On avance avec passion, sans pression, dans un esprit de liberté, de
-          partage et de curiosité.
-        </p>
-      </div>
-    </Card>
-    <Card>
-      <div class="header-container">
-        <Icon
-          type="lucide"
-          name="rocket"
-          width={24}
-          height={24}
-          class="glow-icon"
-        />
-        <h2 id="activities">Le projet</h2>
-      </div>
-      <div class="content-container">
-        <p class="text-default">
-          Notre objectif est de proposer des sessions techniques accessibles à
-          toutes et tous, sur des thématiques variées en cybersécurité.
-          <br />
-          L’idée est simple&nbsp;: permettre à chacun de monter en compétences
-          sur un sujet spécifique, quel que soit son niveau.
-          <br />
-          Aucun format n’est imposé&nbsp;: ça peut être une présentation, une démo,
-          un atelier, un projet en cours, un retour d’expérience… Étudiants, professionnels,
-          autodidactes&nbsp;—&nbsp;tout le monde est bienvenu&nbsp;💡
-        </p>
-        <h3>📚 Ce qu’on fait concrètement</h3>
-        <p class="text-default">
-          - De <b>l'entraide</b> au quotidien via <b>Hackadémie</b>
-          <br />
-          - Des <b>conférences</b> régulières sur des sujets techniques
-          <br />
-          - Des <b>CTF</b> et de l'entraînement avec notre équipe <b>MindBreakers ESGI</b>
-          <br />
-          - Des <b>projets de développement</b> collaboratifs (outils, scripts, automations…)
-          <br />
-          - Des <b>articles</b> publiés sur le site pour documenter nos travaux ou
-          approfondir des notions
-          <br />
-          - Des <b>vidéos YouTube</b> avec les replays de nos conférences et ateliers
-        </p>
-        <h3>🙋‍♂️ Suivre les sessions</h3>
-        <p class="text-default">
-          Nos événements ont lieu en <b
-            >en présentiel à l’ESGI et distanciel sur Discord</b
-          > suivez-nous sur les réseaux pour ne rien manquer !
-          <br />
-          L’accès se fait via notre groupe <a href="https://www.meetup.com/hacklab_esgi/" target="_blank"><b>Meetup</b></a>, où chaque session est
-          annoncée à l’avance.
-          <br />
-          Chaque session est suivie d’un moment convivial autour d’un verre &nbsp;—&nbsp;l’occasion
-          d’échanger et de rencontrer les membres du labo dans une ambiance détendue
-          🍻
-        </p>
-        <h3>🎤 Proposer un sujet</h3>
-        <p class="text-default">
-          Tout le monde peut proposer un sujet de présentation, peu importe le
-          niveau ou la forme.
-          <br />
-          Si tu veux partager quelque chose, contacte-nous via nos canaux de communication&nbsp;—&nbsp;on
-          est toujours partants pour découvrir de nouvelles choses et mettre en avant
-          les contributions de chacun.
-        </p>
-      </div>
-    </Card>
-    <Card>
-      <div class="header-container">
-        <Icon
-          type="lucide"
-          name="handshake"
-          width={24}
-          height={24}
-          class="glow-icon"
-        />
-        <h2 id="partners">Les partenaires</h2>
-      </div>
-      <div class="content-container">
-        <p class="text-default">
-          Le HackLab est soutenu par l’<a
-            href="https://www.esgi.fr/"
-            target="_blank">ESGI</a
-          >, notre partenaire principal.
-          <br />
-          L’école nous accompagne dans l’organisation de nos événements et met à
-          disposition les moyens nécessaires pour faire vivre le projet&nbsp;: salles,
-          matériel, visibilité, et soutien logistique.
-        </p>
+    <section class="page-section" aria-labelledby="about">
+      <h2 id="about">Le HackLab</h2>
+      <p>
+        Le HackLab est un laboratoire étudiant libre dédié à la cybersécurité. Créé à l’initiative d’étudiants et
+        d’alumni de l’ESGI, il vise à expérimenter, apprendre et construire ensemble autour de la sécurité
+        offensive et défensive.
+      </p>
+      <p>
+        Tout est fait maison, en dehors des cours et du travail, avec les moyens du bord mais beaucoup de
+        motivation. On avance avec passion, sans pression, dans un esprit de liberté, de partage et de curiosité.
+      </p>
+      <dl class="principles">
+        <dt>Par des passionnés</dt>
+        <dd>Organisé par des étudiants et des alumni pour expérimenter, apprendre ensemble et partager autour de la cybersécurité.</dd>
+        <dt>Ouvert à tous</dt>
+        <dd>Étudiant, professionnel ou simplement curieux : les sessions sont ouvertes à tout le monde.</dd>
+        <dt>Construisons ensemble</dt>
+        <dd>Toute proposition est la bienvenue : une idée, une recherche, une démo.</dd>
+      </dl>
+    </section>
 
-        <p class="text-default">
-          Grâce à ce partenariat, nous pouvons accueillir nos conférences en
-          présentiel, proposer un cadre stable à nos activités, et encourager
-          les initiatives étudiantes autour de la cybersécurité.
-        </p>
+    <section class="page-section" aria-labelledby="activities">
+      <h2 id="activities">Le projet</h2>
+      <p>
+        Notre objectif est de proposer des sessions techniques accessibles à toutes et à tous, sur des thématiques
+        variées en cybersécurité. L’idée est simple : permettre à chacun de monter en compétences sur un sujet
+        précis, quel que soit son niveau.
+      </p>
+      <p>
+        Aucun format n’est imposé : une présentation, une démo, un atelier, un projet en cours, un retour
+        d’expérience… Étudiants, professionnels, autodidactes : tout le monde est bienvenu.
+      </p>
 
-        <p class="text-default">
-          Nous sommes également ouverts à d'autres formes de soutien ou de
-          collaboration. Si vous souhaitez contribuer au projet&nbsp;—&nbsp;en
-          tant qu'entreprise, association ou individu&nbsp;—&nbsp;n’hésitez pas
-          à nous contacter pour en discuter&nbsp;🤝
-        </p>
-      </div>
-    </Card>
+      <h3>Ce qu’on fait concrètement</h3>
+      <ul>
+        <li>De l’entraide au quotidien via Hackadémie</li>
+        <li>Des conférences régulières sur des sujets techniques</li>
+        <li>Des CTF et de l’entraînement avec notre équipe MindBreakers ESGI</li>
+        <li>Des projets de développement collaboratifs (outils, scripts, automatisations…)</li>
+        <li>Des articles publiés sur le site pour documenter nos travaux ou approfondir des notions</li>
+        <li>Des vidéos YouTube avec les replays de nos conférences et ateliers</li>
+      </ul>
+
+      <h3>Suivre les sessions</h3>
+      <p>
+        Nos événements ont lieu en présentiel à l’ESGI et à distance sur Discord. Chaque session est annoncée à
+        l’avance sur notre groupe <a href="https://www.meetup.com/hacklab_esgi/" target="_blank" rel="noopener">Meetup</a>{' '}
+        et dans l’<a href="/agenda">agenda</a>.
+      </p>
+      <p>
+        Chaque session est suivie d’un moment convivial autour d’un verre : l’occasion d’échanger et de rencontrer
+        les membres du labo dans une ambiance détendue.
+      </p>
+
+      <h3>Proposer un sujet</h3>
+      <p>
+        Tout le monde peut proposer un sujet de présentation, quels que soient le niveau ou la forme. Si tu veux
+        partager quelque chose, contacte-nous sur nos réseaux : on est toujours partants pour découvrir de
+        nouvelles choses et mettre en avant les contributions de chacun.
+      </p>
+    </section>
+
+    <section class="page-section" aria-labelledby="partners">
+      <h2 id="partners">Les partenaires</h2>
+      <p>
+        Le HackLab est soutenu par l’<a href="https://www.esgi.fr/" target="_blank" rel="noopener">ESGI</a>, notre
+        partenaire principal. L’école nous accompagne dans l’organisation de nos événements et met à disposition
+        les moyens nécessaires pour faire vivre le projet : salles, matériel, visibilité et soutien logistique.
+      </p>
+      <p>
+        Grâce à ce partenariat, nous pouvons accueillir nos conférences en présentiel, proposer un cadre stable à
+        nos activités et encourager les initiatives étudiantes autour de la cybersécurité.
+      </p>
+      <p>
+        Nous sommes également ouverts à d’autres formes de soutien ou de collaboration. Si vous souhaitez
+        contribuer au projet, en tant qu’entreprise, association ou particulier, n’hésitez pas à nous contacter
+        pour en discuter.
+      </p>
+    </section>
   </div>
 </Layout>
+
+<style>
+  /* Organigramme pyramidal : un niveau par rôle, reliés par des traits fins */
+  .org {
+    display: grid;
+    justify-items: center;
+    margin-top: 2rem;
+  }
+
+  .org-level {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  .org-children {
+    padding-top: 2.5rem;
+  }
+
+  /* trait vertical sous le niveau précédent */
+  .org-children::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1px;
+    height: 1.25rem;
+    background: #3a3a3a;
+  }
+
+  /* trait horizontal entre le premier et le dernier enfant (centres des nœuds de 8rem) */
+  .org-children::after {
+    content: "";
+    position: absolute;
+    top: 1.25rem;
+    left: 4rem;
+    right: 4rem;
+    height: 1px;
+    background: #3a3a3a;
+  }
+
+  .org-node {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 0.25rem;
+    width: 8rem;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  /* trait vertical au-dessus de chaque enfant */
+  .org-children .org-node::before {
+    content: "";
+    position: absolute;
+    top: -1.25rem;
+    left: 50%;
+    width: 1px;
+    height: 1.25rem;
+    background: #3a3a3a;
+  }
+
+  .org-node img {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 0.25rem;
+    object-fit: cover;
+    border: 2px solid #2e2e2e;
+    border-radius: 50%;
+  }
+
+  .org-handle {
+    font-weight: var(--fw-bold);
+  }
+
+  .org-role {
+    color: var(--accent);
+    font-size: 0.875rem;
+  }
+
+  a.org-node:hover {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  a.org-node:hover img {
+    border-color: var(--accent);
+  }
+
+  a.org-node:focus-visible {
+    outline: 2px solid #e0e0e0;
+    outline-offset: 4px;
+    border-radius: 0.5rem;
+  }
+
+  .principles {
+    max-width: 70ch;
+    margin: 1.5rem 0 0;
+    padding: 1.25rem 0 0;
+    border-top: 1px solid #262626;
+  }
+
+  .principles dt {
+    color: #fff;
+    font-weight: var(--fw-bold);
+  }
+
+  .principles dd {
+    margin: 0.25rem 0 1rem;
+    color: #c7c7c7;
+  }
+</style>
