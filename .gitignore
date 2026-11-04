@@ -29,3 +29,4 @@ pnpm-debug.log*
 # generated at build
 public/calendar.ics
 .netlify/
+public/entrainements.ics

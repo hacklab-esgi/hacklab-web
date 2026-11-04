@@ -69,6 +69,7 @@ const events = eventsData.map(ev => {
   const uid = `${startDate.toISOString().slice(0, 10)}-${slugify(ev.title)}@hacklab_esgi`;
 
   const event = {
+    type: ev.type === 'training' ? 'training' : 'session',
     uid,
     title: ev.title,
     description: description + speakerInfo,
@@ -88,13 +89,19 @@ const events = eventsData.map(ev => {
   return event;
 }).filter(Boolean); // enlève les nulls
 
-// 🗓 Génération du fichier ICS
-createEvents(events, (error, value) => {
-  if (error) {
-    console.error('❌ Erreur ICS :', error);
-    process.exit(1);
-  }
+// 🗓 Deux fichiers : les sessions (calendar.ics) et les entraînements CTF (entrainements.ics, « type »: « training »).
+// Séparés pour que les abonnés aux sessions ne reçoivent pas d'office tous les entraînements.
+function writeIcs(list, file, label) {
+  const clean = list.map(({ type, ...event }) => event);
+  createEvents(clean, (error, value) => {
+    if (error) {
+      console.error(`❌ Erreur ICS (${label}) :`, error);
+      process.exit(1);
+    }
+    fs.writeFileSync(file, value);
+    console.log(`✅ ${path.basename(file)} généré (${clean.length} ${label}).`);
+  });
+}
 
-  fs.writeFileSync(icsPath, value);
-  console.log('✅ Fichier calendar.ics généré avec succès.');
-});
+writeIcs(events.filter((e) => e.type === 'session'), icsPath, 'sessions');
+writeIcs(events.filter((e) => e.type === 'training'), path.join(__dirname, 'public', 'entrainements.ics'), 'entraînements');
