@@ -1,0 +1,213 @@
+---
+// Sommaire d'article : un trait qui suit les retraits (en « serpent »). Le violet couvre ce qui est à l'écran,
+// la boule en est la tête selon le sens de défilement. Replié par défaut sur mobile.
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+const { headings } = Astro.props;
+const minDepth = Math.min(...headings.map((h) => h.depth));
+---
+
+{
+  headings.length > 0 && (
+    <details class="toc" open data-toc>
+      <summary>
+        Sommaire
+        <svg class="toc-chevron" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+          <path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.75" />
+        </svg>
+      </summary>
+      <div class="toc-body">
+        <svg class="toc-track" aria-hidden="true"><path /></svg>
+        <div class="toc-progress" aria-hidden="true">
+          <svg><path /></svg>
+        </div>
+        <span class="toc-thumb" aria-hidden="true" />
+        <ol>
+          {headings.map((h) => (
+            <li data-level={h.depth - minDepth}>
+              <a href={`#${h.slug}`}>{h.text}</a>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </details>
+  )
+}
+
+<script is:inline>
+  // Avant l'affichage : replié sur mobile (une colonne), ouvert sur desktop, sans clignotement
+  document.querySelectorAll('[data-toc]').forEach((el) => {
+    el.open = !window.matchMedia('(max-width: 1380px)').matches;
+  });
+</script>
+
+<script>
+  import { initToc } from '../scripts/toc';
+  document.querySelectorAll<HTMLDetailsElement>('[data-toc]').forEach(initToc);
+</script>
+
+<style>
+  .toc {
+    min-width: 0;
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    color: #fff;
+    font-size: 1.125rem;
+    font-weight: var(--fw-bold);
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* Desktop : toujours ouvert, le titre n'est pas un bouton */
+  @media screen and (min-width: 1381px) {
+    summary {
+      pointer-events: none;
+    }
+
+    .toc-chevron {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 1380px) {
+    .toc {
+      padding: 1rem 1.25rem;
+      background: #141414;
+      border: 1px solid #262626;
+      border-radius: 0.75rem;
+    }
+
+    summary {
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .toc[open] summary {
+      margin-bottom: 1rem;
+    }
+
+    .toc[open] .toc-chevron {
+      transform: rotate(180deg);
+    }
+  }
+
+  .toc-body {
+    position: relative;
+    /* Sommaire long : il défile dans sa colonne */
+    max-height: calc(100vh - 13rem);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+
+  @media screen and (max-width: 1380px) {
+    .toc-body {
+      max-height: 60vh;
+    }
+  }
+
+  .toc-track,
+  .toc-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+  }
+
+  /* En bloc : affiché en ligne, le SVG ajoute l'espace sous la ligne de texte et déborde de 4px */
+  .toc-progress svg {
+    display: block;
+  }
+
+  .toc-track path,
+  .toc-progress path {
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+
+  .toc-track path {
+    stroke: #2e2e2e;
+  }
+
+  .toc-progress path {
+    stroke: var(--accent-past);
+  }
+
+  /* La partie violette est le même tracé, découpé de la boule à la dernière section visible */
+  .toc-progress {
+    clip-path: inset(0 0 100% 0);
+  }
+
+  .toc-thumb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 7px;
+    height: 7px;
+    background: var(--accent-past);
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px #0b0b0b;
+  }
+
+  /* Changement de sens de défilement : la boule glisse d'un bout à l'autre du serpent */
+  .toc-thumb.is-flipping {
+    transition: transform 250ms var(--ease-out);
+  }
+
+  ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li a {
+    display: block;
+    padding: 0.3rem 0.5rem 0.3rem calc(1rem + var(--indent, 0px));
+    color: #a3a3a3;
+    font-size: 0.925rem;
+    line-height: 1.35;
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  li[data-level='1'] { --indent: 12px; }
+  li[data-level='2'] { --indent: 24px; }
+  li[data-level='3'],
+  li[data-level='4'] { --indent: 36px; }
+
+  /* Même survol que la navigation du site : blanc + souligné bleu */
+  li a:hover {
+    color: #fff;
+    text-decoration: underline 2px var(--link);
+    text-underline-offset: 0.4em;
+  }
+
+  li a.current,
+  li a.active {
+    color: #fff;
+  }
+
+  li a.current {
+    font-weight: var(--fw-bold);
+  }
+
+  li a:focus-visible {
+    outline: 2px solid #e0e0e0;
+    outline-offset: -2px;
+    border-radius: 0.25rem;
+  }
+
+</style>

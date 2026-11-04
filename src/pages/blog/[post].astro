@@ -1,9 +1,13 @@
 ---
+// Texte courant en Roboto (police de texte de la charte ESGI) : plus confortable qu'une chasse fixe sur un long article
+import "@fontsource-variable/roboto/wght.css";
+import "@fontsource-variable/roboto/wght-italic.css";
 import "../../styles/article.css";
 import "../../styles/index.css";
 
 import { Image } from 'astro:assets';
-import Card from "../../components/Card.astro";
+import Toc from "../../components/Toc.astro";
+import Byline from "../../components/Byline.astro";
 import Layout from "../../layouts/Layout.astro";
 
 import type { GetStaticPaths } from "astro";
@@ -67,24 +71,9 @@ const { Content, headings } = await render(post);
   }}
 >
   <div class="layout-grid-left-sticky" slot="left">
-    <Card class="toc-card">
-      <h2 class="no-mt">Sommaire</h2>
-      <ol>
-        <li class="toc-li">
-          <a href={`#_top`} class="active">{post.data.title}</a>
-        </li>
-        {
-          headings.map((heading) => (
-            <li class="toc-li" data-depth={heading.depth}>
-              <a href={`#${heading.slug}`}>{heading.text}</a>
-            </li>
-          ))
-        }
-      </ol>
-    </Card>
+    <Toc headings={headings} />
   </div>
-  <article slot="right">
-    <Card>
+  <article slot="right" class="article-sheet">
       <div class={`article-header ${!post.data.image ? 'no-image' : ''}`} id="_top">
         {
           post.data.image && (
@@ -100,58 +89,27 @@ const { Content, headings } = await render(post);
           <div>
             <h1 class="no-mt article-h1">{post.data.title}</h1>
           </div>
-          <div class="article-info">
-            <span><span aria-hidden="true">📅</span>&nbsp;{post.data.createdAt.toLocaleDateString('fr-FR')}</span>
-            <span
-              ><span aria-hidden="true">⏱️</span>&nbsp;{timeToRead(post)}&nbsp;minute{timeToRead(post) === 1 ? "" : "s"}&nbsp;à&nbsp;lire</span
-            >
-            <span><span aria-hidden="true">🏷️</span>&nbsp;Tags:&nbsp;{post.data.tags.map((tag) => tag.id).join(", ")}</span>
-            {post.data.author && (
-              <>
-                <span><span aria-hidden="true">✍️</span>&nbsp;Par&nbsp;@{post.data.author}</span>
-              </>
-            )}
-          </div>
+          <Byline
+            author={post.data.author}
+            label="Écrit par"
+            meta={[
+              post.data.createdAt.toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris', day: 'numeric', month: 'long', year: 'numeric' }),
+              `${timeToRead(post)} minute${timeToRead(post) === 1 ? '' : 's'} de lecture`,
+              post.data.tags.map((tag) => tag.id).join(', '),
+            ]}
+          />
         </div>
       </div>
-      <Content />
+      <div class="prose">
+        <Content />
+      </div>
       <hr class="end-of-article" />
       <a href="/blog" class="block-link">← Retour aux articles</a>
-    </Card>
   </article>
 </Layout>
-<script src="../../scripts/toc.ts"></script>
 <style is:global>
-  .toc-card ol {
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 0;
-    list-style-type: none;
-    position: relative;
-  }
-
   [id] {
     scroll-margin-top: 100px;
-  }
-
-  .toc-card ol li a {
-    color: #c7c7c7;
-    font-size: 0.925rem;
-    padding: 0.25rem 0.5rem;
-    box-decoration-break: clone;
-    -webkit-box-decoration-break: clone;
-  }
-
-  .toc-card ol li a:hover {
-    color: white;
-    text-decoration: none;
-  }
-
-  .toc-card ol li a.active {
-    color: white;
-    background: var(--primary);
   }
 
   .left {
@@ -159,10 +117,6 @@ const { Content, headings } = await render(post);
     position: relative;
   }
 
-  .toc-card {
-    position: sticky;
-    top: 2rem;
-  }
   article {
     display: flex;
     flex-direction: column;

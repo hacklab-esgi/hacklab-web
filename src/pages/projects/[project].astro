@@ -1,8 +1,11 @@
 ---
+// Texte courant en Roboto (police de texte de la charte ESGI) : plus confortable qu'une chasse fixe sur un long article
+import "@fontsource-variable/roboto/wght.css";
+import "@fontsource-variable/roboto/wght-italic.css";
 import "../../styles/article.css";
 import "../../styles/index.css";
 
-import Card from "../../components/Card.astro";
+import Byline from "../../components/Byline.astro";
 import Layout from "../../layouts/Layout.astro";
 
 import type { GetStaticPaths } from "astro";
@@ -40,8 +43,8 @@ const { Content } = await render(project);
   }}
 >
   <div class="layout-grid-left-sticky" slot="left">
-    <Card class="toc-card">
-      <h2 class="no-mt">Info</h2>
+    <div class="project-links">
+      <h2 class="no-mt">Liens</h2>
       <ul class="overview-list">
         {
           project.data.info.map((info) => {
@@ -50,7 +53,8 @@ const { Content } = await render(project);
               <li>
                 <Tag
                   href={info.link}
-                  target={"_blank"}
+                  target={info.link && "_blank"}
+                  rel={info.link && "noopener"}
                   class="project-info-item"
                 >
                   <Icon
@@ -67,10 +71,9 @@ const { Content } = await render(project);
           })
         }
       </ul>
-    </Card>
+    </div>
   </div>
-  <article slot="right">
-    <Card>
+  <article slot="right" class="article-sheet">
       <div class={`article-header ${!project.data.image ? 'no-image' : ''}`} id="_top">
         {
           project.data.image && (
@@ -86,25 +89,28 @@ const { Content } = await render(project);
           <div>
             <h1 class="no-mt article-h1">{project.data.title}</h1>
           </div>
-          <div class="article-info">
-            <span><span aria-hidden="true">📅</span>&nbsp;{project.data.date.toLocaleDateString('fr-FR')}</span>
-            {project.data.author && (
-              <>
-                <span><span aria-hidden="true">✍️</span>&nbsp;Par&nbsp;@{project.data.author}</span>
-              </>
-            )}
-          </div>
+          <Byline
+            author={project.data.author}
+            label="Projet de"
+            meta={[project.data.date.toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris', day: 'numeric', month: 'long', year: 'numeric' })]}
+          />
         </div>
       </div>
-      <Content />
+      <div class="prose">
+        <Content />
+      </div>
       <hr class="end-of-article" />
       <a href="/projects" class="block-link"
         >← Retour aux projets</a
       >
-    </Card>
   </article>
 </Layout>
 <style>
+  .project-links h2 {
+    margin-bottom: 1rem;
+    font-size: 1.125rem;
+  }
+
   .project-info-item {
     display: flex;
     align-items: center;

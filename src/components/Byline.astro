@@ -1,0 +1,67 @@
+---
+// Signature d'un article ou d'un projet : met en avant l'étudiant qui l'a écrit
+interface Props {
+  author?: string;
+  /** « Écrit par », « Projet de »… */
+  label: string;
+  /** Date, durée de lecture, tags : affichés en ligne, en plus discret */
+  meta: string[];
+}
+const { author, label, meta } = Astro.props;
+---
+
+<div class="byline">
+  {author && <span class="byline-avatar" aria-hidden="true">{author.replace(/^@/, '').charAt(0).toUpperCase()}</span>}
+  <div class="byline-text">
+    {author && (
+      <p class="byline-author">
+        {label} <span class="byline-name">@{author.replace(/^@/, '')}</span>
+      </p>
+    )}
+    <p class="byline-meta">
+      {meta.map((item) => <span>{item}</span>)}
+    </p>
+  </div>
+</div>
+
+<style>
+  .byline {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    margin-top: 1.25rem;
+  }
+
+  .byline-avatar {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    color: #fff;
+    font-size: 1.375rem;
+    font-weight: var(--fw-bold);
+    background: var(--accent-fill);
+    border-radius: 50%;
+  }
+
+  .byline-author {
+    margin: 0;
+    color: var(--muted);
+    font-size: 1.125rem;
+  }
+
+  .byline-name {
+    color: #fff;
+    font-weight: var(--fw-bold);
+  }
+
+  .byline-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.25rem;
+    margin: 0.25rem 0 0;
+    color: var(--muted);
+    font-size: 0.925rem;
+  }
+</style>

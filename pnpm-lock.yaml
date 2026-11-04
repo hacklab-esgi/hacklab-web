@@ -23,6 +23,9 @@ importers:
       '@fontsource-variable/cascadia-code':
         specifier: ^5.3.0
         version: 5.3.0
+      '@fontsource-variable/roboto':
+        specifier: ^5.3.0
+        version: 5.3.0
       '@fullcalendar/core':
         specifier: ^6.1.21
         version: 6.1.21
@@ -507,6 +510,9 @@ packages:
 
   '@fontsource-variable/cascadia-code@5.3.0':
     resolution: {integrity: sha512-6I6M029Lum62MGmP0o+rXRrIBiIiptNDC4slPKLPUJiSB7NHZTLb+Ihk9G7jLvUfWziGXHJLjJPJLBzlEPjS1g==}
+
+  '@fontsource-variable/roboto@5.3.0':
+    resolution: {integrity: sha512-BoaaZiQf8fgtxv07KXkTwx1bKz/EoqIlTXq2OOKKXINxp6qXWdnlChqV+hSaDANS49yyUASFl3OVBMMDTCIHFA==}
 
   '@fullcalendar/core@6.1.21':
     resolution: {integrity: sha512-t3u/+sqh3Iq7TWtUnVLcGDUE6OWZh0UD3c04bI/l7lSLAgAKr3kngBmhHiQD1QXpwC8ZN5iNqG7a7gOVixhSKQ==}
@@ -2468,6 +2474,8 @@ snapshots:
       '@expressive-code/core': 0.44.2
 
   '@fontsource-variable/cascadia-code@5.3.0': {}
+
+  '@fontsource-variable/roboto@5.3.0': {}
 
   '@fullcalendar/core@6.1.21':
     dependencies:
