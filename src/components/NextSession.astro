@@ -1,0 +1,157 @@
+---
+// Session mise en avant sur l'accueil : la prochaine si elle est annoncée, sinon la dernière
+import { sessions, trainings, formatLongDay, formatHour } from '../lib/sessions';
+
+const DISCORD = 'https://discord.gg/nF6AJGd4DB';
+const ICS = 'webcal://hacklab-esgi.fr/calendar.ics';
+
+const now = Date.now();
+const upcoming = sessions.find((s) => s.start.getTime() >= now);
+const session = upcoming ?? sessions.at(-1)!;
+// Prochain entraînement CTF (créé par le bot Discord), rappelé sous la session
+const nextTraining = trainings.find((t) => t.start.getTime() >= now);
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const excerpt = session.description.length > 240 ? `${session.description.slice(0, 239).trimEnd()}…` : session.description;
+---
+
+<section class="spotlight" data-upcoming={upcoming ? 'true' : 'false'} data-start={session.start.toISOString()} aria-labelledby="spotlight-title">
+  <p class="spotlight-state">
+    <span class="state-next">Prochaine session</span>
+    <span class="state-last">Dernière session</span>
+    <span class="spotlight-number">n° {session.number}</span>
+  </p>
+  <h2 class="spotlight-title" id="spotlight-title">{session.title}</h2>
+  <p class="spotlight-when">
+    <time datetime={session.start.toISOString()} data-dt={session.start.toISOString()} data-fmt="long-hour">{cap(formatLongDay(session.start))} à {formatHour(session.start)}</time>{`, ${session.place}`}
+  </p>
+  {session.speaker && <p class="spotlight-speaker">Animée par {session.speaker}</p>}
+  {excerpt && <p class="spotlight-excerpt">{excerpt}</p>}
+  <div class="spotlight-actions">
+    <a class="button button-primary" href={DISCORD} target="_blank" rel="noopener">Rejoindre le Discord</a>
+    <a class="button state-next" href={ICS}>Ajouter à mon agenda</a>
+    <p class="state-last spotlight-hint">Les prochaines dates sont annoncées sur Discord.</p>
+  </div>
+  {
+    nextTraining && (
+      <p class="spotlight-training" data-start={nextTraining.start.toISOString()}>
+        <span class="training-label">Prochain entraînement CTF</span>
+        <span>
+          <time datetime={nextTraining.start.toISOString()} data-dt={nextTraining.start.toISOString()} data-fmt="long-hour">{cap(formatLongDay(nextTraining.start))} à {formatHour(nextTraining.start)}</time>, {nextTraining.place}
+        </span>
+        <a href="/agenda">Voir l’agenda</a>
+      </p>
+    )
+  }
+</section>
+
+<script is:inline>
+  // Construite avant la session, la page doit basculer d'elle-même une fois la date passée
+  document.querySelectorAll('.spotlight[data-upcoming="true"]').forEach((el) => {
+    if (Date.parse(el.dataset.start) + 2 * 3600e3 < Date.now()) el.dataset.upcoming = 'false';
+  });
+  document.querySelectorAll('.spotlight-training').forEach((el) => {
+    if (Date.parse(el.dataset.start) + 3 * 3600e3 < Date.now()) el.hidden = true;
+  });
+</script>
+
+<style>
+  .spotlight {
+    padding: 2rem 2.25rem;
+    background: var(--graphite);
+    border: 1px solid #2a2a2a;
+    border-left: 4px solid #2a2a2a;
+    border-radius: 0.25rem 0.75rem 0.75rem 0.25rem;
+  }
+
+  .spotlight[data-upcoming='true'] {
+    border-left-color: var(--primary-lightest);
+  }
+
+  .spotlight[data-upcoming='true'] .state-last,
+  .spotlight[data-upcoming='false'] .state-next {
+    display: none;
+  }
+
+  .spotlight-state {
+    display: flex;
+    gap: 1rem;
+    margin: 0 0 1rem;
+    color: var(--muted);
+  }
+
+  .spotlight[data-upcoming='true'] .spotlight-state .state-next {
+    color: var(--primary-lightest);
+  }
+
+  .spotlight-title {
+    margin: 0 0 1rem;
+    max-width: 22ch;
+    font-size: 3rem;
+    line-height: 1.1;
+    color: var(--accent);
+    text-wrap: balance;
+  }
+
+  /* Session passée : violet plus doux */
+  .spotlight[data-upcoming='false'] .spotlight-title {
+    color: var(--accent-past);
+  }
+
+  .spotlight-when,
+  .spotlight-speaker {
+    margin: 0;
+    font-size: 1.125rem;
+  }
+
+  .spotlight-speaker {
+    margin-top: 0.25rem;
+    color: var(--muted);
+  }
+
+  .spotlight-excerpt {
+    max-width: 60ch;
+    margin: 1.25rem 0 0;
+    color: #c7c7c7;
+    white-space: pre-line;
+  }
+
+  .spotlight-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    margin-top: 1.75rem;
+  }
+
+  /* Rappel du prochain entraînement : même contour que dans l'agenda */
+  .spotlight-training {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 1rem;
+    margin: 1.75rem 0 0;
+    padding: 0.875rem 1rem;
+    border: 1.5px solid var(--fill);
+    border-radius: 0.5rem;
+  }
+
+  .training-label {
+    color: #fff;
+    font-weight: var(--fw-bold);
+  }
+
+  .spotlight-hint {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  @media screen and (max-width: 640px) {
+    .spotlight {
+      padding: 1.5rem 1.25rem;
+    }
+
+    .spotlight-title {
+      font-size: 2rem;
+    }
+  }
+</style>

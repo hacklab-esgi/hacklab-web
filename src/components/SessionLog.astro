@@ -1,0 +1,124 @@
+---
+// Journal des sessions, de la plus récente à la plus ancienne, numérotées dans l'ordre chronologique
+import { sessions } from '../lib/sessions';
+import SessionEntry from './SessionEntry.astro';
+
+const VISIBLE = 5;
+const latestFirst = [...sessions].reverse();
+const recent = latestFirst.slice(0, VISIBLE);
+const older = latestFirst.slice(VISIBLE);
+
+// Regroupe une liste (déjà triée) par année, en heure de Paris
+const year = (d: Date) => d.toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris', year: 'numeric' });
+const byYear = (list: typeof sessions) =>
+  list.reduce<{ year: string; items: typeof sessions }[]>((groups, s) => {
+    const y = year(s.start);
+    if (groups.at(-1)?.year === y) groups.at(-1)!.items.push(s);
+    else groups.push({ year: y, items: [s] });
+    return groups;
+  }, []);
+const recentGroups = byYear(recent);
+const olderGroups = byYear(older);
+
+const since = sessions[0].start.toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris', month: 'long', year: 'numeric' });
+---
+
+<section class="log" aria-labelledby="log-title">
+  <h2 id="log-title">Journal des sessions</h2>
+  <p class="log-intro">{sessions.length} sessions depuis {since}, présentées par des étudiants, des alumni et des invités.</p>
+
+  {
+    recentGroups.map((g) => (
+      <>
+        <h3 class="log-year">{g.year}</h3>
+        <ol class="log-list">{g.items.map((s) => <SessionEntry session={s} />)}</ol>
+      </>
+    ))
+  }
+
+  {
+    older.length > 0 && (
+      <details class="log-more">
+        <summary class="button">
+          <span class="when-closed">Afficher les {older.length} autres sessions</span>
+          <span class="when-open">Masquer les sessions précédentes</span>
+          <svg class="chevron" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+            <path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.75" />
+          </svg>
+        </summary>
+        {
+          olderGroups.map((g, i) => (
+            <>
+              {(i > 0 || g.year !== recentGroups.at(-1)?.year) && <h3 class="log-year">{g.year}</h3>}
+              <ol class="log-list">{g.items.map((s) => <SessionEntry session={s} />)}</ol>
+            </>
+          ))
+        }
+      </details>
+    )
+  }
+
+  <p class="log-footer"><a href="/agenda">Voir l'agenda</a></p>
+</section>
+
+<style>
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+
+  .log-intro {
+    margin: 0.5rem 0 1.25rem;
+    color: #c7c7c7;
+  }
+
+  .log-year {
+    margin: 1.5rem 0 0.5rem;
+    color: var(--muted);
+    font-size: 1rem;
+    font-weight: var(--fw-normal);
+  }
+
+  .log-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-bottom: 1px solid #262626;
+  }
+
+  .log-more > summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin: 1rem 0;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .log-more > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .log-more[open] .when-closed,
+  .log-more:not([open]) .when-open {
+    display: none;
+  }
+
+  .chevron {
+    transition: transform 160ms var(--ease-out);
+  }
+
+  .log-more[open] .chevron {
+    transform: rotate(180deg);
+  }
+
+  .log-footer {
+    margin: 1rem 0 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chevron {
+      transition: none;
+    }
+  }
+</style>

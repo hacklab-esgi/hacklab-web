@@ -1,17 +1,12 @@
 ---
-// Carte « Réseaux sociaux » de l'accueil (affichée à gauche sur desktop, en bas sur mobile)
-import type { HTMLAttributes } from 'astro/types';
+// Liens vers les réseaux du HackLab (colonne de présentation de l'accueil)
 import { getCollection } from 'astro:content';
-import Card from './Card.astro';
 import Icon from './Icon.astro';
-
-type Props = HTMLAttributes<'div'>;
 
 const socials = await getCollection('socials');
 ---
 
-<Card {...Astro.props}>
-  <h3 class="no-mt">Réseaux sociaux</h3>
+<nav aria-label="Réseaux sociaux">
   <ul class="overview-list-media">
     {
       socials.map((item) => (
@@ -30,4 +25,4 @@ const socials = await getCollection('socials');
       ))
     }
   </ul>
-</Card>
+</nav>

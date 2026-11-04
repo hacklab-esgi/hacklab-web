@@ -1,176 +1,100 @@
 ---
 import "../styles/index.css";
 
-import Card from "../components/Card.astro";
 import Layout from "../layouts/Layout.astro";
-import Icon from "../components/Icon.astro";
 import { getCollection } from "astro:content";
 import { name, openGraph } from "spectre:globals";
-import Calendar from "../components/Calendar.astro";
+import NextSession from "../components/NextSession.astro";
+import SessionLog from "../components/SessionLog.astro";
 import Socials from "../components/Socials.astro";
+import WorkList from "../components/WorkList.astro";
 
 const [posts, projects] = await Promise.all([
-  getCollection("posts", (post) => post.data.draft !== true),
+  getCollection("posts", (post) => !post.data.draft),
   getCollection("projects", (project) => !project.data.draft),
 ]);
+const work = [
+  { title: "Articles des membres", all: "/blog", allLabel: "Tous les articles", items: posts.map((p) => ({ ...p.data, date: p.data.createdAt, href: `/blog/${p.id}`, tags: undefined })) },
+  { title: "Projets des membres", all: "/projects", allLabel: "Tous les projets", items: projects.map((p) => ({ ...p.data, href: `/projects/${p.id}` })) },
+].filter((section) => section.items.length > 0);
 ---
 
 <Layout
+  ogImage="/og/pages/accueil.png"
   title={openGraph.home.title || name}
   description={openGraph.home.description}
 >
-  <div class="layout-grid-left-sticky" slot="left">
-    <Card class="flex-col-card">
-      <img
-        width={80}
-        height={80}
-        src="/favicon.png"
-        alt="HackLab logo"
-        loading="eager"
-      />
-      <h2>{name}</h2>
-      <ul class="overview-list">
-        <li>
-          <Icon
-            type="lucide"
-            name="earth"
-            width={24}
-            height={24}
-            class="glow-icon"
-          />
-          <span>Made in France</span>
-        </li>
-        <li>
-          <Icon
-            type="lucide"
-            name="shield"
-            width={24}
-            height={24}
-            class="glow-icon"
-          />
-          <span>Laboratoire associatif de cybersécurité de l’ESGI.</span>
-        </li>
-      </ul>
-    </Card>
-      <Socials class="layout-desktop-only" />
-  </div>
-  <div class="layout-grid-right" slot="right">
-    <Card>
-      <div class="header-container">
-        <Icon
-          type="lucide"
-          name="user"
-          width={24}
-          height={24}
-          class="glow-icon"
-        />
-        <h2>Notre philosophie</h2>
-      </div>
-      <section class="card-grid">
-        <Card
-          ><b>Par des Passionnés</b><br /><br />Organisées par des étudiants et des
-          alumni de l'<a href="https://www.esgi.fr/" target="_blank">ESGI</a
-          >.&nbsp;🎓<br /><br />Notre objectif&nbsp: expérimenter, apprendre
-          ensemble et partager autour de la cybersécurité.&nbsp;🧠</Card
-        >
-        <Card
-          ><b>Ouvert à tous</b><br /><br />Nos sessions sont ouvertes à tous, que
-          vous soyez étudiant, professionnel ou simplement curieux.&nbsp;🙌</Card
-        >
-        <Card
-          ><b>Construisons ensemble</b><br /><br />Toute proposition est la
-          bienvenue&nbsp;!<br /><br />Venez partager vos idées, vos recherches
-          ou juste votre passion avec nous&nbsp;🤝💡</Card
-        >
-      </section>
-    </Card>
-    <Card>
-      <div class="header-container">
-        <Icon
-          type="lucide"
-          name="calendar"
-          width={24}
-          height={24}
-          class="glow-icon"
-        />
-        <h2>Prochaines conférences</h2>
-      </div>
-      <div class="content-container">
-        <Calendar />
-      </div>
-    </Card>
-    <Card>
-      <div class="header-container">
-        <Icon
-          type="lucide"
-          name="rss"
-          width={24}
-          height={24}
-          class="glow-icon"
-        />
-        <h2>Derniers articles</h2>
-      </div>
-      <div class="content-container">
-        {
-          posts
-            .sort(
-              (a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime()
-            )
-            .slice(0, 2)
-            .map((post) => (
-              <a href={`/blog/${post.id}`} class="post-container">
-                <div class="post-header">
-                  <h3>{post.data.title}</h3>
-                  <span class="post-date">
-                    {post.data.createdAt.toLocaleDateString('fr-FR')}
-                  </span>
-                </div>
-                <div class="post-info">
-                  <span class="post-description">{post.data.description}</span>
-                  {post.data.author && 
-                    <span class="post-author">Par @{post.data.author}</span>
-                  }
-                </div>
-              </a>
-            ))
-        }
-      </div>
-    </Card>
-    <Card>
-      <div class="header-container">
-        <Icon
-          type="lucide"
-          name="folder-git"
-          width={24}
-          height={24}
-          class="glow-icon"
-        />
-        <h2>Derniers projets</h2>
-      </div>
-      <div class="content-container">
-        {
-          projects
-            .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-            .slice(0, 2)
-            .map((project) => (
-              <a href={`/projects/${project.id}`} class="post-container">
-                <div class="post-header">
-                  <h3>{project.data.title}</h3>
-                  <span class="post-date">
-                    {project.data.date.toLocaleDateString('fr-FR')}
-                  </span>
-                </div>
-                <div class="post-info">
-                  <span class="post-description">{project.data.description}</span>
-                  {project.data.author && 
-                    <span class="post-author">Par @{project.data.author}</span>
-                  }
-                </div>
-              </a>
-            ))
-        }
-      </div>
-    </Card>
-    <Socials class="layout-mobile-only" />
+  <aside class="layout-grid-left-sticky home-aside" slot="left">
+    <img class="home-logo" width={96} height={101} src="/favicon.png" alt="" loading="eager" />
+    <h1 class="home-name">{name}</h1>
+    <p class="home-lead">
+      Le laboratoire associatif de cybersécurité de l’<a href="https://www.esgi.fr/" target="_blank" rel="noopener">ESGI</a>.
+      Étudiants et alumni y présentent leurs recherches, leurs outils et leurs retours d’expérience.
+    </p>
+    <Socials />
+  </aside>
+
+  <div class="layout-grid-right home-main" slot="right">
+    <NextSession />
+    <SessionLog />
+
+    {
+      work.map((section) => (
+        <section class="work" aria-label={section.title}>
+          <h2>{section.title}</h2>
+          <WorkList items={section.items} limit={2} />
+          <a class="work-all" href={section.all}>{section.allLabel}</a>
+        </section>
+      ))
+    }
   </div>
 </Layout>
+
+<script>
+  // Heures dans le fuseau du visiteur (heure de Paris précisée s'il est ailleurs)
+  import { localizeTimes } from "../scripts/local-times";
+  localizeTimes();
+</script>
+
+<style>
+  .home-aside {
+    gap: 1.25rem;
+  }
+
+  .home-logo {
+    width: 96px;
+    height: auto;
+  }
+
+  .home-name {
+    margin: 0;
+    font-size: 2.25rem;
+    line-height: 1.1;
+  }
+
+  .home-lead {
+    margin: 0;
+    color: #c7c7c7;
+  }
+
+  .home-main {
+    gap: 3.5rem;
+  }
+
+  .work h2 {
+    margin: 0 0 1rem;
+    font-size: 1.5rem;
+  }
+
+  .work-all {
+    display: inline-block;
+    margin-top: 1rem;
+  }
+
+  /* Une colonne : le travail d'abord, la présentation ensuite */
+  @media screen and (max-width: 1380px) {
+    .home-aside {
+      order: 2;
+    }
+  }
+</style>
