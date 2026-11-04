@@ -1,15 +1,54 @@
 <div id="calendar-wrapper">
+  <fieldset class="cal-legend">
+    <legend class="sr-only">Afficher dans le calendrier</legend>
+    <label><input type="checkbox" data-type="session" checked /><span class="swatch swatch-session" aria-hidden="true"></span>Sessions</label>
+    <label><input type="checkbox" data-type="training" checked /><span class="swatch swatch-training" aria-hidden="true"></span>Entraînements CTF</label>
+  </fieldset>
+  <p class="cal-tz" hidden>
+    Heures affichées dans votre fuseau horaire (<span class="cal-tz-name"></span>). Les sessions ont lieu à l'heure de Paris.
+  </p>
   <div id="calendar"></div>
 </div>
 
 <script>
-  import { Calendar } from '@fullcalendar/core';
-  import frLocale from '@fullcalendar/core/locales/fr';
-  import dayGridPlugin from '@fullcalendar/daygrid';
-  import timeGridPlugin from '@fullcalendar/timegrid';
-  import listPlugin from '@fullcalendar/list';
+  import { differsFromParis } from '../scripts/local-times';
+  import type { EventApi } from '@fullcalendar/core';
 
-  const ICS_URL = 'webcal://hacklab.esgi.fr/calendar.ics';
+  // Infobulle au style du journal des sessions : mêmes icônes (Lucide), lieu, intervenant en violet doux
+  const svg = (body: string) => `<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">${body}</svg>`;
+  const ICON = {
+    clock: svg('<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></g>'),
+    pin: svg('<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></g>'),
+    mic: svg('<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 19v3m7-12v2a7 7 0 0 1-14 0v-2"/><rect width="6" height="13" x="9" y="2" rx="3"/></g>'),
+  };
+  const toText = (html = '') => html.replace(/<#\d+>/g, '').replace(/<[^>]+>/g, '').replace(/Discord (du )?HackLab ESGI/g, 'Discord').replace(/\+\s*&\s*/g, '+ ').trim();
+  const HOUR: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit' };
+
+  const tooltipHtml = (event: EventApi) => {
+    const { location, description, speaker } = event.extendedProps;
+    const start = event.start!;
+    const end = event.end ?? start;
+    const day = start.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    const range = (tz?: string) => `${start.toLocaleTimeString('fr-FR', { ...HOUR, timeZone: tz })} – ${end.toLocaleTimeString('fr-FR', { ...HOUR, timeZone: tz })}`;
+    const hours = differsFromParis(start) ? `${range()} (${range('Europe/Paris')} à Paris)` : range();
+    const place = toText(location);
+    const who = toText(speaker);
+    const desc = (description ?? '').replace(/<\/?br\s*\/?>/gi, '<br>').trim();
+    return `
+      <p class="tt-title">${event.title}</p>
+      <p class="tt-row">${ICON.clock}<span>${day.charAt(0).toUpperCase() + day.slice(1)}<br>${hours}</span></p>
+      ${place ? `<p class="tt-row">${ICON.pin}<span>${place}</span></p>` : ''}
+      ${who ? `<p class="tt-row tt-speaker">${ICON.mic}<span>${who}</span></p>` : ''}
+      ${desc ? `<p class="tt-desc">${desc}</p>` : ''}
+    `;
+  };
+
+  // Visiteur hors du fuseau de Paris : FullCalendar affiche ses heures locales, on le signale
+  const tzNote = document.querySelector<HTMLElement>('.cal-tz');
+  if (tzNote && differsFromParis(new Date())) {
+    tzNote.querySelector('.cal-tz-name')!.textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    tzNote.hidden = false;
+  }
   const el = document.getElementById('calendar');
 
   // Une seule infobulle partagée (avant : une nouvelle div par rendu d'événement, jamais supprimée)
@@ -43,7 +82,18 @@
     if (!tooltip.contains(e.target as Node)) hideTooltip();
   });
 
-  if (el) fetch('/events/events.json').then((res) => res.json()).then((events) => {
+  // FullCalendar (~230 Ko) est chargé après la page, sans bloquer son affichage
+  const init = async () => {
+    const [{ Calendar }, { default: frLocale }, { default: dayGridPlugin }, { default: timeGridPlugin }, { default: listPlugin }, events] =
+      await Promise.all([
+        import('@fullcalendar/core'),
+        import('@fullcalendar/core/locales/fr'),
+        import('@fullcalendar/daygrid'),
+        import('@fullcalendar/timegrid'),
+        import('@fullcalendar/list'),
+        fetch('/events/events.json').then((res) => res.json()),
+      ]);
+
     const calendar = new Calendar(el, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
       initialView: window.matchMedia('(max-width: 768px)').matches ? 'listYear' : 'dayGridMonth',
@@ -52,23 +102,10 @@
       headerToolbar: {
         left: 'prev,dynamicTitle,next',
         center: '',
-        right: 'today timeGridWeek,dayGridMonth,listYear subscribeButton google',
+        right: 'today timeGridWeek,dayGridMonth,listYear',
       },
       customButtons: {
         dynamicTitle: { text: '' },
-        // Icônes en CSS : elles s'affichent dès le premier rendu
-        subscribeButton: {
-          text: '\u00a0',
-          hint: 'S’abonner au calendrier',
-          click: () => { window.location.href = ICS_URL; },
-        },
-        google: {
-          text: '\u00a0',
-          hint: 'S’abonner au calendrier Google',
-          click: () => {
-            window.location.href = 'https://calendar.google.com/calendar/r?cid=' + encodeURIComponent(ICS_URL);
-          },
-        },
       },
       views: {
         listYear: {
@@ -80,7 +117,11 @@
       events: events.map((ev: Record<string, any>) => ({
         title: ev.title,
         start: ev.start,
+        end: new Date(new Date(ev.start).getTime() + (ev.duration ?? 1) * 3600e3),
+        // Entraînements CTF (« type »: « training ») : contour au lieu d'aplat, masquables via la légende
+        classNames: ev.type === 'training' ? ['is-training'] : [],
         extendedProps: {
+          type: ev.type === 'training' ? 'training' : 'session',
           location: ev.location,
           description: ev.description,
           speaker: ev.speaker,
@@ -89,6 +130,7 @@
       })),
       eventDidMount(info) {
         const { location, description, url, speaker } = info.event.extendedProps;
+        // Heure du visiteur (FullCalendar travaille dans son fuseau) ; l'infobulle précise l'heure de Paris s'il est ailleurs
         const heure = info.event.start!.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 
         info.el.querySelector('.fc-event-time')?.remove();
@@ -100,13 +142,7 @@
           content.style.whiteSpace = 'normal';
         }
 
-        const details = `
-          <strong>${info.event.title}</strong><br/>
-          <span aria-hidden="true">🕒</span> ${heure}<br/>
-          <span aria-hidden="true">📍</span> ${location}<br/>
-          <span aria-hidden="true">📝</span> ${description || 'Aucune description'}<br/>
-          ${speaker?.trim() ? `<span aria-hidden="true">👤</span> ${speaker}<br/>` : ''}
-        `;
+        const details = tooltipHtml(info.event);
         info.el.style.cursor = 'pointer';
 
         let pointerType = 'mouse';
@@ -178,7 +214,18 @@
     });
 
     calendar.render();
-  });
+
+    // Légende : afficher ou masquer chaque type d'événement
+    document.querySelectorAll<HTMLInputElement>('.cal-legend input').forEach((box) => {
+      box.addEventListener('change', () => {
+        calendar.getEvents()
+          .filter((ev) => ev.extendedProps.type === box.dataset.type)
+          .forEach((ev) => ev.setProp('display', box.checked ? 'auto' : 'none'));
+      });
+    });
+  };
+
+  if (el) init();
 </script>
 
 <style is:global>
@@ -208,8 +255,89 @@
   }
 }
 
+/* === LÉGENDE === */
+.cal-tz {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.cal-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  border: none;
+}
+
+.cal-legend label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.cal-legend input {
+  accent-color: var(--fill);
+}
+
+.swatch {
+  width: 1.75rem;
+  height: 0.875rem;
+  border-radius: 3px;
+}
+
+.swatch-session {
+  background: var(--fill);
+}
+
+.swatch-training {
+  border: 1.5px solid var(--fill);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Entraînements CTF : contour au lieu d'aplat, pour les distinguer des sessions */
+.fc .fc-event.is-training,
+.fc .fc-daygrid-event.is-training,
+.fc .fc-timegrid-event.is-training {
+  color: #e0e0e0;
+  background: #141414;
+  border: 1.5px solid var(--fill);
+}
+
+.fc .fc-list-event.is-training .fc-list-event-dot {
+  border-color: var(--fill);
+  border-width: 2px;
+  background: transparent;
+  width: 10px;
+  height: 10px;
+}
+
 /* === STRUCTURE GENERALE === */
 .fc {
+  /* Bordures et jour courant alignés sur la palette du site (au lieu du blanc et du jaune par défaut) */
+  --fc-border-color: #2a2a2a;
+  /* En-têtes de jour de la vue liste : sombres au lieu du blanc par défaut */
+  --fc-neutral-bg-color: #1f1f1f;
+  --fc-list-event-hover-bg-color: #222;
+  /* Boutons neutres comme les boutons secondaires du site ; la vue active en bleu clair */
+  --fc-button-text-color: #e0e0e0;
+  --fc-button-bg-color: #1a1a1a;
+  --fc-button-border-color: #333;
+  --fc-button-hover-bg-color: #242424;
+  --fc-button-hover-border-color: #555;
+  --fc-button-active-bg-color: var(--fill);
+  --fc-button-active-border-color: var(--fill);
+  --fc-today-bg-color: rgba(255, 255, 255, 0.05);
   direction: ltr;
   text-align: left;
 }
@@ -234,56 +362,15 @@
 }
 
 .fc-dynamicTitle-button:hover {
-  background: var(--primary);
-  color: white;
+  background: var(--fc-button-bg-color);
+  color: var(--fc-button-text-color);
 }
 
-.fc-button,
-.fc-button-downloadButton {
-  background: var(--primary);
-  color: white;
-  border: none;
+.fc-button {
+  border: 1px solid #333;
   padding: 0.25rem 0.5rem;
   cursor: pointer;
   border-radius: 4px;
-}
-
-.fc-button-downloadButton {
-  font-weight: var(--fw-bold);
-  padding: 0 0.75rem;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.fc-button-subscribeButton {
-  background-color: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-weight: var(--fw-bold);
-  padding: 0 0.75rem;
-  cursor: pointer;
-}
-
-.fc-subscribeButton-button,
-.fc-google-button {
-  min-width: 2.5em;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
-  background-size: 1em !important;
-}
-
-.fc-subscribeButton-button {
-  background-image: url('/img/calendar.png') !important;
-}
-
-.fc-google-button {
-  background-image: url('/img/google.png') !important;
-}
-
-.fc-button-subscribeButton:hover {
-  background-color: var(--primary-lightest);
 }
 
 .fc-button:focus,
@@ -293,8 +380,8 @@
 }
 
 .fc-button-active {
-  background-color: var(--primary) !important;
-  color: white !important;
+  background-color: var(--fill) !important;
+  color: var(--fill-ink) !important;
 }
 
 /* === GRID JOUR/MOIS === */
@@ -317,8 +404,8 @@
 }
 
 .fc-daygrid-event {
-  background-color: var(--primary);
-  color: white;
+  background-color: var(--fill);
+  color: var(--fill-ink);
   padding: 2px 4px;
   font-size: 0.8rem;
   border-radius: 3px;
@@ -331,8 +418,8 @@
 
 .fc-daygrid-event:hover,
 .fc-daygrid-event:focus {
-  background-color: var(--primary);
-  color: white;
+  background-color: var(--fill-hover);
+  color: var(--fill-ink);
 }
 
 /* === TIMEGRID (VUE SEMAINE) === */
@@ -342,8 +429,8 @@
 }
 
 .fc-timegrid-event {
-  background-color: var(--primary);
-  color: white;
+  background-color: var(--fill);
+  color: var(--fill-ink);
   font-size: 0.75rem;
   padding: 2px 4px;
   white-space: nowrap;
@@ -414,16 +501,55 @@
 .fc-event-tooltip {
   position: absolute;
   z-index: 9999;
-  background-color: #111;
-  color: white;
-  padding: 0.75rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  max-width: min(22rem, calc(100vw - 16px));
+  max-width: min(24rem, calc(100vw - 16px));
+  padding: 0.875rem 1rem;
+  color: #e0e0e0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  background: #141414;
+  border: 1px solid #2e2e2e;
+  border-radius: 0.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   pointer-events: none;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  line-height: 1.4;
-  border: 1px solid var(--primary);
+}
+
+.fc-event-tooltip p {
+  margin: 0;
+}
+
+.tt-title {
+  margin-bottom: 0.5rem !important;
+  color: #fff;
+  font-size: 0.9375rem;
+  font-weight: var(--fw-bold);
+}
+
+.tt-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem !important;
+  color: var(--muted);
+}
+
+.tt-row svg {
+  flex-shrink: 0;
+  margin-top: 0.2em;
+}
+
+.tt-speaker {
+  color: var(--accent-past);
+}
+
+.tt-desc {
+  margin-top: 0.625rem !important;
+  padding-top: 0.625rem;
+  color: #c7c7c7;
+  border-top: 1px solid #262626;
+}
+
+.fc-event-tooltip a {
+  display: inline-block;
+  margin-top: 0.625rem;
 }
 
 .fc-event-tooltip.is-touch {
@@ -469,9 +595,6 @@
   cursor: default;
 }
 
-.fc-day-today {
-  background-color: rgba(255, 255, 255, 0.05);
-}
 
 /* ========== TOOLBAR FLEX FIX ========== */
 @media screen and (max-width: 800px) {
@@ -497,14 +620,6 @@
 
   .fc-button-group {
     margin-left: 0 !important;
-  }
-
-  .fc-button-downloadButton {
-    align-self: center;
-    padding: 0.4rem;
-    font-size: 1rem;
-    width: auto;
-    justify-content: center;
   }
 }
 

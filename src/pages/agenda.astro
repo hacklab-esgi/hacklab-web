@@ -1,0 +1,109 @@
+---
+import "../styles/index.css";
+
+import Layout from "../layouts/Layout.astro";
+import Calendar from "../components/Calendar.astro";
+import PageIntro from "../components/PageIntro.astro";
+import { name } from "spectre:globals";
+
+const ICS = "webcal://hacklab-esgi.fr/calendar.ics";
+const ICS_HTTPS = "https://hacklab-esgi.fr/calendar.ics";
+const google = (ics: string) => `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(ics)}`;
+// Deux abonnements séparés : les abonnés aux sessions ne reçoivent pas d'office les ~40 entraînements du samedi
+const feeds = [
+  { title: "Sessions", hint: "Conférences, ateliers et retours d’expérience", ics: ICS, https: ICS_HTTPS },
+  { title: "Entraînements CTF", hint: "Le samedi, sur Discord, selon les semaines", ics: "webcal://hacklab-esgi.fr/entrainements.ics", https: "https://hacklab-esgi.fr/entrainements.ics" },
+];
+---
+
+<Layout
+  ogImage="/og/pages/agenda.png"
+  title={`Agenda | ${name}`}
+  description="Les sessions du HackLab ESGI, à consulter ou à ajouter à votre agenda."
+>
+  <PageIntro
+    slot="left"
+    title="Agenda"
+    lead="Les sessions du HackLab, passées et à venir, et les entraînements CTF du samedi."
+  >
+    <div class="subscribe">
+      <h2>Ajouter à votre agenda</h2>
+      <p>Abonnez-vous une fois : les nouvelles dates apparaîtront d’elles-mêmes dans votre agenda.</p>
+      {
+        feeds.map((feed) => (
+          <div class="feed">
+            <h3>{feed.title}</h3>
+            <p class="feed-hint">{feed.hint}</p>
+            <div class="feed-buttons">
+              <a class="button subscribe-button" href={feed.ics}>
+                <img src="/img/calendar.png" alt="" width="18" height="18" />
+                Apple, Outlook
+              </a>
+              <a class="button subscribe-button" href={google(feed.ics)} target="_blank" rel="noopener">
+                <img src="/img/google.png" alt="" width="18" height="18" />
+                Google
+              </a>
+            </div>
+            <p class="subscribe-other">Autre application : <a href={feed.https}>lien .ics</a></p>
+          </div>
+        ))
+      }
+    </div>
+  </PageIntro>
+  <div class="layout-grid-right" slot="right">
+    <Calendar />
+  </div>
+</Layout>
+
+<style>
+  .subscribe {
+    display: grid;
+    gap: 0.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #262626;
+  }
+
+  .subscribe h2 {
+    margin: 0;
+    font-size: 1.125rem;
+  }
+
+  .subscribe p {
+    margin: 0;
+    color: #c7c7c7;
+  }
+
+  .subscribe-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    justify-self: start;
+  }
+
+  .subscribe-other {
+    font-size: 0.875rem;
+  }
+
+  .feed {
+    display: grid;
+    gap: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #262626;
+  }
+
+  .feed h3 {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .subscribe .feed-hint {
+    color: var(--muted);
+    font-size: 0.875rem;
+  }
+
+  .feed-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+</style>

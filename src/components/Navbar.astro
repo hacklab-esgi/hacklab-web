@@ -2,7 +2,8 @@
 import Icon from "./Icon.astro";
 import { name } from "spectre:globals";
 
-const path = Astro.url.pathname;
+// Le site construit sert /agenda/ (barre finale) : on la retire pour comparer
+const path = Astro.url.pathname.replace(/(.)\/$/, '$1');
 ---
 
 <nav>
@@ -10,15 +11,11 @@ const path = Astro.url.pathname;
     <a class="site-title" href="/">{name}</a>
     <ul>
       <li>
-        <a href="/about" class:list={{ active: path === "/about" }}
-          >Le laboratoire</a
-        >
+        <a href="/about" class:list={{ active: path === "/about" }}>Le laboratoire</a>
       </li>
       <li class="nav-separator">/</li>
       <li>
-        <a href="/join" class:list={{ active: path === "/join" }}
-          >Nous rejoindre</a
-        >
+        <a href="/agenda" class:list={{ active: path === "/agenda" }}>Agenda</a>
       </li>
       <li class="nav-separator">/</li>
       <li>
@@ -26,9 +23,11 @@ const path = Astro.url.pathname;
       </li>
       <li class="nav-separator">/</li>
       <li>
-        <a href="/projects" class:list={{ active: path === "/projects" }}
-          >Projets</a
-        >
+        <a href="/projects" class:list={{ active: path === "/projects" }}>Projets</a>
+      </li>
+      <li class="nav-separator">/</li>
+      <li>
+        <a href="/join" class:list={{ active: path === "/join" }}>Nous rejoindre</a>
       </li>
     </ul>
     <button class="mobile-nav-toggle" aria-label="Menu" aria-expanded="false">
@@ -100,10 +99,13 @@ const path = Astro.url.pathname;
     padding: 0.25rem 0.5rem;
   }
 
+  /* Navigation : blanc + souligné bleu au survol et sur la page en cours (comportement commun, voir globals.css) */
   nav a:hover,
   nav a:focus-visible,
   nav a.active {
-    background-color: var(--primary);
+    color: #fff;
+    text-decoration: underline 2px var(--link);
+    text-underline-offset: 0.4em;
     outline: none;
   }
 
@@ -208,6 +210,7 @@ const path = Astro.url.pathname;
     nav.active ul li:nth-child(3) { transition-delay: 30ms; }
     nav.active ul li:nth-child(5) { transition-delay: 60ms; }
     nav.active ul li:nth-child(7) { transition-delay: 90ms; }
+    nav.active ul li:nth-child(9) { transition-delay: 120ms; }
 
     @media (prefers-reduced-motion: reduce) {
       nav ul li {
