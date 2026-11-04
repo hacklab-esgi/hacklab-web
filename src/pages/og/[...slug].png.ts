@@ -2,14 +2,16 @@ import type { APIRoute, GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import { resolve } from 'node:path';
 import sharp from 'sharp';
+import { sessions } from '../../lib/sessions';
 
-// Image de partage (Open Graph) générée au build pour chaque article/projet, même s'il a sa propre image.
+// Image de partage (Open Graph) générée au build pour chaque article/projet (même s'il a sa propre image)
+// et pour les pages principales du site, toutes au même format.
 // Police embarquée : le build ne dépend pas des polices installées sur la machine (aucune sur Netlify).
 const FONT = resolve('src/assets/fonts/CascadiaCode-Bold.ttf');
 const W = 1200;
 const H = 630;
 const TEXT_WIDTH = 900;
-// Violet des titres de « Notre philosophie » (strong/b dans index.css)
+// Violet doux du site (--accent-past)
 const ACCENT = '#BB86FC';
 
 // Markup Pango : on échappe & < >, et on retire les emojis (pas de glyphe dans la police)
@@ -43,7 +45,19 @@ export const getStaticPaths = (async () => {
     getCollection('projects', (project) => !project.data.draft),
   ]);
 
+  const since = sessions[0].start.toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris', month: 'long', year: 'numeric' });
+  // Pages du site : un titre et une phrase à la place de la date et de l'auteur
+  const pages = [
+    { name: 'accueil', title: 'Laboratoire associatif de cybersécurité de l’ESGI', meta: 'Sessions, articles et projets des étudiants' },
+    { name: 'laboratoire', title: 'Le laboratoire', meta: 'L’équipe, le projet et les partenaires' },
+    { name: 'rejoindre', title: 'Nous rejoindre', meta: 'Ouvert à tous, sans sélection' },
+    { name: 'articles', title: 'Articles des membres', meta: 'Recherches, outils et retours d’expérience' },
+    { name: 'projets', title: 'Projets des membres', meta: 'Outils, scripts et recherches' },
+    { name: 'agenda', title: 'Agenda des sessions', meta: `${sessions.length} sessions depuis ${since}` },
+  ];
+
   return [
+    ...pages.map((page) => ({ params: { slug: `pages/${page.name}` }, props: { title: page.title, meta: page.meta } })),
     ...posts.map((post) => ({
       params: { slug: `blog/${post.id}` },
       props: { title: post.data.title, date: post.data.createdAt, author: post.data.author },
@@ -56,10 +70,10 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 export const GET: APIRoute = async ({ props }) => {
-  const { date, author } = props as { date: Date; author?: string };
+  const { date, author } = props as { date?: Date; author?: string; meta?: string };
   // Au-delà, même en petite taille, le titre déborderait de la carte
   const title: string = props.title.length > 140 ? `${props.title.slice(0, 139).trimEnd()}…` : props.title;
-  const meta = [date.toLocaleDateString('fr-FR'), author && `@${author}`].filter(Boolean).join('  ·  ');
+  const meta: string = props.meta ?? [date?.toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris' }), author && `@${author}`].filter(Boolean).join('  ·  ');
 
   // Titre long : police plus petite pour tenir dans la carte
   let heading = await text(title, '#ffffff', 60);

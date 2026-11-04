@@ -34,7 +34,7 @@ const fontFaces = [
 	.join('\n');
 const canonical = new URL(Astro.url.pathname, Astro.site);
 // L'image générée (/og/…) a priorité : même format de partage pour tous les articles
-const ogImage = new URL(generatedOgImage || image?.src || '/img/hacklab.png', Astro.site);
+const ogImage = new URL(generatedOgImage || image?.src || '/og/pages/accueil.png', Astro.site);
 ---
 
 <!DOCTYPE html>
@@ -42,6 +42,9 @@ const ogImage = new URL(generatedOgImage || image?.src || '/img/hacklab.png', As
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!-- Site sombre : fond posé avant tout fichier CSS, sinon flash blanc au chargement (visible surtout en pnpm dev) -->
+		<meta name="color-scheme" content="dark" />
+		<style is:inline>html { color-scheme: dark; background-color: #0b0b0b; }</style>
 		<link rel="icon" type="image/png" href="/favicon.png" />
 		<link rel="preload" href={cascadiaLatin} as="font" type="font/woff2" crossorigin />
 		<style is:inline set:html={fontFaces}></style>
