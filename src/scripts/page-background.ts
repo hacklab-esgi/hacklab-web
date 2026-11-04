@@ -30,6 +30,21 @@ class PageBackground {
   private height: number = document.getElementById('overlay-canvas')!.clientHeight;
 
   private letterPositions: LetterPosition[] = [];
+
+  // Zones de contenu (colonnes de la page) : aucune lettre derrière le texte
+  private blocked: DOMRect[] = [];
+  private updateBlocked = () => {
+    this.blocked = [...document.querySelectorAll('.layout-grid > *, main > :not(.layout-grid)')].map((el) => el.getBoundingClientRect());
+  };
+  private isFree = (x: number, y: number) =>
+    !this.blocked.some((r) => x + 24 > r.left - 12 && x < r.right + 12 && y + 36 > r.top - 12 && y < r.bottom + 12);
+  private pickFreeLetter = () => {
+    for (let i = 0; i < 12; i++) {
+      const [letter] = this.getRandomAmountFromArray<LetterPosition>(this.letterPositions, 1);
+      if (this.isFree(letter.x, letter.y)) return letter;
+    }
+    return undefined;
+  };
   private letterInstances: LetterInstance[] = [];
 
   private primaryRgb: string;
@@ -184,6 +199,8 @@ class PageBackground {
   private redrawBackground = () => {
     // Clear the overlay canvas
     this.overlayCtx.clearRect(0, 0, this.overlayCanvas.width, this.overlayCanvas.height);
+    // Le contenu défile sous le canvas fixe : zones recalculées à chaque image (2 ou 3 rectangles)
+    this.updateBlocked();
     const fontSize = Math.max(16, Math.min(32, window.innerWidth / 40));
   
     for(const letter of this.letterInstances) {
@@ -193,17 +210,20 @@ class PageBackground {
 
       if(alpha <= 0 && Date.now() > letter.fadeout) {
         this.letterInstances.splice(this.letterInstances.indexOf(letter), 1);
-        const randomLetter = this.getRandomAmountFromArray<LetterPosition>(this.letterPositions, 1);
+        // Nouvelle lettre dans une zone libre (sinon une ancienne position, masquée tant qu'elle est sous le contenu)
+        const randomLetter = this.pickFreeLetter() ?? letter;
 
         this.letterInstances.push({
-          x: randomLetter[0].x,
-          y: randomLetter[0].y,
-          letter: randomLetter[0].letter,
+          x: randomLetter.x,
+          y: randomLetter.y,
+          letter: randomLetter.letter,
           timestamp: Date.now(),
           fadeout: Date.now() + (this.LETTER_FADE_DURATION[0] + Math.random() * (this.LETTER_FADE_DURATION[1] - this.LETTER_FADE_DURATION[0])) * 1000
         });
       }
       
+      if (!this.isFree(letter.x, letter.y)) continue;
+
       this.overlayCtx.font = `bold ${fontSize}px ${FONT}`;
       this.overlayCtx.textAlign = 'start';
       this.overlayCtx.textBaseline = 'top';
