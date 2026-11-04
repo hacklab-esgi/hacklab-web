@@ -1,0 +1,36 @@
+---
+// Colonne de gauche des pages : titre, présentation, puis contenu libre (sommaire, filtres, liens)
+interface Props {
+  title: string;
+  lead?: string;
+}
+const { title, lead } = Astro.props;
+---
+
+<aside class="layout-grid-left-sticky page-intro">
+  <h1>{title}</h1>
+  {lead && <p class="page-lead">{lead}</p>}
+  <slot />
+</aside>
+
+<style>
+  .page-intro {
+    gap: 1.25rem;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 2.25rem;
+    line-height: 1.1;
+  }
+
+  /* Boutons de la colonne (Proposer un article, un projet…) : à leur taille, pas étirés */
+  .page-intro > :global(.button) {
+    align-self: flex-start;
+  }
+
+  .page-lead {
+    margin: 0;
+    color: #c7c7c7;
+  }
+</style>

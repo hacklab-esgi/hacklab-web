@@ -16,12 +16,12 @@
   }
   
   .site-footer a {
-    color: var(--primary-light);
+    color: var(--link);
     text-decoration: none;
   }
   
   .site-footer a:hover {
-    color: var(--primary-lightest);
+    color: var(--link-hover);
     text-decoration: underline;
   }
   

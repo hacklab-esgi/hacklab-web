@@ -7,8 +7,22 @@
   --fw-bold: 650;
   --primary: #095496;
   --primary-rgb: 9, 84, 150;
-  --primary-light: #045b83;
-  --primary-lightest: #0ac9e0;
+  --primary-lightest: #0ac9e0; /* cyan : réservé à l'état « prochaine session » et au survol des liens */
+  /* Violet : saturé pour ce qui est actif ou à venir, plus doux pour le passé */
+  --accent: #b070ff; /* 6.2:1 sur le fond */
+  --accent-past: #BB86FC;
+  /* Liens : même teinte que le bleu des boutons (--primary), éclaircie pour être lisible en texte (5.5:1) */
+  --link: #298be0;
+  --link-hover: #6aaeec;
+  /* Bleu en aplat (bouton actif, navigation) : même bleu que les liens, texte sombre dessus (5.3:1) */
+  --fill: #298be0;
+  --fill-hover: #4a9fe6;
+  --fill-ink: #04121f;
+  /* Aplat violet (bouton principal, tag actif, pastille auteur) : violet profond, texte blanc 5.7:1 */
+  --accent-fill: #7c3aed;
+  --accent-fill-hover: #6d28d9;
+  --graphite: #1a1a1a; /* surfaces qui portent une information */
+  --muted: #a3a3a3; /* texte secondaire : 7.9:1 sur #0b0b0b */
   /* Courbes d'animation (Emil Kowalski) */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
@@ -115,30 +129,6 @@ html {
   color: #2563eb;
 }
 
-.announcement-stars {
-  margin-left: auto;
-  width: 5.6rem;
-  height: 1.25rem;
-  background: url("https://img.shields.io/github/stars/onwidget/astrowind.svg?style=social&label=Stars&maxAge=86400")
-    no-repeat center/contain;
-  display: inline-block;
-}
-
-/* Icône RSS dans la navbar */
-.nav-rss-icon {
-  transform: scale(0.75); /* réduit visuellement l'icône à ~18x18 */
-  display: inline-block;
-  margin-left: 0.25rem;
-  margin-right: 0.25rem;
-  vertical-align: middle;
-  opacity: 0.8;
-  transition: opacity 0.2s ease;
-}
-
-.nav-rss-icon:hover {
-  opacity: 1;
-}
-
 body {
   margin: 0;
   padding: 0;
@@ -166,27 +156,18 @@ body {
 }
 
 a {
-  color: var(--primary-light);
+  color: var(--link);
   text-decoration: none;
   transition: color 0.15s ease;
 }
 
 a:hover {
-  color: var(--primary-lightest);
+  color: var(--link-hover);
   text-decoration: underline;
 }
 
 .no-mt {
   margin-top: 0;
-}
-
-.text-default {
-  font-size: 1rem;
-  line-height: 1.625;
-  margin: 0;
-}
-.layout-grid-right > .card > .content-container > h3 {
-  margin-bottom: 0;
 }
 
 main {
@@ -201,9 +182,10 @@ main {
   padding-top: 2rem;
 }
 
+/* Icônes : même bleu que les liens, lueur discrète */
 .glow-icon {
-  color: var(--primary);
-  filter: drop-shadow(0 0 4px var(--primary));
+  color: var(--link);
+  filter: drop-shadow(0 0 4px rgba(41, 139, 224, 0.45));
 }
 
 .expressive-code {
@@ -240,77 +222,24 @@ main {
   border-radius: 0 !important;
 }
 
-.post-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-  border: 1px solid #353535;
-  color: #ffffff;
-  text-decoration: none;
-  transition: background-color 0.15s ease, border 0.15s ease;
-}
-
-.post-container:hover,
-.post-container:focus-visible {
-  background-color: rgba(var(--primary-rgb), 0.125);
-  border: 1px solid var(--primary);
-  color: white;
-  text-decoration: none;
-}
-
-.post-container:focus-visible {
-  outline: none;
-}
-
-.post-header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.post-header h3 {
-  margin: 0;
-}
-
-.post-date {
-  color: #c7c7c7;
-}
-
-.post-info {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-top: 0.5rem;
-}
-
-.post-description {
-  font-size: 0.85rem;
-  color: #c7c7c7;
-}
-
-.post-author {
-  font-size: 1rem;
-  color: #999;
-  white-space: nowrap; /* évite que l'auteur passe à la ligne */
-}
-
 .text-glow {
-  color: var(--primary);
-  filter: drop-shadow(0 0 12px var(--primary));
+  color: var(--link);
+  filter: drop-shadow(0 0 12px rgba(41, 139, 224, 0.45));
+}
+
+/* Trois comportements de lien sur tout le site :
+   1. lien dans le texte (bleu) : bleu plus clair + souligné au survol (règle a:hover) ;
+   2. navigation (barre du haut, sommaires, réseaux) : texte clair, blanc + souligné bleu au survol et sur la page en cours ;
+   3. ligne cliquable (articles, sessions) : le fond s'éclaircit (dans chaque composant). */
+.page-toc a:hover,
+.socials-link:hover {
+  color: #fff;
+  text-decoration: underline 2px var(--link);
+  text-underline-offset: 0.4em;
 }
 
 .block-link {
-  color: white;
-  padding: 0.25rem 0.5rem;
-}
-
-.block-link:hover,
-.block-link:focus-visible {
-  color: white;
-  background-color: var(--primary);
-  text-decoration: none;
-  outline: none;
+  display: inline-block;
 }
 
 @media screen and (max-width: 1380px) {
@@ -325,20 +254,51 @@ main {
     gap: 1rem;
     margin-top: 0.75rem;
   }
+}
 
-  .post-header {
-    flex-direction: column;
-    gap: 0.5rem;
+/* Boutons (liens d'action) */
+.button {
+  display: inline-block;
+  padding: 0.625rem 1.125rem;
+  color: #e0e0e0;
+  text-decoration: none;
+  border: 1px solid #3a3a3a;
+  border-radius: 0.375rem;
+  transition: background-color 150ms ease, border-color 150ms ease, transform 160ms var(--ease-out);
+}
+
+.button-primary {
+  color: #fff;
+  font-weight: var(--fw-bold);
+  background: var(--accent-fill);
+  border-color: var(--accent-fill);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button:hover {
+    color: #fff;
+    text-decoration: none;
+    border-color: #5a5a5a;
   }
 
-  .post-info {
-    flex-direction: column;
-    gap: 0.5rem;
+  .button-primary:hover {
+    color: #fff;
+    background: var(--accent-fill-hover);
+    border-color: var(--accent-fill-hover);
   }
 }
 
-.content-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.button:active {
+  transform: scale(0.97);
+}
+
+.button:focus-visible {
+  outline: 2px solid #e0e0e0;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button:active {
+    transform: none;
+  }
 }
