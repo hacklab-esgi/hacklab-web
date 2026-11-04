@@ -51,8 +51,10 @@ const renderData = iconToSVG(iconData, {
 
 const body = replaceIDs(renderData.body);
 
+// Sans viewBox, une icône affichée à une autre taille que sa taille d'origine (24px) est rognée
 let renderAttribsHTML =
-	body.indexOf('xlink:') === -1 ? '' : ' xmlns:xlink="http://www.w3.org/1999/xlink"';
+	` viewBox="${renderData.attributes.viewBox}"` +
+	(body.indexOf('xlink:') === -1 ? '' : ' xmlns:xlink="http://www.w3.org/1999/xlink"');
 
 for (const attr in attributes) {
 	renderAttribsHTML += ` ${attr}="${attributes[attr]}"`;
