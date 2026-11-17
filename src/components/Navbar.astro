@@ -11,23 +11,23 @@ const path = Astro.url.pathname.replace(/(.)\/$/, '$1');
     <a class="site-title" href="/">{name}</a>
     <ul>
       <li>
-        <a href="/about" class:list={{ active: path === "/about" }}>Le laboratoire</a>
+        <a href="/about/" class:list={{ active: path === "/about" }}>Le laboratoire</a>
       </li>
       <li class="nav-separator">/</li>
       <li>
-        <a href="/agenda" class:list={{ active: path === "/agenda" }}>Agenda</a>
+        <a href="/agenda/" class:list={{ active: path === "/agenda" }}>Agenda</a>
       </li>
       <li class="nav-separator">/</li>
       <li>
-        <a href="/blog" class:list={{ active: path === "/blog" }}>Articles</a>
+        <a href="/blog/" class:list={{ active: path === "/blog" }}>Articles</a>
       </li>
       <li class="nav-separator">/</li>
       <li>
-        <a href="/projects" class:list={{ active: path === "/projects" }}>Projets</a>
+        <a href="/projects/" class:list={{ active: path === "/projects" }}>Projets</a>
       </li>
       <li class="nav-separator">/</li>
       <li>
-        <a href="/join" class:list={{ active: path === "/join" }}>Nous rejoindre</a>
+        <a href="/join/" class:list={{ active: path === "/join" }}>Nous rejoindre</a>
       </li>
     </ul>
     <button class="mobile-nav-toggle" aria-label="Menu" aria-expanded="false">

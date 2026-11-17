@@ -38,7 +38,7 @@ const excerpt = session.description.length > 240 ? `${session.description.slice(
         <span>
           <time datetime={nextTraining.start.toISOString()} data-dt={nextTraining.start.toISOString()} data-fmt="long-hour">{cap(formatLongDay(nextTraining.start))} à {formatHour(nextTraining.start)}</time>, {nextTraining.place}
         </span>
-        <a href="/agenda">Voir l’agenda</a>
+        <a href="/agenda/">Voir l’agenda</a>
       </p>
     )
   }

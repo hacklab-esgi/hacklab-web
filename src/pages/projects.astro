@@ -13,7 +13,7 @@ const items = projects.map((project) => ({
   description: project.data.description,
   author: project.data.author,
   date: project.data.date,
-  href: `/projects/${project.id}`,
+  href: `/projects/${project.id}/`,
 }));
 const PROPOSE = "https://github.com/hacklab-esgi/hacklab-web/issues/new?template=project.yaml";
 ---

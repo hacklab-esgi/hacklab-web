@@ -14,8 +14,8 @@ const [posts, projects] = await Promise.all([
   getCollection("projects", (project) => !project.data.draft),
 ]);
 const work = [
-  { title: "Articles des membres", all: "/blog", allLabel: "Tous les articles", items: posts.map((p) => ({ ...p.data, date: p.data.createdAt, href: `/blog/${p.id}`, tags: undefined })) },
-  { title: "Projets des membres", all: "/projects", allLabel: "Tous les projets", items: projects.map((p) => ({ ...p.data, href: `/projects/${p.id}` })) },
+  { title: "Articles des membres", all: "/blog/", allLabel: "Tous les articles", items: posts.map((p) => ({ ...p.data, date: p.data.createdAt, href: `/blog/${p.id}/`, tags: undefined })) },
+  { title: "Projets des membres", all: "/projects/", allLabel: "Tous les projets", items: projects.map((p) => ({ ...p.data, href: `/projects/${p.id}/` })) },
 ].filter((section) => section.items.length > 0);
 ---
 

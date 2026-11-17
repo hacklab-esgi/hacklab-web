@@ -15,7 +15,7 @@ const items = posts.map((post) => ({
   description: post.data.description,
   author: post.data.author,
   date: post.data.createdAt,
-  href: `/blog/${post.id}`,
+  href: `/blog/${post.id}/`,
   tags: post.data.tags.map((tag) => tag.id),
 }));
 ---
@@ -31,7 +31,7 @@ const items = posts.map((post) => ({
     lead="Écrits par les membres du HackLab : recherches, outils et retours d’expérience."
   >
     <nav class="tags" aria-label="Filtrer par tag">
-      {tags.map((tag) => <a class="tag" href="/blog" data-tag={tag}>{tag}</a>)}
+      {tags.map((tag) => <a class="tag" href="/blog/" data-tag={tag}>{tag}</a>)}
     </nav>
     <a class="button" href={PROPOSE} target="_blank" rel="noopener">Proposer un article</a>
     <a href="/api/articles-rss.xml">Flux RSS des articles</a>
@@ -39,7 +39,7 @@ const items = posts.map((post) => ({
 
   <div class="layout-grid-right" slot="right">
     <WorkList items={items} />
-    <p class="no-match" hidden>Aucun article ne porte tous ces tags. <a href="/blog">Afficher tous les articles</a></p>
+    <p class="no-match" hidden>Aucun article ne porte tous ces tags. <a href="/blog/">Afficher tous les articles</a></p>
   </div>
 </Layout>
 
@@ -53,7 +53,7 @@ const items = posts.map((post) => ({
     const next = active ? current.filter((t) => t !== name) : [...current, name];
     tag.classList.toggle("active", active);
     tag.setAttribute("aria-pressed", String(active));
-    tag.href = next.length ? `/blog?tags=${next.join(",")}` : "/blog";
+    tag.href = next.length ? `/blog/?tags=${next.join(",")}` : "/blog/";
   });
 
   const rows = document.querySelectorAll<HTMLElement>(".work-list li[data-tags]");
