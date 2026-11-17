@@ -5,14 +5,19 @@ import Layout from "../layouts/Layout.astro";
 import Calendar from "../components/Calendar.astro";
 import PageIntro from "../components/PageIntro.astro";
 import { name } from "spectre:globals";
+import { trainings } from "../lib/sessions";
 
 const ICS = "webcal://www.hacklab-esgi.fr/calendar.ics";
 const ICS_HTTPS = "https://www.hacklab-esgi.fr/calendar.ics";
 const google = (ics: string) => `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(ics)}`;
-// Deux abonnements séparés : les abonnés aux sessions ne reçoivent pas d'office les ~40 entraînements du samedi
+// Deux abonnements séparés : les abonnés aux sessions ne reçoivent pas d'office les ~40 entraînements du samedi.
+// Celui des entraînements n'est proposé que s'il en existe (événements « type »: « training » créés par le bot).
+const hasTrainings = trainings.length > 0;
 const feeds = [
   { title: "Sessions", hint: "Conférences, ateliers et retours d’expérience", ics: ICS, https: ICS_HTTPS },
-  { title: "Entraînements CTF", hint: "Le samedi, sur Discord, selon les semaines", ics: "webcal://www.hacklab-esgi.fr/entrainements.ics", https: "https://www.hacklab-esgi.fr/entrainements.ics" },
+  ...(hasTrainings
+    ? [{ title: "Entraînements CTF", hint: "Le samedi, sur Discord, selon les semaines", ics: "webcal://www.hacklab-esgi.fr/entrainements.ics", https: "https://www.hacklab-esgi.fr/entrainements.ics" }]
+    : []),
 ];
 ---
 
@@ -24,7 +29,7 @@ const feeds = [
   <PageIntro
     slot="left"
     title="Agenda"
-    lead="Les sessions du HackLab, passées et à venir, et les entraînements CTF du samedi."
+    lead={`Les sessions du HackLab, passées et à venir${hasTrainings ? ", et les entraînements CTF du samedi" : ""}.`}
   >
     <div class="subscribe">
       <h2>Ajouter à votre agenda</h2>

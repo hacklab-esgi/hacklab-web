@@ -1,9 +1,18 @@
+---
+import { trainings } from '../lib/sessions';
+---
+
 <div id="calendar-wrapper">
-  <fieldset class="cal-legend">
-    <legend class="sr-only">Afficher dans le calendrier</legend>
-    <label><input type="checkbox" data-type="session" checked /><span class="swatch swatch-session" aria-hidden="true"></span>Sessions</label>
-    <label><input type="checkbox" data-type="training" checked /><span class="swatch swatch-training" aria-hidden="true"></span>Entraînements CTF</label>
-  </fieldset>
+  {
+    // Légende affichée seulement s'il existe des entraînements CTF à distinguer des sessions
+    trainings.length > 0 && (
+      <fieldset class="cal-legend">
+        <legend class="sr-only">Afficher dans le calendrier</legend>
+        <label><input type="checkbox" data-type="session" checked /><span class="swatch swatch-session" aria-hidden="true"></span>Sessions</label>
+        <label><input type="checkbox" data-type="training" checked /><span class="swatch swatch-training" aria-hidden="true"></span>Entraînements CTF</label>
+      </fieldset>
+    )
+  }
   <p class="cal-tz" hidden>
     Heures affichées dans votre fuseau horaire (<span class="cal-tz-name"></span>). Les sessions ont lieu à l'heure de Paris.
   </p>
