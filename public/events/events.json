@@ -340,5 +340,14 @@
     "speaker": "@srv_yagoo",
     "description": "L'école est ouverte samedi ! On va pouvoir faire une nouvelle session en salle A11 (Nation 1)",
     "url": ""
+  },
+  {
+    "title": "Session libre",
+    "start": "2026-11-19T14:30:00.000Z",
+    "duration": 1,
+    "location": "Voltaire",
+    "speaker": "@provenzanors3, @yanis6314",
+    "description": "Session libre, sujet au choix selon les présences!",
+    "url": ""
   }
 ]
