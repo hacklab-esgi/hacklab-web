@@ -150,6 +150,11 @@
           url: httpUrl(ev.url),
         },
       })),
+      // Vue liste : hauteur libre, toute la liste dans la page (sinon, sur mobile, elle défile dans une boîte de 200 px).
+      // Grilles : proportions par défaut.
+      viewDidMount({ view }) {
+        calendar.setOption('height', view.type === 'listYear' ? 'auto' : undefined);
+      },
       eventDidMount(info) {
         const { location, description, url, speaker } = info.event.extendedProps;
         // Heure du visiteur (FullCalendar travaille dans son fuseau) ; l'infobulle précise l'heure de Paris s'il est ailleurs
@@ -269,6 +274,19 @@
 
 /* Responsive */
 @media screen and (max-width: 640px) {
+  /* Mobile : moins de marges autour de la liste, et les textes passent à la ligne au lieu de déborder */
+  #calendar-wrapper {
+    padding: 0;
+  }
+  #calendar {
+    padding: 0.5rem;
+  }
+  .fc .fc-list-event-time {
+    white-space: normal;
+  }
+  .fc .fc-list-event-title {
+    overflow-wrap: anywhere;
+  }
   .fc-toolbar-title {
     font-size: 1rem;
   }

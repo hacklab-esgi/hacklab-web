@@ -154,6 +154,8 @@ const team = [
 <style>
   /* Organigramme pyramidal : un niveau par rôle, reliés par des traits fins */
   .org {
+    /* écart entre deux membres : se resserre sur mobile pour que trois photos tiennent côte à côte */
+    --org-gap: clamp(0.5rem, 3vw, 2rem);
     display: grid;
     justify-items: center;
     margin-top: 2rem;
@@ -163,7 +165,8 @@ const team = [
     position: relative;
     display: flex;
     justify-content: center;
-    gap: 2rem;
+    gap: var(--org-gap);
+    max-width: 100%;
   }
 
   .org-children {
@@ -181,23 +184,16 @@ const team = [
     background: #3a3a3a;
   }
 
-  /* trait horizontal entre le premier et le dernier enfant (centres des nœuds de 8rem) */
-  .org-children::after {
-    content: "";
-    position: absolute;
-    top: 1.25rem;
-    left: 4rem;
-    right: 4rem;
-    height: 1px;
-    background: #3a3a3a;
-  }
-
   .org-node {
     position: relative;
     display: grid;
     justify-items: center;
+    align-content: start;
     gap: 0.25rem;
-    width: 8rem;
+    /* 8rem au plus, moins si l'écran est étroit */
+    flex: 0 1 8rem;
+    min-width: 0;
+    overflow-wrap: anywhere;
     color: #fff;
     text-align: center;
     text-decoration: none;
@@ -212,6 +208,25 @@ const team = [
     width: 1px;
     height: 1.25rem;
     background: #3a3a3a;
+  }
+
+  /* trait horizontal : un segment par enfant, du centre du premier au centre du dernier, quelle que soit leur largeur */
+  .org-children .org-node::after {
+    content: "";
+    position: absolute;
+    top: -1.25rem;
+    left: calc(var(--org-gap) / -2);
+    right: calc(var(--org-gap) / -2);
+    height: 1px;
+    background: #3a3a3a;
+  }
+
+  .org-children .org-node:first-child::after {
+    left: 50%;
+  }
+
+  .org-children .org-node:last-child::after {
+    right: 50%;
   }
 
   .org-node img {
