@@ -1,5 +1,6 @@
 // Sessions du HackLab, lues depuis events.json (même source que le calendrier et le fichier ICS)
 import events from '../../public/events/events.json';
+import { formatPlace, toText } from './places';
 
 export interface Session {
   number: number;
@@ -10,16 +11,6 @@ export interface Session {
   description: string;
   url?: string;
 }
-
-// Les lieux et descriptions contiennent parfois du HTML (liens Discord, <br>, mentions de salon <#…>)
-const toText = (html = '') =>
-  html
-    .replace(/<\/?br\s*\/?>/gi, '\n')
-    .replace(/<#\d+>/g, '')
-    .replace(/<[^>]+>/g, '')
-    .replace(/&amp;/g, '&')
-    .replace(/[ \t]+/g, ' ')
-    .trim();
 
 // Même règle que generate-ics.cjs : une date sans fuseau est une heure de Paris (été/hiver gérés)
 const parisOffset = (date: Date) => {
@@ -51,10 +42,7 @@ const toSession = (ev: (typeof all)[number], i: number): Session => ({
   number: i + 1,
   start: ev.startDate,
   title: ev.title.trim(),
-  place:
-    toText(ev.location)
-      .replace(/Discord (du )?HackLab ESGI/g, 'Discord')
-      .replace(/\+\s*&\s*/g, '+ ') || 'Lieu à confirmer',
+  place: formatPlace(ev.location) || 'Lieu à confirmer',
   speaker: toText(ev.speaker),
   description: toText(ev.description),
   // Lien affiché tel quel dans le journal : http(s) uniquement (pas de javascript:)

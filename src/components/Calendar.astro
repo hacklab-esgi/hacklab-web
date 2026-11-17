@@ -21,6 +21,7 @@ import { trainings } from '../lib/sessions';
 
 <script>
   import { differsFromParis } from '../scripts/local-times';
+  import { formatPlace, toText } from '../lib/places';
   import type { EventApi } from '@fullcalendar/core';
 
   // Infobulle au style du journal des sessions : mêmes icônes (Lucide), lieu, intervenant en violet doux
@@ -30,7 +31,6 @@ import { trainings } from '../lib/sessions';
     pin: svg('<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></g>'),
     mic: svg('<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 19v3m7-12v2a7 7 0 0 1-14 0v-2"/><rect width="6" height="13" x="9" y="2" rx="3"/></g>'),
   };
-  const toText = (html = '') => html.replace(/<#\d+>/g, '').replace(/<[^>]+>/g, '').replace(/Discord (du )?HackLab ESGI/g, 'Discord').replace(/\+\s*&\s*/g, '+ ').trim();
   const HOUR: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit' };
 
   // events.json est rempli depuis Discord : rien n'entre dans la page sans être échappé ou filtré
@@ -62,7 +62,7 @@ import { trainings } from '../lib/sessions';
     const day = start.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     const range = (tz?: string) => `${start.toLocaleTimeString('fr-FR', { ...HOUR, timeZone: tz })} – ${end.toLocaleTimeString('fr-FR', { ...HOUR, timeZone: tz })}`;
     const hours = differsFromParis(start) ? `${range()} (${range('Europe/Paris')} à Paris)` : range();
-    const place = toText(location);
+    const place = formatPlace(location);
     const who = toText(speaker);
     const desc = safeHtml(description).trim();
     return `

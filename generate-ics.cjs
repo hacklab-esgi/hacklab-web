@@ -73,7 +73,7 @@ const events = eventsData.map(ev => {
     uid,
     title: ev.title,
     description: description + speakerInfo,
-    location: ev.location,
+    location: sanitizeHtmlDescription(ev.location),
     start: startDate.getTime(),
     end: endDate.getTime(),
     organizer: {
