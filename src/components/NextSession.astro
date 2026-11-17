@@ -115,6 +115,11 @@ const excerpt = session.description.length > 240 ? `${session.description.slice(
     white-space: pre-line;
   }
 
+  /* Session passée : l'annonce écrite avant (« on se retrouve samedi ») est périmée, on ne garde que les faits */
+  .spotlight[data-upcoming='false'] .spotlight-excerpt {
+    display: none;
+  }
+
   .spotlight-actions {
     display: flex;
     flex-wrap: wrap;
