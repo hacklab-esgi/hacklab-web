@@ -37,12 +37,8 @@ const minDepth = Math.min(...headings.map((h) => h.depth));
   )
 }
 
-<script is:inline>
-  // Avant l'affichage : replié sur mobile (une colonne), ouvert sur desktop, sans clignotement
-  document.querySelectorAll('[data-toc]').forEach((el) => {
-    el.open = !window.matchMedia('(max-width: 1380px)').matches;
-  });
-</script>
+<!-- État initial du sommaire, avant l'affichage. En fichier (public/toc-init.js) : la CSP interdit les scripts en ligne -->
+<script is:inline src="/toc-init.js"></script>
 
 <script>
   import { initToc } from '../scripts/toc';

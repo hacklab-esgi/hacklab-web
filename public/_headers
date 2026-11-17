@@ -1,2 +1,14 @@
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
+
+# En-têtes de sécurité, sur tout le site.
+# script-src 'self' : seuls les scripts servis en fichiers s'exécutent. Un script injecté dans une page
+# (ou un <script is:inline>) est bloqué : le build le refuse, voir noInlineScripts dans astro.config.ts.
+# style-src 'unsafe-inline' : nécessaire aux blocs de code colorés et au calendrier.
+# img-src https: : les articles peuvent afficher des images hébergées ailleurs.
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'

@@ -42,11 +42,11 @@ const path = Astro.url.pathname.replace(/(.)\/$/, '$1');
     </button>
   </div>
 </nav>
-<script is:inline>
+<script>
   const navToggle = document.querySelector(".mobile-nav-toggle");
 
   navToggle?.addEventListener("click", () => {
-    const open = document.querySelector("nav").classList.toggle("active");
+    const open = document.querySelector("nav")!.classList.toggle("active");
     navToggle.classList.toggle("active", open);
     navToggle.setAttribute("aria-expanded", String(open));
   });

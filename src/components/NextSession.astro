@@ -44,13 +44,13 @@ const excerpt = session.description.length > 240 ? `${session.description.slice(
   }
 </section>
 
-<script is:inline>
+<script>
   // Construite avant la session, la page doit basculer d'elle-même une fois la date passée
-  document.querySelectorAll('.spotlight[data-upcoming="true"]').forEach((el) => {
-    if (Date.parse(el.dataset.start) + 2 * 3600e3 < Date.now()) el.dataset.upcoming = 'false';
+  document.querySelectorAll<HTMLElement>('.spotlight[data-upcoming="true"]').forEach((el) => {
+    if (Date.parse(el.dataset.start!) + 2 * 3600e3 < Date.now()) el.dataset.upcoming = 'false';
   });
-  document.querySelectorAll('.spotlight-training').forEach((el) => {
-    if (Date.parse(el.dataset.start) + 3 * 3600e3 < Date.now()) el.hidden = true;
+  document.querySelectorAll<HTMLElement>('.spotlight-training').forEach((el) => {
+    if (Date.parse(el.dataset.start!) + 3 * 3600e3 < Date.now()) el.hidden = true;
   });
 </script>
 
