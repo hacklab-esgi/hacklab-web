@@ -57,7 +57,8 @@ const toSession = (ev: (typeof all)[number], i: number): Session => ({
       .replace(/\+\s*&\s*/g, '+ ') || 'Lieu à confirmer',
   speaker: toText(ev.speaker),
   description: toText(ev.description),
-  url: ev.url?.trim() || undefined,
+  // Lien affiché tel quel dans le journal : http(s) uniquement (pas de javascript:)
+  url: /^https?:\/\//i.test(ev.url?.trim() ?? '') ? ev.url.trim() : undefined,
 });
 
 /** Toutes les sessions, de la plus ancienne (n° 1) à la plus récente. */

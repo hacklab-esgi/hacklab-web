@@ -82,8 +82,8 @@ const events = eventsData.map(ev => {
     }
   };
 
-  if (ev.url && ev.url.trim() !== '') {
-    event.url = ev.url;
+  if (/^https?:\/\//i.test((ev.url || '').trim())) {
+    event.url = ev.url.trim();
   }
 
   return event;

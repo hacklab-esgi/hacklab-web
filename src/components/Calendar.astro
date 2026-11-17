@@ -24,6 +24,28 @@
   const toText = (html = '') => html.replace(/<#\d+>/g, '').replace(/<[^>]+>/g, '').replace(/Discord (du )?HackLab ESGI/g, 'Discord').replace(/\+\s*&\s*/g, '+ ').trim();
   const HOUR: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit' };
 
+  // events.json est rempli depuis Discord : rien n'entre dans la page sans être échappé ou filtré
+  const esc = (s = '') => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+  const httpUrl = (u?: string) => (u && /^https?:\/\//i.test(u.trim()) ? u.trim() : undefined);
+  // Description : seuls les retours à la ligne et les liens http(s) sont gardés, tout le reste devient du texte.
+  // DOMParser crée un document inerte (aucun script ni gestionnaire d'événement n'y est exécuté).
+  const safeHtml = (html = '') => {
+    const out = document.createElement('div');
+    const copy = (from: Node, to: Node) =>
+      from.childNodes.forEach((node) => {
+        if (node.nodeType === Node.TEXT_NODE) return void to.appendChild(document.createTextNode(node.textContent ?? ''));
+        if (!(node instanceof Element)) return;
+        if (node.tagName === 'BR') return void to.appendChild(document.createElement('br'));
+        const href = node.tagName === 'A' ? httpUrl(node.getAttribute('href') ?? '') : undefined;
+        if (!href) return copy(node, to);
+        const a = Object.assign(document.createElement('a'), { href, target: '_blank', rel: 'noopener' });
+        copy(node, a);
+        to.appendChild(a);
+      });
+    copy(new DOMParser().parseFromString(html.replace(/<#\d+>/g, ''), 'text/html').body, out);
+    return out.innerHTML;
+  };
+
   const tooltipHtml = (event: EventApi) => {
     const { location, description, speaker } = event.extendedProps;
     const start = event.start!;
@@ -33,12 +55,12 @@
     const hours = differsFromParis(start) ? `${range()} (${range('Europe/Paris')} à Paris)` : range();
     const place = toText(location);
     const who = toText(speaker);
-    const desc = (description ?? '').replace(/<\/?br\s*\/?>/gi, '<br>').trim();
+    const desc = safeHtml(description).trim();
     return `
-      <p class="tt-title">${event.title}</p>
+      <p class="tt-title">${esc(event.title)}</p>
       <p class="tt-row">${ICON.clock}<span>${day.charAt(0).toUpperCase() + day.slice(1)}<br>${hours}</span></p>
-      ${place ? `<p class="tt-row">${ICON.pin}<span>${place}</span></p>` : ''}
-      ${who ? `<p class="tt-row tt-speaker">${ICON.mic}<span>${who}</span></p>` : ''}
+      ${place ? `<p class="tt-row">${ICON.pin}<span>${esc(place)}</span></p>` : ''}
+      ${who ? `<p class="tt-row tt-speaker">${ICON.mic}<span>${esc(who)}</span></p>` : ''}
       ${desc ? `<p class="tt-desc">${desc}</p>` : ''}
     `;
   };
@@ -125,7 +147,7 @@
           location: ev.location,
           description: ev.description,
           speaker: ev.speaker,
-          url: ev.url?.trim() || undefined,
+          url: httpUrl(ev.url),
         },
       })),
       eventDidMount(info) {
@@ -138,7 +160,7 @@
 
         const content = info.el.querySelector<HTMLElement>('.fc-event-title');
         if (content) {
-          content.innerHTML = `<span aria-hidden="true">📌</span> ${heure}<br/>${info.event.title}`;
+          content.innerHTML = `<span aria-hidden="true">📌</span> ${heure}<br/>${esc(info.event.title)}`;
           content.style.whiteSpace = 'normal';
         }
 
@@ -154,7 +176,7 @@
             return;
           }
           e.stopPropagation();
-          tooltip.innerHTML = details + (url ? `<a href="${url}" target="_blank" rel="noopener">Plus d’infos →</a>` : '');
+          tooltip.innerHTML = details + (url ? `<a href="${esc(url)}" target="_blank" rel="noopener">Plus d’infos →</a>` : '');
           tooltip.classList.add('is-touch');
           tooltip.hidden = false;
           const r = info.el.getBoundingClientRect();
