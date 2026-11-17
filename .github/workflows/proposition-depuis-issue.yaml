@@ -1,0 +1,49 @@
+name: 🛠️ Proposition d'article ou de projet depuis une Issue
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+# Une exécution à la fois par issue : deux modifications rapprochées ne se marchent pas dessus
+concurrency:
+  group: proposition-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  proposition:
+    if: >-
+      github.event.issue.state == 'open' &&
+      (contains(github.event.issue.labels.*.name, 'article') || contains(github.event.issue.labels.*.name, 'projet'))
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      ISSUE: ${{ github.event.issue.number }}
+    steps:
+      - name: Checkout 👉🏼 master
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      # Le contenu de l'issue passe uniquement par des variables d'environnement, jamais dans le texte du script
+      - name: Créer ou mettre à jour la proposition
+        env:
+          KIND: ${{ contains(github.event.issue.labels.*.name, 'article') && 'article' || 'projet' }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          CREATED_AT: ${{ github.event.issue.created_at }}
+        run: bash .github/scripts/issue-to-content.sh
+
+      # Un seul commentaire, tenu à jour : reçu, ou ce qu'il faut corriger
+      - name: Prévenir l'auteur
+        if: ${{ !cancelled() }}
+        run: |
+          MSG="$RUNNER_TEMP/message.md"
+          if [ ! -s "$MSG" ]; then
+            echo "❌ **Une erreur inattendue a empêché de traiter la proposition.** L'équipe du HackLab va regarder : $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > "$MSG"
+          fi
+          gh issue comment "$ISSUE" --edit-last --body-file "$MSG" || gh issue comment "$ISSUE" --body-file "$MSG"
