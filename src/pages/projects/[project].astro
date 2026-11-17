@@ -40,6 +40,7 @@ const { Content } = await render(project);
   ogImage={`/og/projects/${project.id}.png`}
   article={{
     createdAt: project.data.date,
+    author: project.data.author,
   }}
 >
   <div class="layout-grid-left-sticky" slot="left">

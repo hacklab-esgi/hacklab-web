@@ -49,20 +49,26 @@ export default defineConfig({
     name: 'HackLab ESGI',
     themeColor: '#121212', // couleur de la navbar : barre d'état mobile assortie
     openGraph: {
+      // Titres : « | HackLab ESGI » est ajouté par le Layout. Descriptions : le texte affiché sous le lien dans Google.
       home: {
-        title: 'HackLab ESGI'
+        title: 'HackLab ESGI, le laboratoire associatif de cybersécurité de l’ESGI',
+        description: 'Le HackLab ESGI est le laboratoire associatif de cybersécurité de l’ESGI : sessions, articles et projets présentés par des étudiants et des alumni.'
       },
       about: {
-        title: 'Le laboratoire'
+        title: 'Le laboratoire',
+        description: 'Un laboratoire étudiant libre dédié à la cybersécurité : l’équipe de bénévoles, le projet, le déroulement des sessions et les partenaires du HackLab ESGI.'
       },
       join: {
-        title: 'Nous rejoindre'
+        title: 'Nous rejoindre',
+        description: 'Rejoindre le HackLab ESGI : sans sélection, ouvert à tous les niveaux. Suivez les sessions, proposez un sujet de conférence ou un atelier.'
       },
       blog: {
-        title: 'Articles'
+        title: 'Articles',
+        description: 'Les articles des membres du HackLab ESGI : recherches en sécurité offensive et défensive, outils et retours d’expérience.'
       },
       projects: {
-        title: 'Projets'
+        title: 'Projets',
+        description: 'Les outils, scripts et recherches en cybersécurité développés par les membres du HackLab ESGI.'
       }
     }
   }), noInlineScripts],

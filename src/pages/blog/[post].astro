@@ -69,6 +69,7 @@ const { Content, headings } = await render(post);
   article={{
     createdAt: post.data.createdAt,
     updatedAt: post.data.updatedAt,
+    author: post.data.author,
   }}
 >
   <div class="layout-grid-left-sticky" slot="left">

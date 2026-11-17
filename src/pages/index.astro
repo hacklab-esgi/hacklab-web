@@ -17,12 +17,24 @@ const work = [
   { title: "Articles des membres", all: "/blog/", allLabel: "Tous les articles", items: posts.map((p) => ({ ...p.data, date: p.data.createdAt, href: `/blog/${p.id}/`, tags: undefined })) },
   { title: "Projets des membres", all: "/projects/", allLabel: "Tous les projets", items: projects.map((p) => ({ ...p.data, href: `/projects/${p.id}/` })) },
 ].filter((section) => section.items.length > 0);
+
+// Données structurées : l'association et ses comptes officiels (même liste que les liens de la colonne)
+const socials = await getCollection("socials");
+const organization = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name,
+  url: Astro.site?.href,
+  logo: new URL("/favicon.png", Astro.site).href,
+  sameAs: socials.map((social) => social.data.link),
+};
 ---
 
 <Layout
   ogImage="/og/pages/accueil.png"
   title={openGraph.home.title || name}
   description={openGraph.home.description}
+  jsonLd={organization}
 >
   <aside class="layout-grid-left-sticky home-aside" slot="left">
     <img class="home-logo" width={96} height={101} src="/favicon.png" alt="" loading="eager" />
