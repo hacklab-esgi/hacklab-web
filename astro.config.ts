@@ -17,7 +17,7 @@ const sanitizeUntrusted = () => {
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://hacklab-esgi.fr',
+  site: 'https://www.hacklab-esgi.fr',
   output: 'static',
   markdown: {
     processor: unified({

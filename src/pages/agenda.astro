@@ -6,13 +6,13 @@ import Calendar from "../components/Calendar.astro";
 import PageIntro from "../components/PageIntro.astro";
 import { name } from "spectre:globals";
 
-const ICS = "webcal://hacklab-esgi.fr/calendar.ics";
-const ICS_HTTPS = "https://hacklab-esgi.fr/calendar.ics";
+const ICS = "webcal://www.hacklab-esgi.fr/calendar.ics";
+const ICS_HTTPS = "https://www.hacklab-esgi.fr/calendar.ics";
 const google = (ics: string) => `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(ics)}`;
 // Deux abonnements séparés : les abonnés aux sessions ne reçoivent pas d'office les ~40 entraînements du samedi
 const feeds = [
   { title: "Sessions", hint: "Conférences, ateliers et retours d’expérience", ics: ICS, https: ICS_HTTPS },
-  { title: "Entraînements CTF", hint: "Le samedi, sur Discord, selon les semaines", ics: "webcal://hacklab-esgi.fr/entrainements.ics", https: "https://hacklab-esgi.fr/entrainements.ics" },
+  { title: "Entraînements CTF", hint: "Le samedi, sur Discord, selon les semaines", ics: "webcal://www.hacklab-esgi.fr/entrainements.ics", https: "https://www.hacklab-esgi.fr/entrainements.ics" },
 ];
 ---
 

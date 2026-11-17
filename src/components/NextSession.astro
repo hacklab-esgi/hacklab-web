@@ -3,7 +3,7 @@
 import { sessions, trainings, formatLongDay, formatHour } from '../lib/sessions';
 
 const DISCORD = 'https://discord.gg/nF6AJGd4DB';
-const ICS = 'webcal://hacklab-esgi.fr/calendar.ics';
+const ICS = 'webcal://www.hacklab-esgi.fr/calendar.ics';
 
 const now = Date.now();
 const upcoming = sessions.find((s) => s.start.getTime() >= now);
