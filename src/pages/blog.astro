@@ -5,10 +5,10 @@ import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import PageIntro from "../components/PageIntro.astro";
 import WorkList from "../components/WorkList.astro";
+import { CATEGORIES } from "../lib/articles";
 import { openGraph } from "spectre:globals";
 
 const posts = await getCollection("posts", (post) => post.data.draft !== true);
-const tags = [...new Set(posts.flatMap((post) => post.data.tags.map((tag) => tag.id)))].sort();
 const PROPOSE = "https://github.com/hacklab-esgi/hacklab-web/issues/new?template=article.yaml";
 const items = posts.map((post) => ({
   title: post.data.title,
@@ -16,8 +16,10 @@ const items = posts.map((post) => ({
   author: post.data.author,
   date: post.data.createdAt,
   href: `/blog/${post.id}/`,
-  tags: post.data.tags.map((tag) => tag.id),
+  category: post.data.category,
+  tags: post.data.tags,
 }));
+const count = (id: string) => posts.filter((post) => post.data.category === id).length;
 ---
 
 <Layout
@@ -30,36 +32,60 @@ const items = posts.map((post) => ({
     title="Articles"
     lead="Écrits par les membres du HackLab : recherches, outils et retours d’expérience."
   >
-    <nav class="tags" aria-label="Filtrer par tag">
-      {tags.map((tag) => <a class="tag" href="/blog/" data-tag={tag}>{tag}</a>)}
+    <nav class="filters" aria-label="Filtrer par catégorie">
+      <a class="pill" href="/blog/" data-cat="">Tous <span class="count">{posts.length}</span></a>
+      {
+        Object.entries(CATEGORIES).map(([id, label]) => (
+          <a class="pill" href={`/blog/?cat=${id}`} data-cat={id}>{label} <span class="count">{count(id)}</span></a>
+        ))
+      }
     </nav>
+    <!-- Tags choisis en cliquant sur un tag d'article : remplis par le script, un clic retire le filtre -->
+    <p class="filters chosen-tags" hidden><span>Tag :</span></p>
     <a class="button" href={PROPOSE} target="_blank" rel="noopener">Proposer un article</a>
     <a href="/api/articles-rss.xml">Flux RSS des articles</a>
   </PageIntro>
 
   <div class="layout-grid-right" slot="right">
     <WorkList items={items} />
-    <p class="no-match" hidden>Aucun article ne porte tous ces tags. <a href="/blog/">Afficher tous les articles</a></p>
+    <p class="no-match" hidden>Aucun article ne correspond à ce filtre. <a href="/blog/">Afficher tous les articles</a></p>
   </div>
 </Layout>
 
 <script>
-  // Filtre par tags via l'URL (/blog?tags=a,b) : un article doit porter tous les tags choisis
-  const current = new URL(window.location.href).searchParams.get("tags")?.split(",").filter(Boolean) ?? [];
+  // Filtres par l'URL : /blog/?cat=defensif&tags=soc,kql (une catégorie, et tous les tags demandés)
+  const params = new URL(window.location.href).searchParams;
+  const cat = params.get("cat") ?? "";
+  const tags = params.get("tags")?.split(",").filter(Boolean) ?? [];
+  const url = (c: string, t: string[]) => {
+    const query = [c && `cat=${encodeURIComponent(c)}`, t.length && `tags=${t.map(encodeURIComponent).join(",")}`].filter(Boolean).join("&");
+    return query ? `/blog/?${query}` : "/blog/";
+  };
 
-  document.querySelectorAll<HTMLAnchorElement>(".tag").forEach((tag) => {
-    const name = tag.dataset.tag!;
-    const active = current.includes(name);
-    const next = active ? current.filter((t) => t !== name) : [...current, name];
-    tag.classList.toggle("active", active);
-    tag.setAttribute("aria-pressed", String(active));
-    tag.href = next.length ? `/blog/?tags=${next.join(",")}` : "/blog/";
+  // Catégories : celle en cours est marquée, et changer de catégorie garde le tag choisi
+  document.querySelectorAll<HTMLAnchorElement>(".filters [data-cat]").forEach((link) => {
+    const active = link.dataset.cat === cat;
+    link.classList.toggle("active", active);
+    if (active) link.setAttribute("aria-current", "true");
+    link.href = url(link.dataset.cat!, tags);
   });
 
-  const rows = document.querySelectorAll<HTMLElement>(".work-list li[data-tags]");
+  // Tags choisis : une pastille par tag. Le nom vient de l'URL : il est posé en texte, jamais en HTML.
+  const chosen = document.querySelector<HTMLElement>(".chosen-tags")!;
+  for (const tag of tags) {
+    const link = document.createElement("a");
+    link.className = "pill active";
+    link.href = url(cat, tags.filter((t) => t !== tag));
+    link.textContent = `${tag} ✕`;
+    link.setAttribute("aria-label", `Retirer le filtre ${tag}`);
+    chosen.append(link);
+  }
+  chosen.hidden = tags.length === 0;
+
   let shown = 0;
-  rows.forEach((row) => {
-    const match = current.every((t) => row.dataset.tags!.split(",").includes(t));
+  document.querySelectorAll<HTMLElement>(".work-list li").forEach((row) => {
+    const rowTags = row.dataset.tags?.split(",") ?? [];
+    const match = (!cat || row.dataset.cat === cat) && tags.every((t) => rowTags.includes(t));
     row.hidden = !match;
     if (match) shown++;
   });
@@ -67,38 +93,33 @@ const items = posts.map((post) => ({
 </script>
 
 <style>
-  .tags {
+  .filters {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 0.5rem;
+    margin: 0;
+    color: var(--muted);
   }
 
-  .tag {
+  /* « hidden » doit l'emporter sur display: flex */
+  .filters[hidden] {
+    display: none;
+  }
+
+  /* :global : les pastilles des tags choisis sont créées par le script */
+  .filters :global(.pill) {
     padding: 0.25rem 0.75rem;
-    color: #e0e0e0;
     font-size: 0.9375rem;
-    text-decoration: none;
-    border: 1px solid #333;
-    border-radius: 999px;
   }
 
-  @media (hover: hover) and (pointer: fine) {
-    .tag:hover {
-      color: #fff;
-      text-decoration: none;
-      border-color: #555;
-    }
+  .count {
+    color: var(--muted);
+    font-size: 0.8125rem;
   }
 
-  .tag.active {
+  .pill.active .count {
     color: #fff;
-    background: var(--accent-fill);
-    border-color: var(--accent-fill);
-  }
-
-  .tag:focus-visible {
-    outline: 2px solid #e0e0e0;
-    outline-offset: 2px;
   }
 
   .no-match {

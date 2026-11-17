@@ -9,6 +9,7 @@ import { Image } from 'astro:assets';
 import Toc from "../../components/Toc.astro";
 import Byline from "../../components/Byline.astro";
 import Layout from "../../layouts/Layout.astro";
+import { CATEGORIES } from "../../lib/articles";
 
 import type { GetStaticPaths } from "astro";
 import type { CollectionEntry } from "astro:content";
@@ -95,9 +96,14 @@ const { Content, headings } = await render(post);
             meta={[
               post.data.createdAt.toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris', day: 'numeric', month: 'long', year: 'numeric' }),
               `${timeToRead(post)} minute${timeToRead(post) === 1 ? '' : 's'} de lecture`,
-              post.data.tags.map((tag) => tag.id).join(', '),
             ]}
-          />
+          >
+            {/* Catégorie et tags : un clic affiche les articles du même classement */}
+            <p class="article-pills">
+              <a class="pill pill-category" href={`/blog/?cat=${post.data.category}`}>{CATEGORIES[post.data.category]}</a>
+              {post.data.tags.map((tag) => <a class="pill" href={`/blog/?tags=${tag}`}>{tag}</a>)}
+            </p>
+          </Byline>
         </div>
       </div>
       <div class="prose">
@@ -123,8 +129,11 @@ const { Content, headings } = await render(post);
     gap: 2rem;
   }
 
-  .comments * {
-    border-color: #353535 !important;
+  .article-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin: 0.625rem 0 0;
   }
 
 

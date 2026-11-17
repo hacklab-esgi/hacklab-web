@@ -4,7 +4,7 @@ interface Props {
   author?: string;
   /** « Écrit par », « Projet de »… */
   label: string;
-  /** Date, durée de lecture, tags : affichés en ligne, en plus discret */
+  /** Date, durée de lecture : affichés en ligne, en plus discret. Le contenu du composant (catégorie, tags) vient en dessous. */
   meta: string[];
 }
 const { author, label, meta } = Astro.props;
@@ -21,6 +21,7 @@ const { author, label, meta } = Astro.props;
     <p class="byline-meta">
       {meta.map((item) => <span>{item}</span>)}
     </p>
+    <slot />
   </div>
 </div>
 

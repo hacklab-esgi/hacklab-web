@@ -60,9 +60,22 @@ CONTENT=$(sed '/./,$!d' "$BODY.content")
 [ -n "$CONTENT" ] || fail "Le champ **Contenu complet** est vide."
 [ -n "$AUTHOR" ] || fail "Le champ **Auteur** est vide."
 
+NEW_TAGS=""
 if [ "$KIND" = article ]; then
-  TAGS=$(field "$BODY.tail" "Tags")
+  # Catégorie : liste fermée, la même que dans src/lib/articles.ts
+  CATEGORY=$(field "$BODY.head" "Catégorie" | slugify)
+  case "$CATEGORY" in
+    offensif | defensif | gouvernance) ;;
+    *) fail "La **catégorie** est absente ou inconnue. Ajoutez, juste après le titre de l’article, une rubrique \`### Catégorie\` suivie d’une ligne vide puis de \`Offensif\`, \`Défensif\` ou \`Gouvernance\`." ;;
+  esac
+  # Tags : même écriture pour tous (minuscules, sans accent, tirets), sans doublon
+  TAGS=$(field "$BODY.tail" "Tags" | tr ',' '\n' | while IFS= read -r tag || [ -n "$tag" ]; do printf '%s' "$tag" | slugify; echo; done | awk 'NF && !seen[$0]++')
   [ -n "$TAGS" ] || fail "Le champ **Tags** est vide."
+  # Tags jamais utilisés par un article publié : signalés au relecteur, pour éviter deux tags pour la même idée
+  KNOWN=$(git ls-tree -r --name-only origin/master -- "$DIR" | while IFS= read -r f; do
+    git show "origin/master:$f" | awk '/^---/ {n++; next} n == 1 && /^tags:/ {t = 1; next} n == 1 && t && /^[[:space:]]*-/ {sub(/^[[:space:]]*-[[:space:]]*/, ""); gsub(/"/, ""); print; next} {t = 0} n >= 2 {exit}'
+  done | while IFS= read -r tag || [ -n "$tag" ]; do printf '%s' "$tag" | slugify; echo; done | sort -u)
+  NEW_TAGS=$(comm -23 <(printf '%s\n' "$TAGS" | sort -u) <(printf '%s\n' "$KNOWN"))
 else
   LINK=$(field "$BODY.tail" "Lien github")
   [[ "$LINK" =~ ^https://[^[:space:]]+$ ]] || fail "Le champ **Lien github du projet** doit être une adresse complète, par exemple \`https://github.com/hacklab-esgi/mon-projet\`."
@@ -98,8 +111,9 @@ mkdir -p "$DIR"
   echo "description: $(q "$DESCRIPTION")"
   if [ "$KIND" = article ]; then
     echo "createdAt: $DATE"
+    echo "category: $CATEGORY"
     echo "tags:"
-    printf '%s' "$TAGS" | jq -Rr 'split(",") | map(gsub("^\\s+|\\s+$"; "")) | map(select(. != "")) | .[] | "  - " + tojson'
+    printf '%s\n' "$TAGS" | sed 's/^/  - /'
   else
     echo "date: $DATE"
     echo "info:"
@@ -125,16 +139,23 @@ else
   git push -q origin "$BRANCH"
 fi
 
-PR_URL=$(gh pr list --head "$BRANCH" --state open --json url --jq '.[0].url // empty')
-if [ -z "$PR_URL" ]; then
-  PR_URL=$(gh pr create --base master --head "$BRANCH" \
-    --title "📝 Proposition $NAME : $TITLE" \
-    --body "Proposition envoyée depuis l’issue #$ISSUE, à relire avant publication.
+PR_BODY="Proposition envoyée depuis l’issue #$ISSUE, à relire avant publication.
 
 - Le fichier est en brouillon (\`draft: true\`) : passer à \`false\` pour publier.
-- Si l’auteur modifie son issue, cette pull request se met à jour toute seule.
+- Si l’auteur modifie son issue, cette pull request se met à jour toute seule."
+if [ -n "$NEW_TAGS" ]; then
+  PR_BODY="$PR_BODY
+- **Nouveaux tags** (jamais utilisés) : $(printf '%s' "$NEW_TAGS" | sed 's/.*/\`&\`/' | paste -sd, - | sed 's/,/, /g'). Vérifier qu’ils ne doublonnent pas un tag existant : $(printf '%s' "$KNOWN" | sed 's/.*/\`&\`/' | paste -sd, - | sed 's/,/, /g'). Pour fusionner deux écritures, compléter \`TAG_ALIASES\` dans \`src/lib/articles.ts\`."
+fi
+PR_BODY="$PR_BODY
 
-Closes #$ISSUE")
+Closes #$ISSUE"
+
+PR_URL=$(gh pr list --head "$BRANCH" --state open --json url --jq '.[0].url // empty')
+if [ -z "$PR_URL" ]; then
+  PR_URL=$(gh pr create --base master --head "$BRANCH" --title "📝 Proposition $NAME : $TITLE" --body "$PR_BODY")
+else
+  gh pr edit "$PR_URL" --title "📝 Proposition $NAME : $TITLE" --body "$PR_BODY" > /dev/null
 fi
 
 printf '✅ **Proposition bien reçue, merci !**\n\nElle est en relecture ici : %s\n\nPour corriger ou compléter votre texte, modifiez simplement cette issue : la pull request se mettra à jour toute seule.\n' "$PR_URL" > "$MSG"

@@ -1,5 +1,6 @@
 import { file, glob } from "astro/loaders";
-import { defineCollection, z, reference } from "astro:content";
+import { defineCollection, z } from "astro:content";
+import { CATEGORIES, normalizeTag, type Category } from "./lib/articles";
 import type { icons as lucideIcons } from '@iconify-json/lucide/icons.json';
 
 const lucideIconSchema = z.object({
@@ -17,13 +18,6 @@ const socials = defineCollection({
   })
 });
 
-const tags = defineCollection({
-  loader: file("src/content/tags.json"),
-  schema: z.object({
-    id: z.string()
-  })
-});
-
 const posts = defineCollection({
   loader: glob({ base: "src/content/posts", pattern: "**/*.{md,mdx}" }),
   schema: ({ image }) => z.object({
@@ -31,9 +25,10 @@ const posts = defineCollection({
     createdAt: z.coerce.date(),
     updatedAt: z.coerce.date().optional(),
     description: z.string(),
-    tags: z.array(
-      reference("tags")
-    ),
+    // Une catégorie parmi la liste fermée de src/lib/articles.ts : le build échoue sur toute autre valeur
+    category: z.enum(Object.keys(CATEGORIES) as [Category, ...Category[]]),
+    // Tags libres, ramenés à une écriture unique (« SOC » = « soc », synonymes fusionnés) puis dédoublonnés
+    tags: z.array(z.string()).transform((tags) => [...new Set(tags.map(normalizeTag).filter(Boolean))]),
     draft: z.boolean().optional().default(false),
     image: image().optional(),
     author: z.string().optional(),
@@ -60,4 +55,4 @@ const projects = defineCollection({
   })
 });
 
-export const collections = { tags, posts, projects, socials };
+export const collections = { posts, projects, socials };

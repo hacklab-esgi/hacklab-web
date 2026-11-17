@@ -297,6 +297,44 @@ main {
   outline-offset: 2px;
 }
 
+/* Pastilles : catégories et tags des articles (liens de filtre vers /blog/) */
+.pill {
+  display: inline-block;
+  padding: 0.125rem 0.625rem;
+  color: #e0e0e0;
+  font-size: 0.875rem;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 1px solid #333;
+  border-radius: 999px;
+}
+
+/* La catégorie se distingue des tags par le violet */
+.pill-category {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pill:hover {
+    color: #fff;
+    text-decoration: none;
+    border-color: #777;
+  }
+}
+
+/* Filtre en cours */
+.pill.active {
+  color: #fff;
+  background: var(--accent-fill);
+  border-color: var(--accent-fill);
+}
+
+.pill:focus-visible {
+  outline: 2px solid #e0e0e0;
+  outline-offset: 2px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .button:active {
     transform: none;

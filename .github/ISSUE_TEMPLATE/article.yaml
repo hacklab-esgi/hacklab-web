@@ -15,6 +15,21 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: category
+    attributes:
+      label: Catégorie
+      description: |
+        Offensif : attaque, pentest, exploitation, maldev, red team.
+        Défensif : détection, SOC, forensique, réponse à incident, durcissement.
+        Gouvernance : risques, conformité, droit, organisation, gestion de crise.
+      options:
+        - Offensif
+        - Défensif
+        - Gouvernance
+    validations:
+      required: true
+
   - type: textarea
     id: description
     attributes:
@@ -49,6 +64,7 @@ body:
     id: tags
     attributes:
       label: Tags (séparés par des virgules)
-      placeholder: "web, sécurité, reverse"
+      description: 3 à 5 mots-clés précis. Reprenez les tags déjà utilisés sur le site quand ils conviennent (« forensic » plutôt que « forensique »).
+      placeholder: "web, reverse, retex"
     validations:
       required: true

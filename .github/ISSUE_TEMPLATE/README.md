@@ -8,16 +8,18 @@ Voici comment proposer un article :
 2. Sélectionnez le modèle **"Proposer un article 📝"**.
 3. Remplissez tous les champs demandés :
    - Un **titre clair** (sans emoji ni caractères spéciaux).
+   - Une **catégorie** : Offensif, Défensif ou Gouvernance.
    - Une **description rapide** de 1-2 phrases.
    - Le **contenu complet** de l’article (en Markdown).
    - Votre **pseudo ou prénom** comme auteur.
-   - Quelques **tags** (exemples : `web`, `linux`, `cloud`, etc.)
+   - Quelques **tags** (exemples : `web`, `linux`, `cloud`, etc.). Majuscules et accents sont uniformisés automatiquement.
 
 ---
 
 ⚡ À savoir :
 
-- Une fois envoyé, **une Pull Request sera automatiquement générée**.
+- Une fois envoyé, **une Pull Request sera automatiquement générée** et un commentaire vous le confirme sur l’issue.
+- S’il manque quelque chose, le commentaire vous dit quoi corriger : **modifiez l’issue**, la vérification se relance et la Pull Request se met à jour.
 - Votre article restera **en brouillon** (`draft: true`) tant qu'il n'est pas validé.
 - **Relisez-vous** avant de soumettre pour éviter les oublis.
 
