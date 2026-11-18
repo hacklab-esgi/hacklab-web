@@ -8,7 +8,7 @@ import { AstroError } from 'astro/errors';
 import type { HTMLAttributes } from 'astro/types';
 
 interface SVGAttributes extends HTMLAttributes<'svg'> {
-	// biome-ignore lint/suspicious/noExplicitAny: Allow any string index
+	// any : Allow any string index
 	[key: string]: any;
 }
 
@@ -31,7 +31,7 @@ if (type !== 'lucide' && type !== 'simple-icons') {
 	throw new AstroError(`Invalid icon type "${type}"`);
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: Needed type not exported
+// any : Needed type not exported
 let iconData: any;
 
 if (type === 'lucide') {
