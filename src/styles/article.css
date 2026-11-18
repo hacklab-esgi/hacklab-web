@@ -17,18 +17,6 @@ article hr {
   background-color: #353535;
 }
 
-p:has(img) {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
-p img {
-  max-width: 100%;
-}
-
 .no-mt {
   margin-top: 0;
 }
@@ -317,9 +305,13 @@ em {
   margin: 1.5rem 0;
 }
 
+/* Image d'article : sur sa propre ligne et centrée, même déposée au milieu d'une phrase.
+   (Avant, le paragraphe passait en flex : texte et image côte à côte, avec un débordement sur mobile.) */
 .prose img {
+  display: block;
   max-width: 100%;
   height: auto;
+  margin: 1rem auto;
   border: 1px solid #262626;
   border-radius: 0.5rem;
 }
