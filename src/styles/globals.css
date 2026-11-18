@@ -344,6 +344,13 @@ main {
   }
 }
 
+/* Brouillon : visible seulement dans l'aperçu d'une pull request */
+.pill-draft {
+  color: #121212;
+  background: #f5c542;
+  border-color: #f5c542;
+}
+
 /* Filtre en cours */
 .pill.active {
   color: #fff;

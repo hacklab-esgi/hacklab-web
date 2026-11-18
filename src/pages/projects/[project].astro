@@ -4,6 +4,7 @@ import "@fontsource-variable/roboto/wght.css";
 import "@fontsource-variable/roboto/wght-italic.css";
 import "../../styles/article.css";
 import "../../styles/index.css";
+import { isVisible } from "../../lib/drafts";
 
 import Byline from "../../components/Byline.astro";
 import Layout from "../../layouts/Layout.astro";
@@ -22,7 +23,7 @@ interface Props {
 const { project } = Astro.props;
 
 export const getStaticPaths = (async () => {
-  const projects = await getCollection("projects", (project) => !project.data.draft);
+  const projects = await getCollection("projects", isVisible);
 
   return projects.map((project) => ({
     params: { project: project.id },

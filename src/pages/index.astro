@@ -3,6 +3,7 @@ import "../styles/index.css";
 
 import Layout from "../layouts/Layout.astro";
 import { getCollection } from "astro:content";
+import { isVisible } from "../lib/drafts";
 import { name, openGraph } from "spectre:globals";
 import NextSession from "../components/NextSession.astro";
 import SessionLog from "../components/SessionLog.astro";
@@ -10,8 +11,8 @@ import Socials from "../components/Socials.astro";
 import WorkList from "../components/WorkList.astro";
 
 const [posts, projects] = await Promise.all([
-  getCollection("posts", (post) => !post.data.draft),
-  getCollection("projects", (project) => !project.data.draft),
+  getCollection("posts", isVisible),
+  getCollection("projects", isVisible),
 ]);
 const work = [
   { title: "Articles des membres", all: "/blog/", allLabel: "Tous les articles", items: posts.map((p) => ({ ...p.data, date: p.data.createdAt, href: `/blog/${p.id}/`, tags: undefined })) },

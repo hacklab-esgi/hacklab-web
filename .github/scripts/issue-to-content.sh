@@ -23,8 +23,8 @@ fail() {
 }
 
 case "$KIND" in
-  article) TITLE_LABEL="Titre de l'Article"; DIR=src/content/posts; NAME="d’article" ;;
-  projet)  TITLE_LABEL="Titre du projet";    DIR=src/content/projects; NAME="de projet" ;;
+  article) TITLE_LABEL="Titre de l'Article"; DIR=src/content/posts; NAME="d’article"; SECTION=blog ;;
+  projet)  TITLE_LABEL="Titre du projet";    DIR=src/content/projects; NAME="de projet"; SECTION=projects ;;
   *) fail "Type de proposition inconnu." ;;
 esac
 
@@ -176,7 +176,7 @@ fi
 
 PR_BODY="Proposition envoyée depuis l’issue #$ISSUE, à relire avant publication.
 
-- Le fichier est en brouillon (\`draft: true\`) : passer à \`false\` pour publier.
+- Le fichier est en brouillon (\`draft: true\`) : il n’apparaît que dans l’aperçu. Passer à \`false\` pour publier.
 - Si l’auteur modifie son issue, cette pull request se met à jour toute seule."
 if [ "$IMAGES" -gt 0 ]; then
   PR_BODY="$PR_BODY
@@ -198,12 +198,17 @@ pr_failed() {
     "$BRANCH" "$(tr '\n`' " '" < "$TMP/gh_error.txt" | cut -c1-300)" > "$MSG"
   exit 1
 }
+PR_TITLE="📝 Proposition $NAME : $TITLE"
 PR_URL=$(gh pr list --head "$BRANCH" --state open --json url --jq '.[0].url // empty' 2> "$TMP/gh_error.txt") || pr_failed
 if [ -z "$PR_URL" ]; then
-  PR_URL=$(gh pr create --base master --head "$BRANCH" --title "📝 Proposition $NAME : $TITLE" --body "$PR_BODY" 2> "$TMP/gh_error.txt") || pr_failed
-else
-  gh pr edit "$PR_URL" --title "📝 Proposition $NAME : $TITLE" --body "$PR_BODY" > /dev/null 2> "$TMP/gh_error.txt" || pr_failed
+  PR_URL=$(gh pr create --base master --head "$BRANCH" --title "$PR_TITLE" --body "$PR_BODY" 2> "$TMP/gh_error.txt") || pr_failed
 fi
+# Le numéro de la pull request donne l'adresse de son aperçu Netlify, où les brouillons sont affichés
+# (src/lib/drafts.ts) : le relecteur ouvre la page telle qu'elle sera publiée. « hacklabesgi » est le nom du site Netlify.
+PREVIEW="https://deploy-preview-${PR_URL##*/}--hacklabesgi.netlify.app/$SECTION/$SLUG/"
+gh pr edit "$PR_URL" --title "$PR_TITLE" --body "**Aperçu de la page** (une fois le déploiement approuvé dans Netlify) : $PREVIEW
+
+$PR_BODY" > /dev/null 2> "$TMP/gh_error.txt" || pr_failed
 
 printf '✅ **Proposition bien reçue, merci !**\n\nElle est en relecture ici : %s\n\nPour corriger ou compléter votre texte, modifiez simplement cette issue : la pull request se mettra à jour toute seule.\n' "$PR_URL" > "$MSG"
 echo "✅ $FILE → $PR_URL"
