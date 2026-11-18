@@ -5,16 +5,31 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import spectre from './package/src';
 import { spectreDark } from './src/ec-theme';
-import rehypeSanitize from 'rehype-sanitize';
+import rehypeRaw from 'rehype-raw';
+import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 import { unified } from '@astrojs/markdown-remark';
 import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-// Les .md viennent des issues GitHub (contenu public) : on retire le HTML dangereux
-// (<script>, onerror=, liens javascript:…). Les .mdx de l'équipe ne sont pas concernés.
+// Les .md viennent des issues GitHub (contenu public). Leur HTML est d'abord analysé (rehype-raw), puis filtré
+// avec la liste blanche de GitHub : <img>, <br>, <details>, <kbd>, tableaux… restent ; <script>, onerror=, style=,
+// <iframe>, formulaires et liens javascript: disparaissent. Les .mdx de l'équipe ne sont pas concernés.
+// Les notes de bas de page arrivent déjà préfixées (« user-content-fn-1 ») et le filtre préfixe tous les id :
+// le doublon est retiré, sinon leurs liens ne mènent nulle part.
+const dedupeIdPrefix = (node: any) => {
+  if (typeof node.properties?.id === 'string') node.properties.id = node.properties.id.replace(/^(user-content-){2,}/, 'user-content-');
+  node.children?.forEach(dedupeIdPrefix);
+};
 const sanitizeUntrusted = () => {
-  const sanitize = rehypeSanitize();
-  return (tree: any, file: any) => (file.path?.endsWith('.md') ? sanitize(tree) : tree);
+  const raw = rehypeRaw();
+  // strip : le contenu de ces balises est retiré avec elles (sinon le CSS d'un <style> s'afficherait en texte)
+  const sanitize = rehypeSanitize({ ...defaultSchema, strip: ['script', 'style'] });
+  return (tree: any, file: any) => {
+    if (!file.path?.endsWith('.md')) return tree;
+    const clean = sanitize(raw(tree, file));
+    dedupeIdPrefix(clean);
+    return clean;
+  };
 };
 
 // La politique de sécurité (public/_headers) n'autorise que les scripts servis en fichiers.
@@ -50,6 +65,8 @@ export default defineConfig({
   markdown: {
     processor: unified({
       rehypePlugins: [sanitizeUntrusted],
+      // Notes de bas de page : titre et lien de retour en français
+      remarkRehype: { footnoteLabel: 'Notes', footnoteBackLabel: 'Retour au texte' },
     }),
   },
   integrations: [expressiveCode({
