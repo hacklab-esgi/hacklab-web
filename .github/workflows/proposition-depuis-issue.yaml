@@ -20,12 +20,15 @@ jobs:
       github.event.issue.state == 'open' &&
       (contains(github.event.issue.labels.*.name, 'article') || contains(github.event.issue.labels.*.name, 'projet'))
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     env:
       GH_TOKEN: ${{ github.token }}
       ISSUE: ${{ github.event.issue.number }}
     steps:
       - name: Checkout 👉🏼 master
-        uses: actions/checkout@v4
+        # Action figée par son empreinte : une étiquette comme « v7 » peut être déplacée, pas une empreinte.
+        # Dependabot propose les mises à jour (.github/dependabot.yml).
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: master
           fetch-depth: 0
