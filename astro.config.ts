@@ -1,6 +1,6 @@
 import { defineConfig } from 'astro/config';
 
-import expressiveCode from 'astro-expressive-code';
+import expressiveCode, { pluginFramesTexts } from 'astro-expressive-code';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import spectre from './package/src';
@@ -55,6 +55,13 @@ const noInlineScripts = {
     },
   },
 };
+
+// Blocs de code : libellés en français (l'outil ne fournit que l'anglais et l'allemand)
+pluginFramesTexts.overrideTexts(undefined, {
+  copyButtonTooltip: 'Copier',
+  copyButtonCopied: 'Copié !',
+  terminalWindowFallbackTitle: 'Terminal',
+});
 
 // https://astro.build/config
 export default defineConfig({
