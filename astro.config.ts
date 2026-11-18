@@ -19,14 +19,23 @@ const sanitizeUntrusted = () => {
 
 // La politique de sécurité (public/_headers) n'autorise que les scripts servis en fichiers.
 // Un <script is:inline> marcherait en local mais serait bloqué en ligne : le build échoue s'il en reste un.
+// La page est lue balise par balise, valeurs d'attributs comprises : un « <script> » cité dans un attribut
+// (bouton « copier » d'un bloc de code, description d'un article sur les XSS) n'est pas une balise.
+const TAG = /<!--[\s\S]*?-->|<\/?[a-zA-Z](?:[^>"']|"[^"]*"|'[^']*')*>/g;
+const hasInlineScript = (html: string) =>
+  (html.match(TAG) ?? []).some((tag) => /^<script\b/i.test(tag) && !/\ssrc=/i.test(tag) && !tag.includes('application/ld+json'));
+console.assert(hasInlineScript('<p>a</p><script>x()</script>'), 'hasInlineScript : script en ligne non détecté');
+console.assert(
+  !hasInlineScript('<meta content="un <script> cité"><button data-code="<script>x()</script>"></button><script type="module" src="/a.js"></script><!-- <script> -->'),
+  'hasInlineScript : faux positif',
+);
 const noInlineScripts = {
   name: 'no-inline-scripts',
   hooks: {
     'astro:build:done': ({ dir }: { dir: URL }) => {
       const root = fileURLToPath(dir);
-      const inline = /<script(?![^>]*\bsrc=)(?![^>]*application\/ld\+json)[^>]*>/;
       const bad = (readdirSync(root, { recursive: true }) as string[])
-        .filter((file) => file.endsWith('.html') && inline.test(readFileSync(root + file, 'utf8')));
+        .filter((file) => file.endsWith('.html') && hasInlineScript(readFileSync(root + file, 'utf8')));
       if (bad.length) throw new Error(`Script en ligne interdit par la CSP dans : ${bad.join(', ')}. Retirer « is:inline » du <script>.`);
     },
   },
