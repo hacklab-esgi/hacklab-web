@@ -105,10 +105,23 @@ const organization = {
     padding-block: 0.25rem;
   }
 
-  /* Une colonne : le travail d'abord, la présentation ensuite */
+  /* Une colonne : la phrase de présentation en premier (le visiteur sait où il est), puis le travail ;
+     le logo, le nom et les réseaux restent en bas. Les enfants de la colonne deviennent des cases de la grille. */
   @media screen and (max-width: 1380px) {
     .home-aside {
+      display: contents;
+    }
+
+    .home-aside > :global(*) {
       order: 2;
+    }
+
+    .home-aside > .home-lead {
+      order: 0;
+    }
+
+    .home-main {
+      order: 1;
     }
   }
 </style>
