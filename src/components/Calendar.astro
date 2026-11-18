@@ -16,6 +16,7 @@ import { trainings } from '../lib/sessions';
   <p class="cal-tz" hidden>
     Heures affichées dans votre fuseau horaire (<span class="cal-tz-name"></span>). Les sessions ont lieu à l'heure de Paris.
   </p>
+  <button type="button" class="button cal-past-toggle">Afficher les sessions passées</button>
   <div id="calendar"></div>
 </div>
 
@@ -62,7 +63,7 @@ import { trainings } from '../lib/sessions';
     const day = start.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     const range = (tz?: string) => `${start.toLocaleTimeString('fr-FR', { ...HOUR, timeZone: tz })} – ${end.toLocaleTimeString('fr-FR', { ...HOUR, timeZone: tz })}`;
     const hours = differsFromParis(start) ? `${range()} (${range('Europe/Paris')} à Paris)` : range();
-    const place = formatPlace(location);
+    const place = formatPlace(location, start.getTime() < Date.now());
     const who = toText(speaker);
     const desc = safeHtml(description).trim();
     return `
@@ -85,6 +86,8 @@ import { trainings } from '../lib/sessions';
   // Une seule infobulle partagée (avant : une nouvelle div par rendu d'événement, jamais supprimée)
   const tooltip = document.createElement('div');
   tooltip.className = 'fc-event-tooltip';
+  tooltip.id = 'fc-event-tooltip';
+  tooltip.setAttribute('role', 'tooltip');
   tooltip.hidden = true;
   document.body.appendChild(tooltip);
 
@@ -125,11 +128,14 @@ import { trainings } from '../lib/sessions';
         fetch('/events/events.json').then((res) => res.json()),
       ]);
 
+    const mobile = window.matchMedia('(max-width: 768px)').matches;
     const calendar = new Calendar(el, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
-      initialView: window.matchMedia('(max-width: 768px)').matches ? 'listYear' : 'dayGridMonth',
+      initialView: mobile ? 'listYear' : 'dayGridMonth',
       locale: frLocale,
       hiddenDays: [0],
+      // Chaque événement est un arrêt de tabulation : son détail s'affiche au focus (voir eventDidMount)
+      eventInteractive: true,
       headerToolbar: {
         left: 'prev,dynamicTitle,next',
         center: '',
@@ -143,6 +149,8 @@ import { trainings } from '../lib/sessions';
           type: 'list',
           duration: { years: 1 },
           buttonText: 'Année',
+          // Mobile : l'heure de début seule tient sur une ligne (la fin est dans le détail)
+          displayEventEnd: !mobile,
         },
       },
       events: events.map((ev: Record<string, any>) => ({
@@ -195,6 +203,24 @@ import { trainings } from '../lib/sessions';
           tooltip.hidden = false;
           const r = info.el.getBoundingClientRect();
           placeTooltip(r.left + window.scrollX, r.bottom + window.scrollY);
+        });
+
+        // Clavier : le détail s'affiche au focus. Un focus venu de la souris ou du doigt est ignoré
+        // (le survol et le tap s'en chargent déjà).
+        info.el.setAttribute('aria-describedby', tooltip.id);
+        info.el.addEventListener('focus', () => {
+          if (!info.el.matches(':focus-visible')) return;
+          tooltip.innerHTML = details;
+          tooltip.hidden = false;
+          const r = info.el.getBoundingClientRect();
+          placeTooltip(r.left + window.scrollX, r.bottom + window.scrollY);
+        });
+        // Au tactile l'infobulle reste ouverte : son lien doit rester cliquable
+        info.el.addEventListener('blur', () => {
+          if (!tooltip.classList.contains('is-touch')) hideTooltip();
+        });
+        info.el.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') hideTooltip();
         });
 
         info.el.addEventListener('pointerenter', (e) => {
@@ -250,6 +276,13 @@ import { trainings } from '../lib/sessions';
     });
 
     calendar.render();
+
+    // Vue liste : les jours passés sont repliés par défaut (voir .cal-past-toggle dans les styles)
+    const pastToggle = document.querySelector<HTMLButtonElement>('.cal-past-toggle');
+    pastToggle?.addEventListener('click', () => {
+      const shown = document.getElementById('calendar-wrapper')!.classList.toggle('show-past');
+      pastToggle.textContent = shown ? 'Masquer les sessions passées' : 'Afficher les sessions passées';
+    });
 
     // Légende : afficher ou masquer chaque type d'événement
     document.querySelectorAll<HTMLInputElement>('.cal-legend input').forEach((box) => {
@@ -320,6 +353,22 @@ import { trainings } from '../lib/sessions';
   border: none;
 }
 
+/* Vue liste : tant qu'il reste des dates à venir, les jours passés sont repliés pour ouvrir sur la prochaine
+   session (sinon la liste de l'année commence en janvier). Le bouton n'apparaît que s'il y a quelque chose à déplier. */
+.cal-past-toggle {
+  display: none;
+  margin-bottom: 0.75rem;
+}
+
+#calendar-wrapper:has(.fc-list-day.fc-day-past):has(.fc-list-day:not(.fc-day-past)) .cal-past-toggle {
+  display: inline-flex;
+}
+
+#calendar-wrapper:not(.show-past):has(.fc-list-day:not(.fc-day-past)) .fc-list-day.fc-day-past,
+#calendar-wrapper:not(.show-past):has(.fc-list-day:not(.fc-day-past)) .fc-list-event.fc-event-past {
+  display: none;
+}
+
 .cal-legend label {
   display: inline-flex;
   align-items: center;
@@ -358,6 +407,7 @@ import { trainings } from '../lib/sessions';
 .fc .fc-event.is-training,
 .fc .fc-daygrid-event.is-training,
 .fc .fc-timegrid-event.is-training {
+  --fc-event-text-color: #e0e0e0;
   color: #e0e0e0;
   background: #141414;
   border: 1.5px solid var(--fill);
@@ -386,6 +436,10 @@ import { trainings } from '../lib/sessions';
   --fc-button-hover-border-color: #555;
   --fc-button-active-bg-color: var(--fill);
   --fc-button-active-border-color: var(--fill);
+  /* Texte des événements : encre sombre sur l'aplat bleu (5,2:1) au lieu du blanc par défaut (3,6:1) */
+  --fc-event-text-color: var(--fill-ink);
+  /* Pas de voile sombre sur l'événement qui a le focus : le contour suffit, et le texte reste lisible */
+  --fc-event-selected-overlay-color: transparent;
   --fc-today-bg-color: rgba(255, 255, 255, 0.05);
   direction: ltr;
   text-align: left;
@@ -426,6 +480,12 @@ import { trainings } from '../lib/sessions';
 .fc-button:active {
   outline: none !important;
   box-shadow: none !important;
+}
+
+/* Au clavier, le bouton qui a le focus reste repérable (même contour que le reste du site) */
+.fc .fc-button:focus-visible {
+  outline: 2px solid #e0e0e0 !important;
+  outline-offset: 2px;
 }
 
 .fc-button-active {
@@ -625,8 +685,13 @@ import { trainings } from '../lib/sessions';
 /* === DIVERS === */
 .fc-col-header a,
 .fc-scrollgrid a {
-  color: white;
   text-decoration: none;
+}
+
+/* Les événements sont aussi des liens : ils gardent leur encre sombre sur l'aplat bleu (voir --fc-event-text-color) */
+.fc-col-header a,
+.fc-scrollgrid a:not(.fc-event) {
+  color: white;
 }
 
 .fc-daygrid-day-number {

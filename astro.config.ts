@@ -1,36 +1,67 @@
 import { defineConfig } from 'astro/config';
 
-import expressiveCode from 'astro-expressive-code';
+import expressiveCode, { pluginFramesTexts } from 'astro-expressive-code';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import spectre from './package/src';
 import { spectreDark } from './src/ec-theme';
-import rehypeSanitize from 'rehype-sanitize';
+import rehypeRaw from 'rehype-raw';
+import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
 import { unified } from '@astrojs/markdown-remark';
 import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-// Les .md viennent des issues GitHub (contenu public) : on retire le HTML dangereux
-// (<script>, onerror=, liens javascript:…). Les .mdx de l'équipe ne sont pas concernés.
+// Les .md viennent des issues GitHub (contenu public). Leur HTML est d'abord analysé (rehype-raw), puis filtré
+// avec la liste blanche de GitHub : <img>, <br>, <details>, <kbd>, tableaux… restent ; <script>, onerror=, style=,
+// <iframe>, formulaires et liens javascript: disparaissent. Les .mdx de l'équipe ne sont pas concernés.
+// Les notes de bas de page arrivent déjà préfixées (« user-content-fn-1 ») et le filtre préfixe tous les id :
+// le doublon est retiré, sinon leurs liens ne mènent nulle part.
+const dedupeIdPrefix = (node: any) => {
+  if (typeof node.properties?.id === 'string') node.properties.id = node.properties.id.replace(/^(user-content-){2,}/, 'user-content-');
+  node.children?.forEach(dedupeIdPrefix);
+};
 const sanitizeUntrusted = () => {
-  const sanitize = rehypeSanitize();
-  return (tree: any, file: any) => (file.path?.endsWith('.md') ? sanitize(tree) : tree);
+  const raw = rehypeRaw();
+  // strip : le contenu de ces balises est retiré avec elles (sinon le CSS d'un <style> s'afficherait en texte)
+  const sanitize = rehypeSanitize({ ...defaultSchema, strip: ['script', 'style'] });
+  return (tree: any, file: any) => {
+    if (!file.path?.endsWith('.md')) return tree;
+    const clean = sanitize(raw(tree, file));
+    dedupeIdPrefix(clean);
+    return clean;
+  };
 };
 
 // La politique de sécurité (public/_headers) n'autorise que les scripts servis en fichiers.
 // Un <script is:inline> marcherait en local mais serait bloqué en ligne : le build échoue s'il en reste un.
+// La page est lue balise par balise, valeurs d'attributs comprises : un « <script> » cité dans un attribut
+// (bouton « copier » d'un bloc de code, description d'un article sur les XSS) n'est pas une balise.
+const TAG = /<!--[\s\S]*?-->|<\/?[a-zA-Z](?:[^>"']|"[^"]*"|'[^']*')*>/g;
+const hasInlineScript = (html: string) =>
+  (html.match(TAG) ?? []).some((tag) => /^<script\b/i.test(tag) && !/\ssrc=/i.test(tag) && !tag.includes('application/ld+json'));
+console.assert(hasInlineScript('<p>a</p><script>x()</script>'), 'hasInlineScript : script en ligne non détecté');
+console.assert(
+  !hasInlineScript('<meta content="un <script> cité"><button data-code="<script>x()</script>"></button><script type="module" src="/a.js"></script><!-- <script> -->'),
+  'hasInlineScript : faux positif',
+);
 const noInlineScripts = {
   name: 'no-inline-scripts',
   hooks: {
     'astro:build:done': ({ dir }: { dir: URL }) => {
       const root = fileURLToPath(dir);
-      const inline = /<script(?![^>]*\bsrc=)(?![^>]*application\/ld\+json)[^>]*>/;
       const bad = (readdirSync(root, { recursive: true }) as string[])
-        .filter((file) => file.endsWith('.html') && inline.test(readFileSync(root + file, 'utf8')));
+        .filter((file) => file.endsWith('.html') && hasInlineScript(readFileSync(root + file, 'utf8')));
       if (bad.length) throw new Error(`Script en ligne interdit par la CSP dans : ${bad.join(', ')}. Retirer « is:inline » du <script>.`);
     },
   },
 };
+
+// Blocs de code : libellés en français (l'outil ne fournit que l'anglais et l'allemand)
+pluginFramesTexts.overrideTexts(undefined, {
+  copyButtonTooltip: 'Copier',
+  copyButtonCopied: 'Copié !',
+  terminalWindowFallbackTitle: 'Terminal',
+});
 
 // https://astro.build/config
 export default defineConfig({
@@ -41,6 +72,8 @@ export default defineConfig({
   markdown: {
     processor: unified({
       rehypePlugins: [sanitizeUntrusted],
+      // Notes de bas de page : titre et lien de retour en français
+      remarkRehype: { footnoteLabel: 'Notes', footnoteBackLabel: 'Retour au texte' },
     }),
   },
   integrations: [expressiveCode({

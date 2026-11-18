@@ -11,6 +11,8 @@ Voici comment proposer un article :
    - Une **catégorie** : Offensif, Défensif ou Gouvernance.
    - Une **description rapide** de 1-2 phrases.
    - Le **contenu complet** de l’article (en Markdown).
+     Pour une **image**, glissez le fichier dans ce champ : elle est copiée sur le site (PNG, JPEG, GIF ou WebP, 5 Mo maximum).
+     Une image hébergée ailleurs doit avoir une adresse complète en `https://`.
    - Votre **pseudo ou prénom** comme auteur.
    - Quelques **tags** (exemples : `web`, `linux`, `cloud`, etc.). Majuscules et accents sont uniformisés automatiquement.
 

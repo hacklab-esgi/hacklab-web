@@ -4,6 +4,7 @@ import "@fontsource-variable/roboto/wght.css";
 import "@fontsource-variable/roboto/wght-italic.css";
 import "../../styles/article.css";
 import "../../styles/index.css";
+import { isVisible } from "../../lib/drafts";
 
 import { Image } from 'astro:assets';
 import Toc from "../../components/Toc.astro";
@@ -47,10 +48,7 @@ interface Props {
 const { post } = Astro.props;
 
 export const getStaticPaths = (async () => {
-  const posts = await getCollection(
-    "posts",
-    (post) => post.data.draft !== true,
-  );
+  const posts = await getCollection("posts", isVisible);
 
   return posts.map((post) => ({ params: { post: post.id }, props: { post } }));
 }) satisfies GetStaticPaths;
@@ -101,6 +99,7 @@ const { Content, headings } = await render(post);
           >
             {/* Catégorie et tags : un clic affiche les articles du même classement */}
             <p class="article-pills">
+              {post.data.draft && <span class="pill pill-draft">Brouillon</span>}
               <a class="pill pill-category" href={`/blog/?cat=${post.data.category}`}>{CATEGORIES[post.data.category]}</a>
               {post.data.tags.map((tag) => <a class="pill" href={`/blog/?tags=${tag}`}>{tag}</a>)}
             </p>

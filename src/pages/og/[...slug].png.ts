@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import { resolve } from 'node:path';
 import sharp from 'sharp';
 import { sessions } from '../../lib/sessions';
+import { isVisible } from '../../lib/drafts';
 
 // Image de partage (Open Graph) générée au build pour chaque article/projet (même s'il a sa propre image)
 // et pour les pages principales du site, toutes au même format.
@@ -41,8 +42,8 @@ const text = (value: string, color: string, size: number) =>
 
 export const getStaticPaths = (async () => {
   const [posts, projects] = await Promise.all([
-    getCollection('posts', (post) => !post.data.draft),
-    getCollection('projects', (project) => !project.data.draft),
+    getCollection('posts', isVisible),
+    getCollection('projects', isVisible),
   ]);
 
   const since = sessions[0].start.toLocaleDateString('fr-FR', { timeZone: 'Europe/Paris', month: 'long', year: 'numeric' });

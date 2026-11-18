@@ -1,9 +1,10 @@
 import type { APIContext } from 'astro';
 import { getCollection } from 'astro:content';
 import rss from '@astrojs/rss';
+import { isVisible } from '../../lib/drafts';
 
 export async function GET(context: APIContext) {
-	const articles = await getCollection('posts', (post) => !post.data.draft);
+	const articles = await getCollection('posts', isVisible);
 
 	return rss({
 		title: 'Articles - HackLab',

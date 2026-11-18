@@ -2,12 +2,13 @@
 import "../styles/index.css";
 
 import { getCollection } from "astro:content";
+import { isVisible } from "../lib/drafts";
 import Layout from "../layouts/Layout.astro";
 import PageIntro from "../components/PageIntro.astro";
 import WorkList from "../components/WorkList.astro";
 import { openGraph } from "spectre:globals";
 
-const projects = await getCollection("projects", (project) => !project.data.draft);
+const projects = await getCollection("projects", isVisible);
 const items = projects.map((project) => ({
   title: project.data.title,
   description: project.data.description,

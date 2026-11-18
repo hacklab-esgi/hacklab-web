@@ -3,6 +3,7 @@ import "../styles/index.css";
 
 import Layout from "../layouts/Layout.astro";
 import { getCollection } from "astro:content";
+import { isVisible } from "../lib/drafts";
 import { name, openGraph } from "spectre:globals";
 import NextSession from "../components/NextSession.astro";
 import SessionLog from "../components/SessionLog.astro";
@@ -10,8 +11,8 @@ import Socials from "../components/Socials.astro";
 import WorkList from "../components/WorkList.astro";
 
 const [posts, projects] = await Promise.all([
-  getCollection("posts", (post) => !post.data.draft),
-  getCollection("projects", (project) => !project.data.draft),
+  getCollection("posts", isVisible),
+  getCollection("projects", isVisible),
 ]);
 const work = [
   { title: "Articles des membres", all: "/blog/", allLabel: "Tous les articles", items: posts.map((p) => ({ ...p.data, date: p.data.createdAt, href: `/blog/${p.id}/`, tags: undefined })) },
@@ -98,15 +99,30 @@ const organization = {
     font-size: 1.5rem;
   }
 
+  /* Lien seul sur sa ligne : zone tactile de 26 px au lieu de 18 */
   .work-all {
     display: inline-block;
-    margin-top: 1rem;
+    margin-top: 0.75rem;
+    padding-block: 0.25rem;
   }
 
-  /* Une colonne : le travail d'abord, la présentation ensuite */
+  /* Une colonne : la phrase de présentation en premier (le visiteur sait où il est), puis le travail ;
+     le logo, le nom et les réseaux restent en bas. Les enfants de la colonne deviennent des cases de la grille. */
   @media screen and (max-width: 1380px) {
     .home-aside {
+      display: contents;
+    }
+
+    .home-aside > :global(*) {
       order: 2;
+    }
+
+    .home-aside > .home-lead {
+      order: 0;
+    }
+
+    .home-main {
+      order: 1;
     }
   }
 </style>

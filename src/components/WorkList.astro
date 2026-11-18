@@ -10,6 +10,7 @@ export interface WorkItem {
   href: string;
   category?: Category;
   tags?: string[];
+  draft?: boolean;
 }
 
 interface Props {
@@ -33,6 +34,7 @@ const sorted = [...items].sort((a, b) => b.date.getTime() - a.date.getTime()).sl
             {item.author && <span class="work-author">@{item.author.replace(/^@/, '')}</span>}
             <span>{day(item.date)}</span>
             {item.category && <span>{CATEGORIES[item.category]}</span>}
+            {item.draft && <span class="pill pill-draft">Brouillon</span>}
           </span>
           {item.tags && item.tags.length > 0 && (
             <span class="work-tags">

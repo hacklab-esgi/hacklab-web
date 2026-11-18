@@ -62,7 +62,9 @@ const structured = jsonLd ?? (article && {
 		<!-- Site sombre : fond posé avant tout fichier CSS, sinon flash blanc au chargement (visible surtout en pnpm dev) -->
 		<meta name="color-scheme" content="dark" />
 		<style is:inline>html { color-scheme: dark; background-color: #0b0b0b; }</style>
-		<link rel="icon" type="image/png" href="/favicon.png" />
+		{/* Icônes carrées tirées du logo (favicon.png, 243×256, reste le logo affiché dans les pages) */}
+		<link rel="icon" type="image/png" sizes="192x192" href="/icon.png" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 		<link rel="preload" href={cascadiaLatin} as="font" type="font/woff2" crossorigin />
 		<style is:inline set:html={fontFaces}></style>
 		
@@ -105,8 +107,9 @@ const structured = jsonLd ?? (article && {
 		{structured && <script type="application/ld+json" set:html={JSON.stringify(structured).replace(/</g, '\\u003c')} />}
 	</head>
 	<body>
+		<a class="skip-link" href="#contenu">Aller au contenu</a>
 		<Navbar />
-		<main>
+		<main id="contenu">
 			<LayoutGrid>
 				<slot name="left" slot="left" />
 				<slot name="right" slot="right" />

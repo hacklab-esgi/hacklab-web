@@ -29,6 +29,12 @@ const { title, lead } = Astro.props;
     align-self: flex-start;
   }
 
+  /* Liens simples de la colonne (flux RSS) : à leur largeur, avec une zone tactile de 26 px au lieu de 18 */
+  .page-intro > :global(a:not(.button)) {
+    align-self: flex-start;
+    padding-block: 0.25rem;
+  }
+
   .page-lead {
     margin: 0;
     color: #c7c7c7;
