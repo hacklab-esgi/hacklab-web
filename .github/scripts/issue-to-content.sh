@@ -8,6 +8,7 @@
 #
 # Sécurité : le contenu de l'issue n'est jamais interprété par le shell (variables entre guillemets, jq pour
 # le frontmatter). Il est publié en .md, sans exécution de code au build, et nettoyé par rehype-sanitize.
+# Images : seules les pièces jointes hébergées par GitHub sont téléchargées, et seul un vrai fichier image est gardé.
 set -euo pipefail
 
 TMP="${RUNNER_TEMP:-/tmp}"
@@ -101,8 +102,42 @@ if git fetch -q origin "$BRANCH" 2>/dev/null; then
 else
   git checkout -q -b "$BRANCH"
 fi
-# Titre modifié = nouveau nom de fichier : l'ancien fichier de cette proposition est retiré
-git diff --name-only --diff-filter=A origin/master...HEAD -- "$DIR" | xargs -r git rm -q --
+# Titre modifié = nouveau nom de fichier : les anciens fichiers de cette proposition (texte et images) sont retirés
+git diff -z --name-only --diff-filter=A origin/master...HEAD -- "$DIR" | xargs -0 -r git rm -q --
+
+# Images glissées dans le formulaire : GitHub les héberge. Elles sont copiées dans le dépôt, à côté du texte,
+# pour ne plus dépendre de GitHub et être optimisées au build. Une balise <img> de GitHub devient une image
+# Markdown, la seule forme qu'Astro optimise.
+GITHUB_IMAGE='https://github\.com/user-attachments/assets/[0-9a-fA-F-]+|https://user-images\.githubusercontent\.com/[0-9]+/[A-Za-z0-9._-]+|https://github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/assets/[0-9]+/[0-9a-fA-F-]+'
+IMAGES=0
+while IFS= read -r url; do
+  IMAGES=$((IMAGES + 1))
+  [ "$IMAGES" -le 20 ] || fail "La proposition contient plus de 20 images. Merci d’en retirer."
+  curl -fsSL --proto '=https' --proto-redir '=https' --max-time 60 --max-filesize 5000000 -o "$TMP/image" "$url" \
+    && [ "$(stat -c %s "$TMP/image")" -le 5000000 ] \
+    || fail "L’image n° $IMAGES n’a pas pu être récupérée ou dépasse 5 Mo. Merci de la réduire puis de la glisser à nouveau dans le formulaire."
+  case "$(file --mime-type -b "$TMP/image")" in
+    image/png) ext=png ;;
+    image/jpeg) ext=jpg ;;
+    image/gif) ext=gif ;;
+    image/webp) ext=webp ;;
+    *) fail "Le fichier joint n° $IMAGES n’est pas une image acceptée (PNG, JPEG, GIF ou WebP)." ;;
+  esac
+  mkdir -p "$DIR/$SLUG"
+  mv "$TMP/image" "$DIR/$SLUG/$IMAGES.$ext"
+  rel="./$SLUG/$IMAGES.$ext"
+  sed -E -i "s#<img[^>]*alt=\"([^\"]*)\"[^>]*src=\"$url\"[^>]*>#![\\1]($rel)#g; s#<img[^>]*src=\"$url\"[^>]*alt=\"([^\"]*)\"[^>]*>#![\\1]($rel)#g; s#<img[^>]*src=\"$url\"[^>]*>#![]($rel)#g; s#$url#$rel#g" "$BODY.content"
+done < <(grep -oE "$GITHUB_IMAGE" "$BODY.content" | awk '!seen[$0]++')
+
+# Toute autre image doit avoir une adresse complète en https : un chemin relatif ferait échouer la mise en ligne
+# du site. Les blocs de code et le code en ligne ne sont pas regardés (un article peut citer « <img src=x> »).
+# ponytail: les images « par référence » (![texte][ref]) et les blocs de code indentés ne sont pas reconnus ;
+# passer à un vrai analyseur Markdown si le cas se présente.
+BAD_IMAGES=$(awk '/^[[:space:]]*(```|~~~)/ {code = !code; next} !code' "$BODY.content" | sed 's/`[^`]*`//g' \
+  | grep -oE '!\[[^]]*\]\([^)[:space:]]+|<img[^>]*src="[^"]*"' | sed -E 's/^!\[[^]]*\]\(//; s/^<img[^>]*src="//; s/"$//' \
+  | grep -vE "^(https://|\./$SLUG/[0-9]+\.[a-z]+\$)" | head -3 | paste -sd ' ' - | tr -d '`' | cut -c1-200 || true)
+[ -z "$BAD_IMAGES" ] || fail "Ces images ne peuvent pas être affichées : \`$BAD_IMAGES\`. Glissez le fichier dans le champ « Contenu complet » (GitHub l’héberge, il sera copié sur le site), ou donnez une adresse complète en \`https://\`."
+CONTENT=$(sed '/./,$!d' "$BODY.content")
 
 mkdir -p "$DIR"
 {
@@ -143,6 +178,10 @@ PR_BODY="Proposition envoyée depuis l’issue #$ISSUE, à relire avant publicat
 
 - Le fichier est en brouillon (\`draft: true\`) : passer à \`false\` pour publier.
 - Si l’auteur modifie son issue, cette pull request se met à jour toute seule."
+if [ "$IMAGES" -gt 0 ]; then
+  PR_BODY="$PR_BODY
+- $IMAGES image(s) copiée(s) depuis l’issue dans \`$DIR/$SLUG/\` : vérifier qu’elles s’affichent dans l’aperçu."
+fi
 if [ -n "$NEW_TAGS" ]; then
   PR_BODY="$PR_BODY
 - **Nouveaux tags** (jamais utilisés) : $(printf '%s' "$NEW_TAGS" | sed 's/.*/\`&\`/' | paste -sd, - | sed 's/,/, /g'). Vérifier qu’ils ne doublonnent pas un tag existant : $(printf '%s' "$KNOWN" | sed 's/.*/\`&\`/' | paste -sd, - | sed 's/,/, /g'). Pour fusionner deux écritures, compléter \`TAG_ALIASES\` dans \`src/lib/articles.ts\`."

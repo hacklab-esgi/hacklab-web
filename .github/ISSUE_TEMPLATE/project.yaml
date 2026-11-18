@@ -28,6 +28,7 @@ body:
     id: content
     attributes:
       label: Contenu complet (en Markdown)
+      description: "Pour ajouter une image, glissez le fichier dans ce champ : elle sera copiée sur le site (PNG, JPEG, GIF ou WebP, 5 Mo maximum par image)."
       placeholder: |
         ## Introduction
         ...
