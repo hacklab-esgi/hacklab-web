@@ -151,11 +151,19 @@ PR_BODY="$PR_BODY
 
 Closes #$ISSUE"
 
-PR_URL=$(gh pr list --head "$BRANCH" --state open --json url --jq '.[0].url // empty')
+# À ce stade le texte est déjà sur la branche. Si GitHub refuse la pull request (réglage du dépôt, panne),
+# on le dit à l'auteur et à l'équipe, avec le message de GitHub, au lieu d'une « erreur inattendue ».
+pr_failed() {
+  cat "$TMP/gh_error.txt" >&2
+  printf '⏳ **Votre proposition est bien enregistrée, mais la pull request n’a pas pu être créée.** Vous n’avez rien à refaire.\n\nÀ l’équipe du HackLab : vérifier dans Settings > Actions > General que « Allow GitHub Actions to create and approve pull requests » est coché, puis modifier cette issue pour relancer. Le texte attend sur la branche `%s`.\n\nMessage de GitHub : `%s`\n' \
+    "$BRANCH" "$(tr '\n`' " '" < "$TMP/gh_error.txt" | cut -c1-300)" > "$MSG"
+  exit 1
+}
+PR_URL=$(gh pr list --head "$BRANCH" --state open --json url --jq '.[0].url // empty' 2> "$TMP/gh_error.txt") || pr_failed
 if [ -z "$PR_URL" ]; then
-  PR_URL=$(gh pr create --base master --head "$BRANCH" --title "📝 Proposition $NAME : $TITLE" --body "$PR_BODY")
+  PR_URL=$(gh pr create --base master --head "$BRANCH" --title "📝 Proposition $NAME : $TITLE" --body "$PR_BODY" 2> "$TMP/gh_error.txt") || pr_failed
 else
-  gh pr edit "$PR_URL" --title "📝 Proposition $NAME : $TITLE" --body "$PR_BODY" > /dev/null
+  gh pr edit "$PR_URL" --title "📝 Proposition $NAME : $TITLE" --body "$PR_BODY" > /dev/null 2> "$TMP/gh_error.txt" || pr_failed
 fi
 
 printf '✅ **Proposition bien reçue, merci !**\n\nElle est en relecture ici : %s\n\nPour corriger ou compléter votre texte, modifiez simplement cette issue : la pull request se mettra à jour toute seule.\n' "$PR_URL" > "$MSG"
