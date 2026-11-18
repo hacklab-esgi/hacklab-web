@@ -99,6 +99,9 @@ git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 # les retouches faites en relecture restent dans l'historique.
 if git fetch -q origin "$BRANCH" 2>/dev/null; then
   git checkout -q -B "$BRANCH" FETCH_HEAD
+  # La branche suit master : l'aperçu de la proposition est construit avec le code actuel du site.
+  # En cas de conflit (retouche de relecture sur un fichier modifié depuis), on continue sans cette mise à niveau.
+  git merge -q --no-edit origin/master || git merge --abort
 else
   git checkout -q -b "$BRANCH"
 fi
@@ -171,8 +174,9 @@ if git diff --cached --quiet; then
   echo "Aucun changement par rapport à la proposition précédente."
 else
   git commit -q -m "📝 Proposition $NAME : $TITLE"
-  git push -q origin "$BRANCH"
 fi
+# Envoi dans tous les cas : même sans changement de texte, la branche peut avoir été remise à niveau avec master
+git push -q origin "$BRANCH"
 
 PR_BODY="Proposition envoyée depuis l’issue #$ISSUE, à relire avant publication.
 
