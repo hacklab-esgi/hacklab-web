@@ -141,3 +141,11 @@ Cette journée s’est bien terminée : pas d’incident de sécurité et des se
 Elle m’a pourtant appris une chose : les outils donnent la vue à un SOC mais c’est à l’équipe de la garder quand ils tombent. Dans ces moments-là la compétence la plus utile n’est pas de lire une alerte mais de remarquer qu’il n’y en a plus, de comprendre pourquoi et de trouver un autre moyen de voir.
 
 Quand elles flanchent la compétence la plus utile n'est pas de lire les alertes, mais de remarquer qu'il n'y en a plus, de comprendre pourquoi et de trouver un autre moyen de continuer à les voir.
+
+## Sources
+
+- [Microsoft sur X : message d'excuses et précisions sur la cause](https://x.com/Microsoft/status/2121282013600907325)
+- [Numerama : une panne géante frappe Microsoft, Outlook, Teams et Microsoft 365 inaccessibles](https://www.numerama.com/tech/2373485-une-panne-geante-frappe-microsoft-outlook-teams-et-microsoft-365-inaccessibles-voici-ce-que-lon-sait.html)
+- [Numerama : retour au fax et paiements bloqués, la pagaille provoquée par la panne](https://www.numerama.com/cyberguerre/2373867-retour-au-fax-pas-de-cinema-paiements-en-ligne-bloques-la-panne-de-microsoft-engendre-une-pagaille-en-france-et-dans-le-monde.html)
+- [Numerama : le journal de bord de Microsoft pendant la panne](https://www.numerama.com/tech/2374177-les-mesures-prises-nont-pas-apporte-le-soulagement-attendu-le-journal-de-bord-de-microsoft-revele-ses-tatonnements-pendant-sa-panne-geante.html)
+- [Page d'état des services Microsoft 365](https://status.cloud.microsoft)
