@@ -105,8 +105,9 @@ const structured = jsonLd ?? (article && {
 		{structured && <script type="application/ld+json" set:html={JSON.stringify(structured).replace(/</g, '\\u003c')} />}
 	</head>
 	<body>
+		<a class="skip-link" href="#contenu">Aller au contenu</a>
 		<Navbar />
-		<main>
+		<main id="contenu">
 			<LayoutGrid>
 				<slot name="left" slot="left" />
 				<slot name="right" slot="right" />

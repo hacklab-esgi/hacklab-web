@@ -292,9 +292,29 @@ main {
   transform: scale(0.97);
 }
 
-.button:focus-visible {
+/* Focus clavier : le même contour partout (liens, boutons, menu mobile, pastilles) */
+:focus-visible {
   outline: 2px solid #e0e0e0;
   outline-offset: 2px;
+}
+
+/* Lien d'évitement : premier arrêt de tabulation, visible seulement quand il a le focus */
+.skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 1000; /* au-dessus de la barre de navigation (999) */
+  padding: 0.5rem 0.75rem;
+  color: #fff;
+  text-decoration: none;
+  background: #121212;
+  border: 1px solid #353535;
+  border-radius: 0.5rem;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
 }
 
 /* Pastilles : catégories et tags des articles (liens de filtre vers /blog/) */
@@ -328,11 +348,6 @@ main {
   color: #fff;
   background: var(--accent-fill);
   border-color: var(--accent-fill);
-}
-
-.pill:focus-visible {
-  outline: 2px solid #e0e0e0;
-  outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {

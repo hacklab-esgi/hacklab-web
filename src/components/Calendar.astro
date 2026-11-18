@@ -428,6 +428,12 @@ import { trainings } from '../lib/sessions';
   box-shadow: none !important;
 }
 
+/* Au clavier, le bouton qui a le focus reste repérable (même contour que le reste du site) */
+.fc .fc-button:focus-visible {
+  outline: 2px solid #e0e0e0 !important;
+  outline-offset: 2px;
+}
+
 .fc-button-active {
   background-color: var(--fill) !important;
   color: var(--fill-ink) !important;
