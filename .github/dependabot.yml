@@ -1,0 +1,17 @@
+# Dependabot ouvre une pull request quand une dépendance ou une action GitHub a une nouvelle version.
+# Les mises à jour de sécurité, elles, arrivent dès qu'une faille est publiée (réglage du dépôt).
+version: 2
+updates:
+  - package-ecosystem: npm # lit aussi pnpm-lock.yaml
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # Une seule pull request par semaine pour les petites versions, au lieu d'une par paquet
+      mises-a-jour-mineures:
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
