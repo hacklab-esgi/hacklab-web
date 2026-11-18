@@ -42,7 +42,7 @@ const toSession = (ev: (typeof all)[number], i: number): Session => ({
   number: i + 1,
   start: ev.startDate,
   title: ev.title.trim(),
-  place: formatPlace(ev.location) || 'Lieu à confirmer',
+  place: formatPlace(ev.location, ev.startDate.getTime() < Date.now()) || 'Lieu à confirmer',
   speaker: toText(ev.speaker),
   description: toText(ev.description),
   // Lien affiché tel quel dans le journal : http(s) uniquement (pas de javascript:)

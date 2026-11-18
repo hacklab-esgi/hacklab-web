@@ -63,7 +63,7 @@ import { trainings } from '../lib/sessions';
     const day = start.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     const range = (tz?: string) => `${start.toLocaleTimeString('fr-FR', { ...HOUR, timeZone: tz })} – ${end.toLocaleTimeString('fr-FR', { ...HOUR, timeZone: tz })}`;
     const hours = differsFromParis(start) ? `${range()} (${range('Europe/Paris')} à Paris)` : range();
-    const place = formatPlace(location);
+    const place = formatPlace(location, start.getTime() < Date.now());
     const who = toText(speaker);
     const desc = safeHtml(description).trim();
     return `
