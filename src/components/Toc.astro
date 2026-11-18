@@ -84,13 +84,16 @@ const minDepth = Math.min(...headings.map((h) => h.depth));
       border-radius: 0.75rem;
     }
 
+    /* Toute la boîte ouvre le sommaire, pas seulement la ligne de texte (20 px de haut) */
     summary {
-      margin: 0;
+      margin: -1rem -1.25rem;
+      padding: 1rem 1.25rem;
+      border-radius: 0.75rem;
       cursor: pointer;
     }
 
     .toc[open] summary {
-      margin-bottom: 1rem;
+      margin-bottom: 0;
     }
 
     .toc[open] .toc-chevron {

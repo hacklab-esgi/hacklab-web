@@ -320,7 +320,8 @@ main {
 /* Pastilles : catégories et tags des articles (liens de filtre vers /blog/) */
 .pill {
   display: inline-block;
-  padding: 0.125rem 0.625rem;
+  /* 25 px de haut : au-dessus du minimum tactile de 24 px */
+  padding: 0.25rem 0.625rem;
   color: #e0e0e0;
   font-size: 0.875rem;
   text-decoration: none;
