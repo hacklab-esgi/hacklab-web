@@ -16,6 +16,10 @@ import { trainings } from '../lib/sessions';
   <p class="cal-tz" hidden>
     Heures affichées dans votre fuseau horaire (<span class="cal-tz-name"></span>). Les sessions ont lieu à l'heure de Paris.
   </p>
+  <p class="cal-none" hidden>
+    Aucune session à venir pour l’instant. Les prochaines dates sont annoncées sur{' '}
+    <a href="https://discord.gg/nF6AJGd4DB" target="_blank" rel="noopener">Discord</a>.
+  </p>
   <button type="button" class="button cal-past-toggle">Afficher les sessions passées</button>
   <div id="calendar"></div>
 </div>
@@ -82,6 +86,7 @@ import { trainings } from '../lib/sessions';
     tzNote.hidden = false;
   }
   const el = document.getElementById('calendar');
+  const wrapper = document.getElementById('calendar-wrapper')!;
 
   // Une seule infobulle partagée (avant : une nouvelle div par rendu d'événement, jamais supprimée)
   const tooltip = document.createElement('div');
@@ -129,9 +134,25 @@ import { trainings } from '../lib/sessions';
       ]);
 
     const mobile = window.matchMedia('(max-width: 768px)').matches;
+
+    // Prochain événement encore à venir (session ou entraînement), d'après les données et non d'après la vue affichée
+    const endOf = (ev: Record<string, any>) => new Date(ev.start).getTime() + (ev.duration ?? 1) * 3600e3;
+    const next: Date | undefined = events
+      .filter((ev: Record<string, any>) => endOf(ev) >= Date.now())
+      .map((ev: Record<string, any>) => new Date(ev.start))
+      .sort((a: Date, b: Date) => a.getTime() - b.getTime())[0];
+    // Rien d'annoncé : on le dit, et la liste des sessions passées se déplie avec le bouton (voir .no-upcoming)
+    if (!next) {
+      wrapper.classList.add('no-upcoming');
+      wrapper.querySelector<HTMLElement>('.cal-none')!.hidden = false;
+    }
+
     const calendar = new Calendar(el, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
       initialView: mobile ? 'listYear' : 'dayGridMonth',
+      // Le calendrier s'ouvre là où se trouve la prochaine session : le mois courant le plus souvent, le suivant
+      // si elle est plus loin (en décembre, celle de janvier). Sans session à venir : aujourd'hui.
+      initialDate: next,
       locale: frLocale,
       hiddenDays: [0],
       // Chaque événement est un arrêt de tabulation : son détail s'affiche au focus (voir eventDidMount)
@@ -280,7 +301,7 @@ import { trainings } from '../lib/sessions';
     // Vue liste : les jours passés sont repliés par défaut (voir .cal-past-toggle dans les styles)
     const pastToggle = document.querySelector<HTMLButtonElement>('.cal-past-toggle');
     pastToggle?.addEventListener('click', () => {
-      const shown = document.getElementById('calendar-wrapper')!.classList.toggle('show-past');
+      const shown = wrapper.classList.toggle('show-past');
       pastToggle.textContent = shown ? 'Masquer les sessions passées' : 'Afficher les sessions passées';
     });
 
@@ -366,6 +387,24 @@ import { trainings } from '../lib/sessions';
 
 #calendar-wrapper:not(.show-past):has(.fc-list-day:not(.fc-day-past)) .fc-list-day.fc-day-past,
 #calendar-wrapper:not(.show-past):has(.fc-list-day:not(.fc-day-past)) .fc-list-event.fc-event-past {
+  display: none;
+}
+
+/* Aucune session à venir : le message tient lieu de liste, les sessions passées se déplient avec le bouton */
+/* (#calendar-wrapper : passe devant la règle « p:last-of-type » de reset.css, qui retire la marge basse) */
+#calendar-wrapper .cal-none {
+  margin: 0 0 0.75rem;
+  padding: 0.75rem 1rem;
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 0.5rem;
+}
+
+#calendar-wrapper.no-upcoming:has(.fc-list-day) .cal-past-toggle {
+  display: inline-flex;
+}
+
+#calendar-wrapper.no-upcoming:not(.show-past) .fc-list {
   display: none;
 }
 
