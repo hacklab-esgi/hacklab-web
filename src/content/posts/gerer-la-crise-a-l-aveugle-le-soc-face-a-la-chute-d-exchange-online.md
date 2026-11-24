@@ -10,7 +10,7 @@ tags:
   - defender
   - kql
   - retex
-draft: true
+draft: false
 author: "Mat4Shell"
 ---
 
