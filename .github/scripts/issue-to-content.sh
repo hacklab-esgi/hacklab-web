@@ -161,8 +161,7 @@ mkdir -p "$DIR"
     echo "      type: lucide"
     echo "      name: github"
   fi
-  # Brouillon : rien n'est publié tant qu'un relecteur n'a pas passé « draft » à false
-  echo "draft: true"
+  # Pas de « draft » : la relecture se fait dans la pull request et son aperçu, la fusionner publie la page
   echo "author: $(q "$AUTHOR")"
   echo "---"
   echo
@@ -180,7 +179,7 @@ git push -q origin "$BRANCH"
 
 PR_BODY="Proposition envoyée depuis l’issue #$ISSUE, à relire avant publication.
 
-- Le fichier est en brouillon (\`draft: true\`) : il n’apparaît que dans l’aperçu. Passer à \`false\` pour publier.
+- **Fusionner cette pull request publie la page sur le site.** Tant qu’elle n’est pas fusionnée, la page n’existe que dans l’aperçu.
 - Si l’auteur modifie son issue, cette pull request se met à jour toute seule."
 if [ "$IMAGES" -gt 0 ]; then
   PR_BODY="$PR_BODY
@@ -207,8 +206,8 @@ PR_URL=$(gh pr list --head "$BRANCH" --state open --json url --jq '.[0].url // e
 if [ -z "$PR_URL" ]; then
   PR_URL=$(gh pr create --base master --head "$BRANCH" --title "$PR_TITLE" --body "$PR_BODY" 2> "$TMP/gh_error.txt") || pr_failed
 fi
-# Le numéro de la pull request donne l'adresse de son aperçu Netlify, où les brouillons sont affichés
-# (src/lib/drafts.ts) : le relecteur ouvre la page telle qu'elle sera publiée. « hacklabesgi » est le nom du site Netlify.
+# Le numéro de la pull request donne l'adresse de son aperçu Netlify : le relecteur ouvre la page telle qu'elle
+# sera publiée. « hacklabesgi » est le nom du site Netlify.
 PREVIEW="https://deploy-preview-${PR_URL##*/}--hacklabesgi.netlify.app/$SECTION/$SLUG/"
 gh pr edit "$PR_URL" --title "$PR_TITLE" --body "**Aperçu de la page** (une fois le déploiement approuvé dans Netlify) : $PREVIEW
 

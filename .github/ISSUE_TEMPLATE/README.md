@@ -22,7 +22,7 @@ Voici comment proposer un article :
 
 - Une fois envoyé, **une Pull Request sera automatiquement générée** et un commentaire vous le confirme sur l’issue.
 - S’il manque quelque chose, le commentaire vous dit quoi corriger : **modifiez l’issue**, la vérification se relance et la Pull Request se met à jour.
-- Votre article restera **en brouillon** (`draft: true`) tant qu'il n'est pas validé.
+- Votre article est **publié dès que l'équipe fusionne** la Pull Request. Jusque-là, il n'est visible que dans son aperçu.
 - **Relisez-vous** avant de soumettre pour éviter les oublis.
 
 ---
